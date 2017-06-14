@@ -238,5 +238,3 @@ void Main3DScene::keyPressEvent(QKeyEvent* event)
     }
   }
 }
-
-//void Main3DScene::keyReleaseEvent(QKeyEvent* event) {}

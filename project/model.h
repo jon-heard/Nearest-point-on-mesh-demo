@@ -15,14 +15,17 @@ class QOpenGLVertexArrayObject;
 class Model
 {
   public:
-    // Construction
+  // Construction
     Model(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader);
     virtual ~Model();
-    // Functionality
+  // Functionality
+    // Render this Model into the scene
     void draw();
+    // Initialize this model with mesh data
     virtual void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
+    // Get model's position in world space
     QVector3D calcWorldPosition();
-    // Accessors
+  // Accessors
     float getScale() const;
     QVector3D getPosition() const;
     QVector3D getRotation() const;
@@ -33,9 +36,9 @@ class Model
     void setRotation(QVector3D value);
     void setShader(QOpenGLShaderProgram* value);
   private:
-    // Functionality - internal
+  // Functionality - internal
     void refreshTransform();
-    // Members
+  // Members
     bool isReady;
     float scale;
     QVector3D position;

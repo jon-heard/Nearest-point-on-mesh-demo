@@ -1,6 +1,8 @@
 #ifndef MODEL_FILELOADER_OFF_H
 #define MODEL_FILELOADER_OFF_H
 
+// Model_FileLoader_Off - Provides functionality to load OFF files into model objects
+
 #include <string>
 #include <vector>
 #include <utility>
@@ -11,7 +13,9 @@ class Model;
 class Model_FileLoader_OFF
 {
   public:
+    // Loads the mesh data from the given OFF file, and puts it into the given model
     bool loadFileIntoModel(Model* model, std::string filename);
+    // Accessors for data on any error that occurs
     std::string getErrorFilename();
     std::string getErrorMessage();
   protected:

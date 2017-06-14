@@ -11,7 +11,7 @@ bool Model_PrimitiveLoader::loadSphereIntoModel(Model* model, float radius, int 
   {
     return false;
   }
-  // initial mesh ( a cube)
+  // initial mesh (a cube)
   vector<QVector3D> vertices = vector<QVector3D>({
                                  {-1, -1, -1},
                                  {1, -1, -1},
@@ -48,12 +48,12 @@ bool Model_PrimitiveLoader::loadSphereIntoModel(Model* model, float radius, int 
           tris[i] = QVector3D(newVertexIndex + 0, newVertexIndex + 1, newVertexIndex + 2);
       }
   }
-  // spherize
+  // spherize vertices
   for (vector<QVector3D>::iterator i = vertices.begin(); i != vertices.end(); ++i)
   {
     *i = (*i).normalized() * radius;
   }
-  // Pass data to the model
+  // Initialize model
   model->initialize(vertices, tris);
   return true;
 }

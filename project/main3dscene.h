@@ -1,6 +1,8 @@
 #ifndef MAIN3DSCENE_H
 #define MAIN3DSCENE_H
 
+// Main3DScene - The driver class of this application
+
 #include <vector>
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
@@ -15,19 +17,20 @@ class QOpenGLShaderProgram;
 class Main3DScene : public QOpenGLWidget
 {
   public:
+  // Construction
     Main3DScene(QWidget* parent = 0);
     virtual ~Main3DScene();
-
+  // functionality
     void refreshSceneTransform();
-
+  // Event handlers - OpenGL
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
+  // Event handlers - input
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent* event);
     void keyPressEvent(QKeyEvent* event);
-    //void keyReleaseEvent(QKeyEvent* event);
   private:
     QMatrix4x4 projectionTransform;
     QMatrix4x4 sceneTransform;
