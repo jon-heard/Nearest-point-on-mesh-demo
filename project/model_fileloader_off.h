@@ -15,11 +15,11 @@ class Model_FileLoader_OFF
     std::string getErrorFilename();
     std::string getErrorMessage();
   protected:
-    bool loadFileIntoTokens(std::string filename, std::vector<std::string>& result);
-    bool stripComments(std::string source,
-                       std::string& destination,
-                       std::vector<std::pair<std::string,std::string>> comments);
-    bool tokenize(std::string toTokenize, std::vector<std::string>& result);
+    bool loadFileIntoString(std::string filename, std::string& result);
+    bool stripCommentsFromString(std::string source,
+                                 std::string& destination,
+                                 std::vector<std::pair<std::string,std::string>> comments);
+    bool tokenizeString(std::string toTokenize, std::vector<std::string>& result);
     bool parseTokens(std::vector<std::string> tokens,
                      std::vector<QVector3D>& vertices,
                      std::vector<QVector3D>& tris);
