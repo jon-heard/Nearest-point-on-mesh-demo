@@ -1,0 +1,15 @@
+
+- decal: projective texture mapping
+
+- rotations: fix (quaternions)
+- nearest point: algorithm to work between vertices.  Test with low poly box
+    - confirm: ignoring backfacing
+
+- ui: mesh load dialog
+- ui: name of mesh in status bar
+- ui: x/y/z axis-rose thingy in local 3d space
+
+- transparency: check proper (ordering, fnc's, etc)
+
+- polish: display decal behind mesh
+

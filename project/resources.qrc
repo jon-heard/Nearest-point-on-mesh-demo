@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file>shader_focus.frag</file>
+        <file>shader_basic.vert</file>
+        <file>shader_mesh.frag</file>
+        <file>shader_reflection.frag</file>
+    </qresource>
+    <qresource prefix="/other">
+        <file>default.off</file>
+    </qresource>
+</RCC>
