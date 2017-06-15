@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
   this->scene->setMainWindow(this);
   this->instructions = this->findChild<QLabel*>("instructions");
   this->instructionsTemplate = instructions->text();
+  refreshInstructions();
 }
 
 MainWindow::~MainWindow()
@@ -23,8 +24,8 @@ MainWindow::~MainWindow()
 void MainWindow::refreshInstructions()
 {
   char instructionsText[1024];
-  string targetSphere = this->scene->getIsEnabled_targetSphere() ? "true" : "false";
-  string targetDecal1 = this->scene->getIsEnabled_targetDecal1() ? "true" : "false";
+  string targetSphere = this->scene->getIsEnabled_targetSphere() ? "ON" : "OFF";
+  string targetDecal1 = this->scene->getIsEnabled_targetDecal1() ? "ON" : "OFF";
   sprintf(instructionsText, this->instructionsTemplate.toStdString().c_str(), targetSphere.c_str(), targetDecal1.c_str());
   instructions->setText(instructionsText);//instructionsText);
 }

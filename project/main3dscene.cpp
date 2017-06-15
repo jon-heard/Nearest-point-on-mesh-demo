@@ -130,14 +130,8 @@ void Main3DScene::paintGL()
     if (*i == this->model_mesh)
     {
       target->bind();
-      if (this->isEnabled_targetDecal1)
-      {
-        shader->setUniformValue("decal", 0);
-      }
-      else
-      {
-        shader->setUniformValue("decal", 1);
-      }
+      shader->setUniformValue("decal1Enabled", (int)this->isEnabled_targetDecal1);
+      shader->setUniformValue("decal", 0);
       shader->setUniformValue("decalProjection", this->decalProjectionTransform);
       shader->setUniformValue("decalCamera", this->decalCameraTransform);
       shader->setUniformValue("decalAdjust", this->decalAdjustTransform);
