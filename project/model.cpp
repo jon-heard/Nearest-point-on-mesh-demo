@@ -8,7 +8,7 @@
 using namespace std;
 
 Model::Model(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader) :
-  isReady(false), scale(1), shader(shader),
+  isReady(false), isVisible(true), scale(1), shader(shader),
   vbo(NULL), vao(NULL), gl(gl) {}
 
 Model::~Model()
@@ -32,6 +32,10 @@ void Model::draw()
   if (!isReady)
   {
     qCritical() << "Model error: drawn before initialized";
+    return;
+  }
+  if (!isVisible)
+  {
     return;
   }
   this->shader->setUniformValue("modelTransform", this->transform);
@@ -101,10 +105,16 @@ QVector3D Model::calcWorldPosition()
   return transform * QVector3D();
 }
 
+bool Model::getIsVisible() const { return isVisible; }
 float Model::getScale() const { return this->scale; }
 QVector3D Model::getPosition() const { return this->position; }
 QVector3D Model::getRotation() const { return this->rotation; }
 QOpenGLShaderProgram* Model::getShader() const { return this->shader; }
+
+void Model::setIsVisible(bool value)
+{
+  this->isVisible = value;
+}
 
 void Model::setScale(float value)
 {

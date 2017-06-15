@@ -9,11 +9,12 @@
 #include <QDebug>
 #include "model_fileloader_off.h"
 #include "model_primitiveloader.h"
+#include "mainwindow.h"
 
 using namespace std;
 
 Main3DScene::Main3DScene(QWidget *parent) :
-  QOpenGLWidget(parent), zoom(-500)
+  QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true), isEnabled_targetDecal1(true)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
@@ -84,12 +85,12 @@ void Main3DScene::initializeGL()
     Model_PrimitiveLoader primitiveLoader;
     // focus
     this->model_focus = new Model(gl, shader_focus);
-    primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 2);
+    primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
     this->models.push_back(this->model_focus);
     // reflection
     this->model_reflection = new Model(gl, shader_reflection);
-    primitiveLoader.loadSphereIntoModel(this->model_reflection, 10, 2);
-    //this->models.push_back(this->model_reflection);
+    primitiveLoader.loadSphereIntoModel(this->model_reflection, 5, 3);
+    this->models.push_back(this->model_reflection);
     // mesh
     this->model_mesh = new Model_Calculatable(gl, shader_mesh);
     if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
@@ -97,6 +98,7 @@ void Main3DScene::initializeGL()
       qCritical() << "Failed to load file final.off";
       qCritical() << fileLoader.getErrorMessage().c_str();
     }
+//    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
     this->models.push_back(this->model_mesh);
   // Setup decal texture
     this->target = new QOpenGLTexture(QImage(":/other/target.png"));
@@ -128,18 +130,27 @@ void Main3DScene::paintGL()
     if (*i == this->model_mesh)
     {
       target->bind();
-      shader->setUniformValue("decal", 0);
+      if (this->isEnabled_targetDecal1)
+      {
+        shader->setUniformValue("decal", 0);
+      }
+      else
+      {
+        shader->setUniformValue("decal", 1);
+      }
       shader->setUniformValue("decalProjection", this->decalProjectionTransform);
       shader->setUniformValue("decalCamera", this->decalCameraTransform);
       shader->setUniformValue("decalAdjust", this->decalAdjustTransform);
       shader->setUniformValue("decalNormal", decalNormal);
 
+      this->gl->glDepthMask(false);
       this->gl->glFrontFace(GL_CW);
-      shader->setUniformValue("transparency", 0);
+      shader->setUniformValue("transparency", 0.0f);
       (*i)->draw();
       this->gl->glFrontFace(GL_CCW);
+      this->gl->glDepthMask(true);
 
-      shader->setUniformValue("transparency", .5f);
+      shader->setUniformValue("transparency", .6f);
       (*i)->draw();
     } else {
       (*i)->draw();
@@ -269,5 +280,35 @@ void Main3DScene::keyPressEvent(QKeyEvent* event)
       repaint();
       break;
     }
+    case Qt::Key_1:
+      setIsEnabled_targetSphere(!getIsEnabled_targetSphere());
+      break;
+    case Qt::Key_2:
+      setIsEnabled_targetDecal1(!getIsEnabled_targetDecal1());
+      break;
   }
+}
+
+bool Main3DScene::getIsEnabled_targetSphere() { return this->isEnabled_targetSphere; }
+bool Main3DScene::getIsEnabled_targetDecal1() { return this->isEnabled_targetDecal1; }
+MainWindow* Main3DScene::getMainWindow() { return this->window; }
+
+void Main3DScene::setIsEnabled_targetSphere(bool value)
+{
+  this->isEnabled_targetSphere = value;
+  this->model_reflection->setIsVisible(value);
+  repaint();
+  window->refreshInstructions();
+}
+
+void Main3DScene::setIsEnabled_targetDecal1(bool value)
+{
+  this->isEnabled_targetDecal1 = value;
+  repaint();
+  window->refreshInstructions();
+}
+
+void Main3DScene::setMainWindow(MainWindow* value)
+{
+  this->window = value;
 }

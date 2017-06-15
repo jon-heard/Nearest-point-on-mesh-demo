@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
-    <height>428</height>
+    <width>606</width>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="Main3DScene" name="openGLWidget">
+     <widget class="Main3DScene" name="scene">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -47,12 +47,12 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>150</width>
+        <width>160</width>
         <height>0</height>
        </size>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotate : left-drag / Arrows&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X&lt;/p&gt;&lt;p&gt;Rotate focus: W,A,S,D&lt;/p&gt;&lt;p&gt;Zoom focus: Q,E&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotate : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Rotate focus: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Zoom focus: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;Num keys toggle features&lt;/p&gt;&lt;p&gt;1) Target sphere (%s)&lt;/p&gt;&lt;p&gt;2) Target decal 1 (%s)&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -67,7 +67,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>543</width>
+     <width>606</width>
      <height>21</height>
     </rect>
    </property>

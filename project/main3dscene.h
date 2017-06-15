@@ -14,6 +14,7 @@ class Model;
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
 class QOpenGLTexture;
+class MainWindow;
 
 class Main3DScene : public QOpenGLWidget
 {
@@ -32,6 +33,13 @@ class Main3DScene : public QOpenGLWidget
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent* event);
     void keyPressEvent(QKeyEvent* event);
+  // Accessors
+    bool getIsEnabled_targetSphere();
+    bool getIsEnabled_targetDecal1();
+    MainWindow* getMainWindow();
+    void setIsEnabled_targetSphere(bool value);
+    void setIsEnabled_targetDecal1(bool value);
+    void setMainWindow(MainWindow* value);
   private:
     QMatrix4x4 projectionTransform;
     QMatrix4x4 cameraTransform;
@@ -52,6 +60,11 @@ class Main3DScene : public QOpenGLWidget
     QMatrix4x4 decalProjectionTransform;
     QMatrix4x4 decalCameraTransform;
     QMatrix4x4 decalAdjustTransform;
+
+    bool isEnabled_targetSphere;
+    bool isEnabled_targetDecal1;
+
+    MainWindow* window;
 };
 
 #endif // MAIN3DSCENE_H

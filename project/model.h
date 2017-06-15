@@ -26,11 +26,13 @@ class Model
     // Get model's position in world space
     QVector3D calcWorldPosition();
   // Accessors
+    bool getIsVisible() const;
     float getScale() const;
     QVector3D getPosition() const;
     QVector3D getRotation() const;
     QOpenGLShaderProgram* getShader() const;
     std::vector<QVector3D> getVertices() const;
+    void setIsVisible(bool value);
     void setScale(float value);
     void setPosition(QVector3D value);
     void setRotation(QVector3D value);
@@ -40,6 +42,7 @@ class Model
     void refreshTransform();
   // Members
     bool isReady;
+    bool isVisible;
     float scale;
     QVector3D position;
     QVector3D rotation;

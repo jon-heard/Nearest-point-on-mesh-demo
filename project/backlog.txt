@@ -1,6 +1,4 @@
 
-- Enable/disable features.  Show state in label.
-
 - rotations: fix (quaternions)
 
 - nearest point: algorithm to work between vertices.  Test with low poly box
@@ -9,6 +7,3 @@
 - ui: mesh load dialog
 - ui: name of mesh in status bar
 - ui: x/y/z axis-rose thingy in local 3d space
-
-- polish: fix flickering at edges of mesh
-

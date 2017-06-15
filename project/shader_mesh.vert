@@ -21,7 +21,6 @@ void main()
   passLightValue = dot(normalize(cameraTransform * modelTransform * vec4(normal, 0.0)), vec4(0.0, 0.0, 1.0, 0.0));
   texCoords = vec4(decalAdjust * decalProjection * decalCamera * modelTransform * vec4(position, 1.0)) * .01;
   if (dot(normalize(modelTransform * vec4(normal, 0.0)), vec4(decalNormal, 0.0)) > 0)
-//  if (dot(vec4(0.0, 0.0, 1.0, 0.0), vec4(decalNormal, 0.0)) > 0)
   {
     texCoords = vec4(0,0,0,0);
   }
