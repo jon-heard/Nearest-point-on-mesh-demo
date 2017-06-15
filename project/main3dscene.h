@@ -48,6 +48,10 @@ class Main3DScene : public QOpenGLWidget
     Model* model_reflection;
     Model* model_focus;
     QOpenGLTexture* target;
+
+    QMatrix4x4 decalProjectionTransform;
+    QMatrix4x4 decalCameraTransform;
+    QMatrix4x4 decalAdjustTransform;
 };
 
 #endif // MAIN3DSCENE_H
