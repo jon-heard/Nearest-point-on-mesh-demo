@@ -100,7 +100,7 @@ void Main3DScene::initializeGL()
     this->models.push_back(this->model_mesh);
   // Setup target texture
     target = new QOpenGLTexture(QImage(":/other/target.png"));
-    //target->setWrapMode(QOpenGLTexture::ClampToBorder);
+    target->setWrapMode(QOpenGLTexture::ClampToBorder);
     target->bind();
 }
 
