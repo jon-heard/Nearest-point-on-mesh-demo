@@ -4,8 +4,10 @@
         <file>shader_basic.vert</file>
         <file>shader_mesh.frag</file>
         <file>shader_reflection.frag</file>
+        <file>shader_mesh.vert</file>
     </qresource>
     <qresource prefix="/other">
         <file>default.off</file>
+        <file>target.png</file>
     </qresource>
 </RCC>

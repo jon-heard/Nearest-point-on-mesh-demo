@@ -13,6 +13,7 @@
 class Model;
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
+class QOpenGLTexture;
 
 class Main3DScene : public QOpenGLWidget
 {
@@ -21,7 +22,7 @@ class Main3DScene : public QOpenGLWidget
     Main3DScene(QWidget* parent = 0);
     virtual ~Main3DScene();
   // functionality
-    void refreshSceneTransform();
+    void refreshCameraTransform();
   // Event handlers - OpenGL
     void initializeGL();
     void paintGL();
@@ -33,7 +34,7 @@ class Main3DScene : public QOpenGLWidget
     void keyPressEvent(QKeyEvent* event);
   private:
     QMatrix4x4 projectionTransform;
-    QMatrix4x4 sceneTransform;
+    QMatrix4x4 cameraTransform;
     float zoom;
     QPoint rotation;
     QPoint previousRotation;
@@ -41,11 +42,12 @@ class Main3DScene : public QOpenGLWidget
     QOpenGLFunctions* gl;
     std::vector<Model*> models;
     QOpenGLShaderProgram* shader_focus;
-    QOpenGLShaderProgram* shader_reflection;
     QOpenGLShaderProgram* shader_mesh;
+    QOpenGLShaderProgram* shader_reflection;
     Model_Calculatable* model_mesh;
-    Model* model_focus;
     Model* model_reflection;
+    Model* model_focus;
+    QOpenGLTexture* target;
 };
 
 #endif // MAIN3DSCENE_H
