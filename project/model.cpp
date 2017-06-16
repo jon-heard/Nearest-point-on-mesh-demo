@@ -7,12 +7,17 @@
 
 using namespace std;
 
-Model::Model(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader) :
-  isReady(false), isVisible(true), scale(1), shader(shader),
-  vbo(NULL), vao(NULL), gl(gl) {}
+Model::Model(QOpenGLFunctions* gl, pair<string, string> shaderSources) :
+  isReady(false), isVisible(true), scale(1), shaderSources(shaderSources),
+  shader(NULL), vbo(NULL), vao(NULL), gl(gl) {}
 
 Model::~Model()
 {
+  if (shader != NULL)
+  {
+    delete this->shader;
+    this->shader = NULL;
+  }
   if (vao != NULL)
   {
     this->vao->destroy();
@@ -50,6 +55,22 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
   if (this->isReady)
   {
     qCritical() << "Model error: initialized twice";
+    return;
+  }
+  // Setup shader
+  this->shader = new QOpenGLShaderProgram();
+  this->shader->addShaderFromSourceFile(
+    QOpenGLShader::Vertex, shaderSources.first.c_str());
+  this->shader->addShaderFromSourceFile(
+    QOpenGLShader::Fragment, shaderSources.second.c_str());
+  this->shader->link();
+  if(!this->shader->isLinked())
+  {
+    qCritical() << "Shader error: <" <<
+                   shaderSources.first.c_str() <<
+                   ", " <<
+                   shaderSources.second.c_str() <<
+                   ">";
     return;
   }
   // Allocate data buffer

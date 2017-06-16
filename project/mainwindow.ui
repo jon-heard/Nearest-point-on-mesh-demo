@@ -82,7 +82,7 @@
           </size>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotate : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Rotate focus: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Zoom focus: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotation : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Focus rotation: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Focus distance: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

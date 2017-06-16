@@ -4,6 +4,8 @@
 // Model - An object to be rendered within a 3D scene
 
 #include <vector>
+#include <string>
+#include <utility> // std::pair
 #include <QVector3D>
 #include <QMatrix4x4>
 
@@ -16,7 +18,7 @@ class Model
 {
   public:
   // Construction
-    Model(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader);
+    Model(QOpenGLFunctions* gl, std::pair<std::string, std::string> shaderSources);
     virtual ~Model();
   // Functionality
     // Render this Model into the scene
@@ -48,6 +50,7 @@ class Model
     QVector3D rotation;
     QMatrix4x4 transform;
     int vertexCount;
+    std::pair<std::string, std::string> shaderSources;
     QOpenGLShaderProgram* shader;
     QOpenGLBuffer* vbo;
     QOpenGLVertexArrayObject* vao;

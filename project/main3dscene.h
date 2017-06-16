@@ -49,9 +49,6 @@ class Main3DScene : public QOpenGLWidget
     QPoint previousMousePos;
     QOpenGLFunctions* gl;
     std::vector<Model*> models;
-    QOpenGLShaderProgram* shader_focus;
-    QOpenGLShaderProgram* shader_mesh;
-    QOpenGLShaderProgram* shader_reflection;
     Model_Calculatable* model_mesh;
     Model* model_reflection;
     Model* model_focus;

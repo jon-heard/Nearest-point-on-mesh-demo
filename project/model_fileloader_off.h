@@ -5,7 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <utility>
+#include <utility> // std::pair
 #include <QVector3D>
 
 class Model;

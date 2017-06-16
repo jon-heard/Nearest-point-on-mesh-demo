@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Model_Calculatable::Model_Calculatable(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader) :
-  Model(gl, shader) {}
+Model_Calculatable::Model_Calculatable(QOpenGLFunctions* gl, vector<std::pair<string, string> > shaderSources) :
+  Model(gl, shaderSources[0]), currentShaderIndex() {}
 
 void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)
 {

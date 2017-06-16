@@ -1,9 +1,10 @@
 #ifndef MODEL_CALCULATABLE_H
 #define MODEL_CALCULATABLE_H
 
-// Model_Calculatable - A model with extra methods for various calculations
+// Model_Calculatable - A model with extra functionality for various calculations
 
 #include "Model.h"
+#include <vector>
 
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
@@ -12,7 +13,8 @@ class Model_Calculatable : public Model
 {
   public:
   // Construction
-    Model_Calculatable(QOpenGLFunctions* gl, QOpenGLShaderProgram* shader);
+    Model_Calculatable(
+        QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
   // Functionality
     // Overridden initialize method adds storing mesh data for calculations
     void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
@@ -22,6 +24,7 @@ class Model_Calculatable : public Model
   // Members
     std::vector<QVector3D> vertices;
     std::vector<QVector3D> tris;
+    int currentShaderIndex;
 };
 
 #endif // MODEL_CALCULATABLE_H

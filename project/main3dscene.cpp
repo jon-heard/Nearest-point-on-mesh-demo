@@ -29,9 +29,6 @@ Main3DScene::~Main3DScene()
     delete this->models.back();
     this->models.pop_back();
   }
-  delete this->shader_focus;
-  delete this->shader_reflection;
-  delete this->shader_mesh;
   this->target->destroy();
   delete this->target;
 }
@@ -57,42 +54,23 @@ void Main3DScene::initializeGL()
   // Setup scene
   cameraTransform.setToIdentity();
   cameraTransform.translate(0, 0, zoom);
-  // Setup shaders
-    // focus
-    this->shader_focus = new QOpenGLShaderProgram();
-    this->shader_focus->addShaderFromSourceFile(
-      QOpenGLShader::Vertex, ":/shaders/shader_basic.vert");
-    this->shader_focus->addShaderFromSourceFile(
-      QOpenGLShader::Fragment, ":/shaders/shader_focus.frag");
-    this->shader_focus->link();
-    // reflection
-    this->shader_reflection = new QOpenGLShaderProgram();
-    this->shader_reflection->addShaderFromSourceFile(
-      QOpenGLShader::Vertex, ":/shaders/shader_basic.vert");
-    this->shader_reflection->addShaderFromSourceFile(
-      QOpenGLShader::Fragment, ":/shaders/shader_reflection.frag");
-    this->shader_reflection->link();
-    // mesh
-    this->shader_mesh = new QOpenGLShaderProgram();
-    this->shader_mesh->addShaderFromSourceFile(
-      QOpenGLShader::Vertex, ":/shaders/shader_mesh.vert");
-    this->shader_mesh->addShaderFromSourceFile(
-      QOpenGLShader::Fragment, ":/shaders/shader_mesh.frag");
-    this->shader_mesh->link();
   // Setup models
     // loaders
     Model_FileLoader_OFF fileLoader;
     Model_PrimitiveLoader primitiveLoader;
     // focus
-    this->model_focus = new Model(gl, shader_focus);
+    this->model_focus = new Model(
+        gl, {":/shaders/shader_basic.vert", ":/shaders/shader_focus.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
     this->models.push_back(this->model_focus);
     // reflection
-    this->model_reflection = new Model(gl, shader_reflection);
+    this->model_reflection = new Model(
+        gl, {":/shaders/shader_basic.vert", ":/shaders/shader_reflection.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_reflection, 5, 3);
     this->models.push_back(this->model_reflection);
     // mesh
-    this->model_mesh = new Model_Calculatable(gl, shader_mesh);
+    this->model_mesh = new Model_Calculatable(
+        gl, {{":/shaders/shader_mesh.vert", ":/shaders/shader_mesh.frag"}});
     if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
     {
       qCritical() << "Failed to load file final.off";
@@ -149,7 +127,7 @@ void Main3DScene::paintGL()
     } else {
       (*i)->draw();
     }
-    this->shader_focus->release();
+    shader->release();
   }
 }
 
