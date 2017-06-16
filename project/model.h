@@ -21,6 +21,8 @@ class Model
     Model(QOpenGLFunctions* gl, std::pair<std::string, std::string> shaderSources);
     virtual ~Model();
   // Functionality
+    // Update the transform with the latest transformation info
+    void refreshTransform();
     // Render this Model into the scene
     void draw();
     // Initialize this model with mesh data
@@ -40,8 +42,6 @@ class Model
     void setRotation(QVector3D value);
     void setShader(QOpenGLShaderProgram* value);
   private:
-  // Functionality - internal
-    void refreshTransform();
   // Members
     bool isReady;
     bool isVisible;

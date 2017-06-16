@@ -32,6 +32,14 @@ Model::~Model()
   }
 }
 
+void Model::refreshTransform()
+{
+  transform.setToIdentity();
+  transform.rotate(QQuaternion::fromEulerAngles(rotation));
+  transform.translate(position);
+  transform.scale(scale, scale, scale);
+}
+
 void Model::draw()
 {
   if (!isReady)
@@ -160,10 +168,3 @@ void Model::setShader(QOpenGLShaderProgram* value)
   this->shader = value;
 }
 
-void Model::refreshTransform()
-{
-  transform.setToIdentity();
-  transform.rotate(QQuaternion::fromEulerAngles(rotation));
-  transform.translate(position);
-  transform.scale(scale, scale, scale);
-}
