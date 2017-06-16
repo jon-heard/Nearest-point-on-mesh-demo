@@ -7,8 +7,8 @@
 
 using namespace std;
 
-Model::Model(QOpenGLFunctions* gl, pair<string, string> shaderSources) :
-  isReady(false), isVisible(true), scale(1), shaderSources(shaderSources),
+Model::Model(QOpenGLFunctions* gl, pair<string, string> shaderSource) :
+  isReady(false), isVisible(true), scale(1), shaderSource(shaderSource),
   shader(NULL), vbo(NULL), vao(NULL), gl(gl) {}
 
 Model::~Model()
@@ -65,21 +65,24 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
     qCritical() << "Model error: initialized twice";
     return;
   }
-  // Setup shader
-  this->shader = new QOpenGLShaderProgram();
-  this->shader->addShaderFromSourceFile(
-    QOpenGLShader::Vertex, shaderSources.first.c_str());
-  this->shader->addShaderFromSourceFile(
-    QOpenGLShader::Fragment, shaderSources.second.c_str());
-  this->shader->link();
-  if(!this->shader->isLinked())
+  // Setup shader (if given)
+  if (this->shaderSource.first != "")
   {
-    qCritical() << "Shader error: <" <<
-                   shaderSources.first.c_str() <<
-                   ", " <<
-                   shaderSources.second.c_str() <<
-                   ">";
-    return;
+    this->shader = new QOpenGLShaderProgram();
+    this->shader->addShaderFromSourceFile(
+      QOpenGLShader::Vertex, shaderSource.first.c_str());
+    this->shader->addShaderFromSourceFile(
+      QOpenGLShader::Fragment, shaderSource.second.c_str());
+    this->shader->link();
+    if(!this->shader->isLinked())
+    {
+      qCritical() << "Shader error: <" <<
+                     shaderSource.first.c_str() <<
+                     ", " <<
+                     shaderSource.second.c_str() <<
+                     ">";
+      return;
+    }
   }
   // Allocate data buffer
   this->vertexCount = (int)tris.size() * 3;
@@ -163,8 +166,4 @@ void Model::setRotation(QQuaternion value)
   refreshTransform();
 }
 
-void Model::setShader(QOpenGLShaderProgram* value)
-{
-  this->shader = value;
-}
 

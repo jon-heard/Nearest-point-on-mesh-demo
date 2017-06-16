@@ -2,9 +2,10 @@
     <qresource prefix="/shaders">
         <file>shader_focus.frag</file>
         <file>shader_basic.vert</file>
-        <file>shader_mesh.frag</file>
+        <file>shader_mesh_projectedTexture.frag</file>
         <file>shader_reflection.frag</file>
-        <file>shader_mesh.vert</file>
+        <file>shader_mesh_projectedTexture.vert</file>
+        <file>shader_mesh.frag</file>
     </qresource>
     <qresource prefix="/other">
         <file>default.off</file>

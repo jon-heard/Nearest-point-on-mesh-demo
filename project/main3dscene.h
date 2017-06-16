@@ -36,10 +36,9 @@ class Main3DScene : public QOpenGLWidget
     void keyPressEvent(QKeyEvent* event);
   // Accessors
     bool getIsEnabled_targetSphere();
-    bool getIsEnabled_targetDecal1();
+    Model_Calculatable* getMesh();
     MainWindow* getMainWindow();
     void setIsEnabled_targetSphere(bool value);
-    void setIsEnabled_targetDecal1(bool value);
     void setMainWindow(MainWindow* value);
   private:
     QMatrix4x4 projectionTransform;
@@ -60,7 +59,6 @@ class Main3DScene : public QOpenGLWidget
     QMatrix4x4 decalAdjustTransform;
 
     bool isEnabled_targetSphere;
-    bool isEnabled_targetDecal1;
 
     MainWindow* window;
 };

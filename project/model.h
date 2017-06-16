@@ -19,7 +19,7 @@ class Model
 {
   public:
   // Construction
-    Model(QOpenGLFunctions* gl, std::pair<std::string, std::string> shaderSources);
+    Model(QOpenGLFunctions* gl, std::pair<std::string, std::string> shaderSource);
     virtual ~Model();
   // Functionality
     // Update the transform with the latest transformation info
@@ -41,18 +41,18 @@ class Model
     void setScale(float value);
     void setPosition(QVector3D value);
     void setRotation(QQuaternion value);
-    void setShader(QOpenGLShaderProgram* value);
+  protected:
+    bool isReady;
+    QOpenGLShaderProgram* shader;
   private:
   // Members
-    bool isReady;
     bool isVisible;
     float scale;
     QVector3D position;
     QQuaternion rotation;
     QMatrix4x4 transform;
     int vertexCount;
-    std::pair<std::string, std::string> shaderSources;
-    QOpenGLShaderProgram* shader;
+    std::pair<std::string, std::string> shaderSource;
     QOpenGLBuffer* vbo;
     QOpenGLVertexArrayObject* vao;
     QOpenGLFunctions* gl;

@@ -28,17 +28,17 @@ SOURCES += \
         mainwindow.cpp \
     main3dscene.cpp \
     model.cpp \
-    model_fileloader_off.cpp \
-    model_primitiveloader.cpp \
-    model_calculatable.cpp
+    model_calculatable.cpp \
+    model_loader_file__off.cpp \
+    model_loader_primitive.cpp
 
 HEADERS += \
         mainwindow.h \
     main3dscene.h \
     model.h \
-    model_fileloader_off.h \
-    model_primitiveloader.h \
-    model_calculatable.h
+    model_calculatable.h \
+    model_loader_file_off.h \
+    model_loader_primitive.h
 
 FORMS += \
         mainwindow.ui

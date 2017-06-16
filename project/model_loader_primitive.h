@@ -5,7 +5,7 @@
 
 class Model;
 
-class Model_PrimitiveLoader
+class Model_Loader_Primitive
 {
   public:
     // Creates mesh data for a sphere, and puts it into the given model

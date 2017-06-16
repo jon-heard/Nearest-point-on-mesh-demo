@@ -1,6 +1,5 @@
 #version 330
 in float passLightValue;
-
 out vec4 finalColor;
 
 void main()

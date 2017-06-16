@@ -82,7 +82,7 @@
           </size>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotation : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Focus rotation: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Focus distance: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotation : left-drag / Arrow keys  &lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Focus rotation: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Focus distance: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -94,13 +94,40 @@
          <property name="text">
           <string>Show target sphere (1 key)</string>
          </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="toggleTargetDecal1">
+        <widget class="QLabel" name="spacer1">
          <property name="text">
-          <string>Show target decal #1 (2 key)</string>
+          <string/>
          </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="decalTypeLabel">
+         <property name="text">
+          <string>Decal type</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="decalTypeSelector">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>No decal</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Projected texture</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item>

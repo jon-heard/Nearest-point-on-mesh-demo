@@ -20,14 +20,11 @@ public:
   void refreshInstructions();
   private slots:
   void on_toggleTargetSphere_stateChanged(int arg1);
-
-  void on_toggleTargetDecal1_stateChanged(int arg1);
-
+  void on_decalTypeSelector_currentIndexChanged(int index);
   private:
   Ui::MainWindow *ui;
   Main3DScene* scene;
   QCheckBox* toggleTargetSphere;
-  QCheckBox* toggleTargetDecal1;
 };
 
 #endif // MAINWINDOW_H

@@ -10,7 +10,7 @@
 
 class Model;
 
-class Model_FileLoader_OFF
+class Model_Loader_File_OFF
 {
   public:
     // Loads the mesh data from the given OFF file, and puts it into the given model

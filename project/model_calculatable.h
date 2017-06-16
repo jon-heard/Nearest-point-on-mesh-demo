@@ -15,16 +15,22 @@ class Model_Calculatable : public Model
   // Construction
     Model_Calculatable(
         QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
+    ~Model_Calculatable();
   // Functionality
     // Overridden initialize method adds storing mesh data for calculations
     void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
     // Calculates the point on this model that is closest to the given focusPoint
     QVector3D calcClosestSurfacePoint(QVector3D focusPoint);
+  // Accessors
+    QOpenGLShaderProgram* getShader(unsigned int index) const;
+    void setCurrentShader(unsigned int index);
   private:
   // Members
     std::vector<QVector3D> vertices;
     std::vector<QVector3D> tris;
-    int currentShaderIndex;
+    std::vector<std::pair<std::string,std::string>> shaderSources;
+    std::vector<QOpenGLShaderProgram*> shaders;
+    unsigned int currentShaderIndex;
 };
 
 #endif // MODEL_CALCULATABLE_H

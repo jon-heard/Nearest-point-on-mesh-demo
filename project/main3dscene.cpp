@@ -7,8 +7,8 @@
 #include <QApplication>
 #include <QOpenGLTexture>
 #include <QDebug>
-#include "model_fileloader_off.h"
-#include "model_primitiveloader.h"
+#include "model_loader_file_off.h"
+#include "model_loader_primitive.h"
 #include "mainwindow.h"
 
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 const float FOCUS_ROTATION_SPEED = 5;
 
 Main3DScene::Main3DScene(QWidget *parent) :
-  QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true), isEnabled_targetDecal1(true)
+  QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
@@ -57,8 +57,8 @@ void Main3DScene::initializeGL()
   cameraTransform.translate(0, 0, zoom);
   // Setup models
     // loaders
-    Model_FileLoader_OFF fileLoader;
-    Model_PrimitiveLoader primitiveLoader;
+    Model_Loader_File_OFF fileLoader;
+    Model_Loader_Primitive primitiveLoader;
     // focus
     this->model_focus = new Model(
         gl, {":/shaders/shader_basic.vert", ":/shaders/shader_focus.frag"});
@@ -71,12 +71,16 @@ void Main3DScene::initializeGL()
     this->models.push_back(this->model_reflection);
     // mesh
     this->model_mesh = new Model_Calculatable(
-        gl, {{":/shaders/shader_mesh.vert", ":/shaders/shader_mesh.frag"}});
+        gl, {
+            {":/shaders/shader_basic.vert", ":/shaders/shader_mesh.frag"},
+            {":/shaders/shader_mesh_projectedTexture.vert", ":/shaders/shader_mesh_projectedTexture.frag"}
+    });
     if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
     {
       qCritical() << "Failed to load file final.off";
       qCritical() << fileLoader.getErrorMessage().c_str();
     }
+    this->model_mesh->setCurrentShader(1);
 //    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
     this->models.push_back(this->model_mesh);
   // Setup decal texture
@@ -109,7 +113,6 @@ void Main3DScene::paintGL()
     if (*i == this->model_mesh)
     {
       target->bind();
-      shader->setUniformValue("decal1Enabled", (int)this->isEnabled_targetDecal1);
       shader->setUniformValue("decal", 0);
       shader->setUniformValue("decalProjection", this->decalProjectionTransform);
       shader->setUniformValue("decalCamera", this->decalCameraTransform);
@@ -254,17 +257,11 @@ void Main3DScene::keyPressEvent(QKeyEvent* event)
       repaint();
       break;
     }
-    case Qt::Key_1:
-      setIsEnabled_targetSphere(!getIsEnabled_targetSphere());
-      break;
-    case Qt::Key_2:
-      setIsEnabled_targetDecal1(!getIsEnabled_targetDecal1());
-      break;
   }
 }
 
 bool Main3DScene::getIsEnabled_targetSphere() { return this->isEnabled_targetSphere; }
-bool Main3DScene::getIsEnabled_targetDecal1() { return this->isEnabled_targetDecal1; }
+Model_Calculatable* Main3DScene::getMesh() { return this->model_mesh; }
 MainWindow* Main3DScene::getMainWindow() { return this->window; }
 
 void Main3DScene::setIsEnabled_targetSphere(bool value)
@@ -272,14 +269,6 @@ void Main3DScene::setIsEnabled_targetSphere(bool value)
   this->isEnabled_targetSphere = value;
   this->model_reflection->setIsVisible(value);
   repaint();
-  window->refreshInstructions();
-}
-
-void Main3DScene::setIsEnabled_targetDecal1(bool value)
-{
-  this->isEnabled_targetDecal1 = value;
-  repaint();
-  window->refreshInstructions();
 }
 
 void Main3DScene::setMainWindow(MainWindow* value)
