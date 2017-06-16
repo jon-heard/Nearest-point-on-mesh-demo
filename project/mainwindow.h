@@ -9,6 +9,7 @@ class MainWindow;
 
 class Main3DScene;
 class QLabel;
+class QCheckBox;
 
 class MainWindow : public QMainWindow
 {
@@ -17,11 +18,16 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
   void refreshInstructions();
-private:
+  private slots:
+  void on_toggleTargetSphere_stateChanged(int arg1);
+
+  void on_toggleTargetDecal1_stateChanged(int arg1);
+
+  private:
   Ui::MainWindow *ui;
-  QLabel* instructions;
   Main3DScene* scene;
-  QString instructionsTemplate;
+  QCheckBox* toggleTargetSphere;
+  QCheckBox* toggleTargetDecal1;
 };
 
 #endif // MAINWINDOW_H

@@ -38,25 +38,85 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="instructions">
+     <widget class="QFrame" name="controls">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>160</width>
-        <height>0</height>
-       </size>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotate : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Rotate focus: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Zoom focus: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;Num keys toggle features&lt;/p&gt;&lt;p&gt;1) Target sphere -  %s&lt;/p&gt;&lt;p&gt;2) Target decal 1 - %s&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="instructions">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Controls&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rotate : left-drag / Arrow keys&lt;/p&gt;&lt;p&gt;Zoom : Mouse-wheel / Z,X keys&lt;/p&gt;&lt;p&gt;Rotate focus: W,A,S,D keys&lt;/p&gt;&lt;p&gt;Zoom focus: Q,E keys&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="toggleTargetSphere">
+         <property name="text">
+          <string>Show target sphere (1 key)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="toggleTargetDecal1">
+         <property name="text">
+          <string>Show target decal #1 (2 key)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>

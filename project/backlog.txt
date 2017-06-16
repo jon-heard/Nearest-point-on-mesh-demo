@@ -4,6 +4,13 @@
 - nearest point: algorithm to work between vertices.  Test with low poly box
     - confirm: ignoring backfacing
 
+- get other decal working
+
+- Clean up code!
+
+- use bsp or octree to optimize search
+
 - ui: mesh load dialog
 - ui: name of mesh in status bar
-- ui: x/y/z axis-rose thingy in local 3d space
+
+- Polish: x/y/z axis-rose thingy in local 3d space
