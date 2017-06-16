@@ -6,11 +6,11 @@
 
 - get other decal working
 
-- Clean up code!
-
 - use bsp or octree to optimize search
 
 - ui: mesh load dialog
 - ui: name of mesh in status bar
+
+- Clean up code!
 
 - Polish: x/y/z axis-rose thingy in local 3d space
