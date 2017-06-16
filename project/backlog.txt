@@ -1,4 +1,12 @@
 
+- add dropdown selector for decal state
+- add multiple shaders for mesh (for decals)
+- switch with dropdown
+
+- have mainwindow get more involved with setting main3dscene stuff
+    - or make separate scene class for holding scene stuff, and main3dscene just uses that
+
+
 - rotations: fix (quaternions)
 
 - nearest point: algorithm to work between vertices.  Test with low poly box

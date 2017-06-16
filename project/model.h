@@ -7,6 +7,7 @@
 #include <string>
 #include <utility> // std::pair
 #include <QVector3D>
+#include <QQuaternion>
 #include <QMatrix4x4>
 
 class QOpenGLFunctions;
@@ -33,13 +34,13 @@ class Model
     bool getIsVisible() const;
     float getScale() const;
     QVector3D getPosition() const;
-    QVector3D getRotation() const;
+    QQuaternion getRotation() const;
     QOpenGLShaderProgram* getShader() const;
     std::vector<QVector3D> getVertices() const;
     void setIsVisible(bool value);
     void setScale(float value);
     void setPosition(QVector3D value);
-    void setRotation(QVector3D value);
+    void setRotation(QQuaternion value);
     void setShader(QOpenGLShaderProgram* value);
   private:
   // Members
@@ -47,7 +48,7 @@ class Model
     bool isVisible;
     float scale;
     QVector3D position;
-    QVector3D rotation;
+    QQuaternion rotation;
     QMatrix4x4 transform;
     int vertexCount;
     std::pair<std::string, std::string> shaderSources;

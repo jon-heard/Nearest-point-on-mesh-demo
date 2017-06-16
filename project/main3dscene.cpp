@@ -13,6 +13,8 @@
 
 using namespace std;
 
+const float FOCUS_ROTATION_SPEED = 5;
+
 Main3DScene::Main3DScene(QWidget *parent) :
   QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true), isEnabled_targetDecal1(true)
 {
@@ -145,8 +147,7 @@ void Main3DScene::mousePressEvent(QMouseEvent *event)
   }
   else if (event->buttons() & Qt::RightButton)
   {
-    QVector3D focusRotation = this->model_focus->getRotation();
-    this->previousRotation = focusRotation;
+    this->previousRotation = this->model_focus->getRotation();
   }
 }
 
@@ -158,9 +159,11 @@ void Main3DScene::mouseMoveEvent(QMouseEvent *event)
     rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
     refreshCameraTransform();
   } else if (event->buttons() & Qt::RightButton) {
-    QVector3D focusRotation = this->model_focus->getRotation();
-    focusRotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
-    focusRotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
+    QQuaternion focusRotation = this->model_focus->getRotation();
+    focusRotation = QQuaternion::fromAxisAndAngle(1, 0, 0,
+        this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
+    focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0,
+        this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
     this->model_focus->setRotation(focusRotation);
     repaint();
   }
@@ -205,32 +208,32 @@ void Main3DScene::keyPressEvent(QKeyEvent* event)
       break;
     case Qt::Key_W:
     {
-      QVector3D focusRotation = this->model_focus->getRotation();
-      focusRotation += QVector3D(-10, 0, 0);
+      QQuaternion focusRotation = this->model_focus->getRotation();
+      focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -FOCUS_ROTATION_SPEED);
       this->model_focus->setRotation(focusRotation);
       repaint();
       break;
     }
     case Qt::Key_A:
     {
-      QVector3D focusRotation = this->model_focus->getRotation();
-      focusRotation += QVector3D(0, -10, 0);
+      QQuaternion focusRotation = this->model_focus->getRotation();
+      focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -FOCUS_ROTATION_SPEED);
       this->model_focus->setRotation(focusRotation);
       repaint();
       break;
     }
     case Qt::Key_S:
     {
-      QVector3D focusRotation = this->model_focus->getRotation();
-      focusRotation += QVector3D(10, 0, 0);
+      QQuaternion focusRotation = this->model_focus->getRotation();
+      focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, FOCUS_ROTATION_SPEED);
       this->model_focus->setRotation(focusRotation);
       repaint();
       break;
     }
     case Qt::Key_D:
     {
-      QVector3D focusRotation = this->model_focus->getRotation();
-      focusRotation += QVector3D(0, 10, 0);
+      QQuaternion focusRotation = this->model_focus->getRotation();
+      focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, FOCUS_ROTATION_SPEED);
       this->model_focus->setRotation(focusRotation);
       repaint();
       break;

@@ -8,6 +8,7 @@
 #include <QMatrix4x4>
 #include <QPoint>
 #include <QVector3D>
+#include <QQuaternion>
 #include "Model_Calculatable.h"
 
 class Model;
@@ -44,8 +45,8 @@ class Main3DScene : public QOpenGLWidget
     QMatrix4x4 projectionTransform;
     QMatrix4x4 cameraTransform;
     float zoom;
-    QVector3D rotation;
-    QVector3D previousRotation;
+    QQuaternion rotation;
+    QQuaternion previousRotation;
     QPoint previousMousePos;
     QOpenGLFunctions* gl;
     std::vector<Model*> models;

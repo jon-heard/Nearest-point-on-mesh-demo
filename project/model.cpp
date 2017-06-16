@@ -35,7 +35,7 @@ Model::~Model()
 void Model::refreshTransform()
 {
   transform.setToIdentity();
-  transform.rotate(QQuaternion::fromEulerAngles(rotation));
+  transform.rotate(rotation);
   transform.translate(position);
   transform.scale(scale, scale, scale);
 }
@@ -137,7 +137,7 @@ QVector3D Model::calcWorldPosition()
 bool Model::getIsVisible() const { return isVisible; }
 float Model::getScale() const { return this->scale; }
 QVector3D Model::getPosition() const { return this->position; }
-QVector3D Model::getRotation() const { return this->rotation; }
+QQuaternion Model::getRotation() const { return this->rotation; }
 QOpenGLShaderProgram* Model::getShader() const { return this->shader; }
 
 void Model::setIsVisible(bool value)
@@ -157,7 +157,7 @@ void Model::setPosition(QVector3D value)
   refreshTransform();
 }
 
-void Model::setRotation(QVector3D value)
+void Model::setRotation(QQuaternion value)
 {
   this->rotation = value;
   refreshTransform();
