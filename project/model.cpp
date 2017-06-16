@@ -163,9 +163,7 @@ void Model::setShader(QOpenGLShaderProgram* value)
 void Model::refreshTransform()
 {
   transform.setToIdentity();
-  transform.rotate(rotation.x(), QVector3D(1, 0, 0));
-  transform.rotate(rotation.y(), QVector3D(0, 1, 0));
-  transform.rotate(rotation.z(), QVector3D(0, 0, 1));
+  transform.rotate(QQuaternion::fromEulerAngles(rotation));
   transform.translate(position);
   transform.scale(scale, scale, scale);
 }

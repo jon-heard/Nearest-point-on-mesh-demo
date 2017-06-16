@@ -44,8 +44,8 @@ class Main3DScene : public QOpenGLWidget
     QMatrix4x4 projectionTransform;
     QMatrix4x4 cameraTransform;
     float zoom;
-    QPoint rotation;
-    QPoint previousRotation;
+    QVector3D rotation;
+    QVector3D previousRotation;
     QPoint previousMousePos;
     QOpenGLFunctions* gl;
     std::vector<Model*> models;

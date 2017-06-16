@@ -37,8 +37,7 @@ void Main3DScene::refreshCameraTransform()
 {
   this->cameraTransform.setToIdentity();
   this->cameraTransform.translate(0, 0, this->zoom);
-  this->cameraTransform.rotate(rotation.x(), 1, 0, 0);
-  this->cameraTransform.rotate(rotation.y(), 0, 1, 0);
+  this->cameraTransform.rotate(QQuaternion::fromEulerAngles(rotation.x(), rotation.y(), 0));
   repaint();
 }
 
@@ -147,7 +146,7 @@ void Main3DScene::mousePressEvent(QMouseEvent *event)
   else if (event->buttons() & Qt::RightButton)
   {
     QVector3D focusRotation = this->model_focus->getRotation();
-    this->previousRotation = QPoint(focusRotation.x(), focusRotation.y());
+    this->previousRotation = focusRotation;
   }
 }
 
