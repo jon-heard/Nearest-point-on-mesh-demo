@@ -1,4 +1,5 @@
 #include "main3dscene.h"
+#include <algorithm>
 #include <QOpenGLFunctions>
 #include <QOpenGLShader>
 #include <QMouseEvent>
@@ -17,7 +18,8 @@ using namespace std;
 const float FOCUS_ROTATION_SPEED = 5;
 
 Main3DScene::Main3DScene(QWidget *parent) :
-  QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true)
+  QOpenGLWidget(parent), zoom(-500), isEnabled_targetSphere(true), model_mesh(NULL),
+  newMeshFilename("")
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
@@ -44,6 +46,11 @@ void Main3DScene::refreshCameraTransform()
   repaint();
 }
 
+void Main3DScene::initiateLoadMesh(std::string filename)
+{
+  newMeshFilename = filename;
+}
+
 void Main3DScene::initializeGL()
 {
   // Setup opengl
@@ -58,7 +65,6 @@ void Main3DScene::initializeGL()
   cameraTransform.translate(0, 0, zoom);
   // Setup models
     // loaders
-    Model_Loader_File_OFF fileLoader;
     Model_Loader_Primitive primitiveLoader;
     // focus
     this->model_focus = new Model(
@@ -71,20 +77,8 @@ void Main3DScene::initializeGL()
     primitiveLoader.loadSphereIntoModel(this->model_nearestPoint, 5, 3);
     this->models.push_back(this->model_nearestPoint);
     // mesh
-    this->model_mesh = new Model_WithCalculations(
-        gl, {
-            {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
-            {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
-            {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
-    });
-    if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
-    {
-      qCritical() << "Failed to load file final.off";
-      qCritical() << fileLoader.getErrorMessage().c_str();
-    }
-//    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
-    this->model_mesh->setCurrentShader(2);
-    this->models.push_back(this->model_mesh);
+    loadMesh(":/other/default.off");
+    //loadMesh("D:/_projects/Nearest-point-on-mesh-demo/off files/Apple.off");
   // Setup decal texture
     this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));
     this->targetTexture->setWrapMode(QOpenGLTexture::ClampToBorder);
@@ -93,6 +87,13 @@ void Main3DScene::initializeGL()
 
 void Main3DScene::paintGL()
 {
+  if (newMeshFilename != "")
+  {
+    loadMesh(newMeshFilename);
+    window->setModelFilename(newMeshFilename.c_str());
+    newMeshFilename = "";
+  }
+
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   targetTexture->bind();
   // Camera transform calculation
@@ -255,4 +256,44 @@ void Main3DScene::setIsEnabled_targetSphere(bool value)
 void Main3DScene::setMainWindow(MainWindow* value)
 {
   this->window = value;
+}
+
+bool Main3DScene::loadMesh(string filename)
+{
+  bool result = true;
+  Model_Loader_File_OFF fileLoader;
+  // Keep track of old model_mesh, in case new one fails
+  Model_WithCalculations* oldModel = model_mesh;
+  // Remove old model_mesh
+  if (model_mesh != NULL)
+  {
+    models.erase(std::find(models.begin(), models.end(), model_mesh));
+  }
+  // Create new model_mesh
+  this->model_mesh = new Model_WithCalculations(
+      gl, {
+          {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
+          {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
+          {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
+  });
+  // Load mesh data
+  if (!fileLoader.loadFileIntoModel(this->model_mesh, filename))
+  {
+    qCritical() << "Failed to load file final.off";
+    qCritical() << fileLoader.getErrorMessage().c_str();
+    model_mesh = oldModel;
+    result = false;
+  }
+  // primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
+  // Add new model_mesh
+  this->window->setDecalTypeSelector(0);
+  this->models.push_back(this->model_mesh);
+  // Erase old model_mesh
+  if (oldModel != model_mesh)
+  {
+    delete oldModel;
+    oldModel = NULL;
+  }
+  model_mesh->scaleToFit(250);
+  return result;
 }

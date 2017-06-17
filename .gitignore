@@ -41,3 +41,7 @@ CMakeLists.txt.user*
 bin/
 
 ProximityToMeshProject\.pdf
+
+off files/
+
+RoffViewGL\.exe

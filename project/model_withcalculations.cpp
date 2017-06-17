@@ -21,6 +21,30 @@ Model_WithCalculations::~Model_WithCalculations()
     shader = NULL;
 }
 
+void Model_WithCalculations::scaleToFit(float size)
+{
+  QVector3D min(INT_MAX, INT_MAX, INT_MAX), max(INT_MIN, INT_MIN, INT_MIN);
+  for (vector<QVector3D>::iterator i = vertices.begin(); i != vertices.end(); ++i)
+  {
+      for (int j = 0; j < 3; ++j)
+      {
+          if ((*i)[0] < min[0]) { min[0] = (*i)[0]; }
+          if ((*i)[1] < min[1]) { min[1] = (*i)[1]; }
+          if ((*i)[2] < min[2]) { min[2] = (*i)[2]; }
+          if ((*i)[0] > max[0]) { max[0] = (*i)[0]; }
+          if ((*i)[1] > max[1]) { max[1] = (*i)[1]; }
+          if ((*i)[2] > max[2]) { max[2] = (*i)[2]; }
+      }
+  }
+  QVector3D modelSize = max-min;
+  float maxModelSize = INT_MIN;
+  for (int i = 0; i < 3; ++i)
+  {
+    if (modelSize[i] > maxModelSize) { maxModelSize = modelSize[i]; }
+  }
+  this->setScale(size / maxModelSize);
+}
+
 void Model_WithCalculations::draw(
         QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
         QVector3D focus, QVector3D nearestPoint)
@@ -35,7 +59,7 @@ void Model_WithCalculations::draw(
 
     this->shader->bind();
     // Texture / alpha settings
-    this->shader->setUniformValue("alpha", 0.0f);
+    this->shader->setUniformValue("alpha", 0.1f);
     this->shader->setUniformValue("mainTexture", 0);
     // Projected texture settings
     this->shader->setUniformValue(
@@ -54,7 +78,7 @@ void Model_WithCalculations::draw(
 
     this->shader->bind();
     // Texture / alpha settings
-    this->shader->setUniformValue("alpha", 0.6f);
+    this->shader->setUniformValue("alpha", 0.5f);
     this->shader->setUniformValue("mainTexture", 0);
     // Projected texture settings
     this->shader->setUniformValue(
@@ -113,8 +137,11 @@ QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focus)
 
     for (vector<QVector3D>::iterator i = this->triangles.begin(); i != this->triangles.end(); ++i)
     {
+        QVector3D v1 = this->transform * this->vertices[(*i)[0]];
+        QVector3D v2 = this->transform * this->vertices[(*i)[1]];
+        QVector3D v3 = this->transform * this->vertices[(*i)[2]];
         QVector3D localResult = Model_WithCalculations::calcClosestPointOnTriangle(
-                    focus, vertices[(*i)[0]], vertices[(*i)[1]], vertices[(*i)[2]]);
+                    focus, v1, v2, v3);
         float localResultDistance = (localResult - focus).length();
         if (localResultDistance < resultDistance)
         {
@@ -136,8 +163,6 @@ inline float clamp(float x, float a, float b)
 QVector3D Model_WithCalculations::calcClosestPointOnTriangle(
         QVector3D point, QVector3D triangle1, QVector3D triangle2, QVector3D triangle3)
 {
-
-
     //  QVector3D result = tri1;
     //  float resultDistance = (point - result).length();
     //  float checkDistance = (point - tri2).length();

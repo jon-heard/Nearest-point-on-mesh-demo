@@ -19,6 +19,8 @@ class Model_WithCalculations : public Model
         QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
     ~Model_WithCalculations();
   // Functionality
+    // Calculates and sets the scale so that the mesh form-fits to the given size
+    void scaleToFit(float size);
     // Overridden to add more involved shader functionality
     void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
         QVector3D focus, QVector3D nearestPoint);

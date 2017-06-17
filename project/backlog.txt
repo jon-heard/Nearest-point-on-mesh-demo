@@ -5,7 +5,11 @@
 - ui: mesh load dialog
 - ui: name of mesh in status bar
 
+- fix ignoring backface on projected texture (shouldn't draw if inside!)
+
 - Clean up code!
+    - add "Scene" and "Scene_Demo" class.  Put all non-rendering details in "Scene" and "Scene_Demo".  Leave rendering details in "Main3DScene"
+    - rename "Main3DScene" to "SceneRenderer"
     - use 'this->' whenever applicable
     - use accessors whenever possible
     - look for places to use 'unsigned'
@@ -18,6 +22,7 @@
  before submission
 -------------------
 - understand tri-closest-point algorithm
+    https://www.gamedev.net/topic/552906-closest-point-on-triangle/
 - writeup
 - get this working on my laptop
 
