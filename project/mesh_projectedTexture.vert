@@ -4,9 +4,8 @@ layout(location=2) in vec3 normal;
 uniform mat4 projectionCameraTransform;
 uniform mat4 cameraTransform;
 uniform mat4 modelTransform;
-uniform mat4 decalProjection;
+uniform mat4 decalAdjustAndProjectionTransform;
 uniform mat4 decalCamera;
-uniform mat4 decalAdjust;
 uniform vec3 decalNormal;
 out float passLightValue;
 out vec4 passTextureCoordinates;
@@ -18,7 +17,7 @@ void main()
       normalize(cameraTransform * modelTransform * vec4(normal, 0.0)),
       vec4(0.0, 0.0, 1.0, 0.0));
   passTextureCoordinates = vec4(
-      decalAdjust * decalProjection * decalCamera * modelTransform * vec4(position, 1.0)
+      decalAdjustAndProjectionTransform * decalCamera * modelTransform * vec4(position, 1.0)
   ) * .01;
   if (dot(normalize(modelTransform * vec4(normal, 0.0)), vec4(decalNormal, 0.0)) > 0)
   {

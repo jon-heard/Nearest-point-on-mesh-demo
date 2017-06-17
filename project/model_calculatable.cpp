@@ -19,7 +19,9 @@ Model_Calculatable::~Model_Calculatable()
   shader = NULL;
 }
 
-void Model_Calculatable::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform, QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
+void Model_Calculatable::draw(
+    QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
+    QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
 {
   this->gl->glDepthMask(false);
   this->gl->glFrontFace(GL_CW);
@@ -27,9 +29,9 @@ void Model_Calculatable::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 c
   this->shader->bind();
   this->shader->setUniformValue("alpha", 0.0f);
   this->shader->setUniformValue("mainTexture", 0);
-  this->shader->setUniformValue("decalProjection", decalProjectionTransform);
+  this->shader->setUniformValue(
+      "decalAdjustAndProjectionTransform", decalAdjustAndProjectionTransform);
   this->shader->setUniformValue("decalCamera", decalCameraTransform);
-  this->shader->setUniformValue("decalAdjust", decalAdjustTransform);
   this->shader->setUniformValue("decalNormal", decalNormal);
   Model::draw(projectionCameraTransform, cameraTransform);
 
@@ -39,9 +41,9 @@ void Model_Calculatable::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 c
   this->shader->bind();
   this->shader->setUniformValue("alpha", 0.6f);
   this->shader->setUniformValue("mainTexture", 0);
-  this->shader->setUniformValue("decalProjection", decalProjectionTransform);
+  this->shader->setUniformValue(
+      "decalAdjustAndProjectionTransform", decalAdjustAndProjectionTransform);
   this->shader->setUniformValue("decalCamera", decalCameraTransform);
-  this->shader->setUniformValue("decalAdjust", decalAdjustTransform);
   this->shader->setUniformValue("decalNormal", decalNormal);
   Model::draw(projectionCameraTransform, cameraTransform);
 }
@@ -55,9 +57,9 @@ void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector
   this->vertices = vertices;
   this->tris = tris;
   // Decal matrices
-  this->decalProjectionTransform.perspective(45, 1, .1f, 1000);
-  this->decalAdjustTransform.translate(.5,.5,.5);
-  this->decalAdjustTransform.scale(.5,.5,.5);
+  this->decalAdjustAndProjectionTransform.translate(.5, .5, .5);
+  this->decalAdjustAndProjectionTransform.scale(.5, .5, .5);
+  this->decalAdjustAndProjectionTransform.perspective(45, 1, .1f, 1000);
   // shaders
   for (vector<pair<string,string>>::iterator i = shaderSources.begin(); i != shaderSources.end(); ++i)
   {

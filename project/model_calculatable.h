@@ -35,9 +35,8 @@ class Model_Calculatable : public Model
     std::vector<std::pair<std::string,std::string>> shaderSources;
     std::vector<QOpenGLShaderProgram*> shaders;
     unsigned int currentShaderIndex;
-    QMatrix4x4 decalProjectionTransform;
+    QMatrix4x4 decalAdjustAndProjectionTransform;
     QMatrix4x4 decalCameraTransform;
-    QMatrix4x4 decalAdjustTransform;
 };
 
 #endif // MODEL_CALCULATABLE_H
