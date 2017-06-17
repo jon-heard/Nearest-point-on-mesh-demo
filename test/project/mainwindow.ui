@@ -28,7 +28,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="Scene_Renderer" name="scene">
+     <widget class="Main3DScene" name="scene">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -187,9 +187,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Scene_Renderer</class>
+   <class>Main3DScene</class>
    <extends>QOpenGLWidget</extends>
-   <header location="global">scene_renderer.h</header>
+   <header location="global">main3dscene.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

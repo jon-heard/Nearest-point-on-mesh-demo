@@ -22,18 +22,15 @@ class Model_WithCalculations : public Model
     // Calculates and sets the scale so that the mesh form-fits to the given size
     void scaleToFit(float size);
     // Overridden to add more involved shader functionality
-    virtual void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform);
+    void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
+        QVector3D focus, QVector3D nearestPoint);
     // Overridden initialize method adds storing mesh data for calculations
     void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> triangles);
     // Calculates the point on this model that is closest to the given focusPoint
     QVector3D calcClosestSurfacePoint(QVector3D focus);
   // Accessors
     QOpenGLShaderProgram* getShader(unsigned int index) const;
-    QVector3D getFocus() const;
-    QVector3D getNearestPoint() const;
     void setCurrentShader(unsigned int index);
-    void setFocus(QVector3D value);
-    void setNearestPoint(QVector3D value);
   private:
   // Functionality - helper
     static QVector3D calcClosestPointOnTriangle(
@@ -46,7 +43,6 @@ class Model_WithCalculations : public Model
     unsigned int currentShaderIndex;
     QMatrix4x4 decalAdjustAndProjectionTransform;
     QMatrix4x4 decalCameraTransform;
-    QVector3D focus, nearestPoint;
 };
 
 #endif // MODEL_WITH_CALCULATIONS_H

@@ -26,23 +26,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+    main3dscene.cpp \
     model.cpp \
     model_loader_file__off.cpp \
     model_loader_primitive.cpp \
-    model_withcalculations.cpp \
-    scene_renderer.cpp \
-    scene.cpp \
-    scene_nearestpointdemo.cpp
+    model_withcalculations.cpp
 
 HEADERS += \
         mainwindow.h \
+    main3dscene.h \
     model.h \
     model_loader_file_off.h \
     model_loader_primitive.h \
-    model_withcalculations.h \
-    scene_renderer.h \
-    scene.h \
-    scene_nearestpointdemo.h
+    model_withcalculations.h
 
 FORMS += \
         mainwindow.ui

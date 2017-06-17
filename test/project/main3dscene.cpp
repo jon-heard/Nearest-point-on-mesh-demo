@@ -96,6 +96,7 @@ void Main3DScene::paintGL()
 
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   targetTexture->bind();
+  qInfo() << cameraTransform;
   // Camera transform calculation
   QMatrix4x4 projectionCameraTransform = projectionTransform * cameraTransform;
   // Nearest point calculation

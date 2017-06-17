@@ -7,8 +7,7 @@ namespace Ui {
   class MainWindow;
 }
 
-class Scene_Renderer;
-class Scene_NearestPointDemo;
+class Main3DScene;
 class QLabel;
 class QCheckBox;
 class QComboBox;
@@ -30,8 +29,7 @@ class MainWindow : public QMainWindow
 
   private:
     Ui::MainWindow *ui;
-    Scene_Renderer* sceneRenderer;
-    Scene_NearestPointDemo* scene;
+    Main3DScene* scene;
     QCheckBox* toggleTargetSphere;
     QLabel* statusBarFilename;
     QComboBox* decalTypeSelector;

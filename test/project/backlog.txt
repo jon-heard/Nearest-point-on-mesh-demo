@@ -2,23 +2,29 @@
 ---------
  Backlog
 ---------
-- look up ways to get rid of back projection on projected texture
+- ui: mesh load dialog
+- ui: name of mesh in status bar
+
+- fix ignoring backface on projected texture (shouldn't draw if inside!)
 
 - Clean up code!
+    - add "Scene" and "Scene_Demo" class.  Put all non-rendering details in "Scene" and "Scene_Demo".  Leave rendering details in "Main3DScene"
+    - rename "Main3DScene" to "SceneRenderer"
     - use 'this->' whenever applicable
     - use accessors whenever possible
     - look for places to use 'unsigned'
     - consistant comments: start uppercase vs lowercase
     - consistant indentation
-    - use QString throughout
+    - have mainwindow get more involved with setting main3dscene stuff
+        - or make separate scene class for holding scene stuff, and main3dscene just uses that
 
 -------------------
  before submission
 -------------------
-- get this working on my laptop
-- writeup
 - understand tri-closest-point algorithm
     https://www.gamedev.net/topic/552906-closest-point-on-triangle/
+- writeup
+- get this working on my laptop
 
 --------
  Icebox

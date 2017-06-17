@@ -34,11 +34,10 @@ Model::~Model()
 
 void Model::refreshTransform()
 {
-  this->transform.setToIdentity();
-  //this->transform.rotate(rotation);
-  this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
-  this->transform.translate(position);
-  this->transform.scale(scale, scale, scale);
+  transform.setToIdentity();
+  transform.rotate(rotation);
+  transform.translate(position);
+  transform.scale(scale, scale, scale);
 }
 
 void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
@@ -57,7 +56,6 @@ void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransfor
   this->shader->setUniformValue("cameraTransform", cameraTransform);
   this->shader->setUniformValue("modelTransform", this->transform);
   this->vao->bind();
-
   this->gl->glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
   this->vao->release();
   this->shader->release();
@@ -127,10 +125,15 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
   this->vbo->bind();
   this->vbo->setUsagePattern(QOpenGLBuffer::StaticDraw);
   this->vbo->allocate(dataBuffer, vertexCount * 6 * 4);
-  this->gl->glEnableVertexAttribArray(1);
-  this->gl->glEnableVertexAttribArray(2);
-  this->gl->glVertexAttribPointer(1, 3, GL_FLOAT, false, 6*4, 0);
-  this->gl->glVertexAttribPointer(2, 3, GL_FLOAT, false, 6*4, (void*)(3*4));
+  //  this->gl->glEnableVertexAttribArray(1);
+  //  this->gl->glEnableVertexAttribArray(2);
+  //  this->gl->glVertexAttribPointer(1, 3, GL_FLOAT, false, 6*4, 0);
+  //  this->gl->glVertexAttribPointer(2, 3, GL_FLOAT, false, 6*4, (void*)(3*4));
+  this->shader->enableAttributeArray(1);
+  this->shader->enableAttributeArray(2);
+  this->shader->setAttributeBuffer(1, GL_FLOAT, 0, 3, 6*4);
+  this->shader->setAttributeBuffer(2, GL_FLOAT, 3*4, 3, 6*4);
+
   this->vbo->release();
   this->vao->release();
   // Wrap up

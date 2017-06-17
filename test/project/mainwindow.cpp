@@ -5,9 +5,8 @@
 #include <string>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "scene_renderer.h"
+#include "main3dscene.h"
 #include "model_withcalculations.h"
-#include "scene_nearestpointdemo.h"
 
 using namespace std;
 
@@ -15,10 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent), ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  this->sceneRenderer = this->findChild<Scene_Renderer*>("scene");
-  this->sceneRenderer->setMainWindow(this);
-  this->scene = new Scene_NearestPointDemo();
-  this->sceneRenderer->setScene(scene);
+  this->scene = this->findChild<Main3DScene*>("scene");
+  this->scene->setMainWindow(this);
   this->toggleTargetSphere = this->findChild<QCheckBox*>("toggleTargetSphere");
   this->decalTypeSelector = this->findChild<QComboBox*>("decalTypeSelector");
   statusBarFilename = new QLabel();
@@ -38,23 +35,23 @@ void MainWindow::setModelFilename(QString value)
 
 void MainWindow::setDecalTypeSelector(int index)
 {
-  Scene_Renderer* tmpScene = sceneRenderer;
-  sceneRenderer = NULL;
+  Main3DScene* tmpScene = scene;
+  scene = NULL;
   this->decalTypeSelector->setCurrentIndex(index);
-  sceneRenderer = tmpScene;
+  scene = tmpScene;
 }
 
 void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
 {
-  this->sceneRenderer->setIsEnabled_targetSphere(arg1 == Qt::Checked);
+  this->scene->setIsEnabled_targetSphere(arg1 == Qt::Checked);
 }
 
 void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
 {
-  if (sceneRenderer)
+  if (scene)
   {
-    sceneRenderer->getScene()->getModel_mesh()->setCurrentShader(index);
-    sceneRenderer->repaint();
+    scene->getMesh()->setCurrentShader(index);
+    scene->repaint();
   }
 }
 
@@ -66,5 +63,5 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionLoad_Mesh_triggered()
 {
   QString filename = QFileDialog::getOpenFileName(this, "Open a model file", "", "OFF Model file (*.off)");
-  this->sceneRenderer->initiateLoadMesh(filename.toStdString());
+  this->scene->initiateLoadMesh(filename.toStdString());
 }

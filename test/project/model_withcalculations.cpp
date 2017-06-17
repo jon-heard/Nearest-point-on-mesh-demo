@@ -23,8 +23,7 @@ Model_WithCalculations::~Model_WithCalculations()
 
 void Model_WithCalculations::scaleToFit(float size)
 {
-  QVector3D min((float)INT_MAX, (float)INT_MAX, (float)INT_MAX);
-  QVector3D max((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
+  QVector3D min(INT_MAX, INT_MAX, INT_MAX), max(INT_MIN, INT_MIN, INT_MIN);
   for (vector<QVector3D>::iterator i = vertices.begin(); i != vertices.end(); ++i)
   {
       for (int j = 0; j < 3; ++j)
@@ -46,11 +45,13 @@ void Model_WithCalculations::scaleToFit(float size)
   this->setScale(size / maxModelSize);
 }
 
-void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
+void Model_WithCalculations::draw(
+        QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
+        QVector3D focus, QVector3D nearestPoint)
 {
     QMatrix4x4 decalCameraTransform;
-    decalCameraTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
-    QVector3D decalNormal = (this->nearestPoint - this->focus).normalized();
+    decalCameraTransform.lookAt(focus, nearestPoint, QVector3D(0,1,0));
+    QVector3D decalNormal = (nearestPoint - focus).normalized();
 
 
     this->gl->glDepthMask(false);
@@ -66,8 +67,8 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Distanced texture settings
-    this->shader->setUniformValue("focus", this->focus);
-    this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    this->shader->setUniformValue("focus", focus);
+    this->shader->setUniformValue("nearestPoint", nearestPoint);
 
     Model::draw(projectionCameraTransform, cameraTransform);
 
@@ -85,8 +86,8 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Distanced texture settings
-    this->shader->setUniformValue("focus", this->focus);
-    this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    this->shader->setUniformValue("focus", focus);
+    this->shader->setUniformValue("nearestPoint", nearestPoint);
 
     Model::draw(projectionCameraTransform, cameraTransform);
 }
@@ -152,48 +153,12 @@ QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focus)
     return result;
 }
 
-QOpenGLShaderProgram* Model_WithCalculations::getShader(unsigned int index) const
-{
-    if (index > shaders.size()-1)
-    {
-        return NULL;
-    }
-    return shaders[index];
-}
-
-QVector3D Model_WithCalculations::getFocus() const
-{
-    return this->focus;
-}
-
-QVector3D Model_WithCalculations::getNearestPoint() const
-{
-    return this->nearestPoint;
-}
-
-void Model_WithCalculations::setCurrentShader(unsigned int index)
-{
-    if (index > shaders.size()-1)
-    {
-        return;
-    }
-    shader = shaders[index];
-}
-
-void Model_WithCalculations::setFocus(QVector3D value)
-{
-    this->focus = value;
-}
-
-void Model_WithCalculations::setNearestPoint(QVector3D value)
-{
-    this->nearestPoint = value;
-}
-
 inline float clamp(float x, float a, float b)
 {
     return x < a ? a : (x > b ? b : x);
 }
+
+
 
 QVector3D Model_WithCalculations::calcClosestPointOnTriangle(
         QVector3D point, QVector3D triangle1, QVector3D triangle2, QVector3D triangle3)
@@ -307,4 +272,21 @@ QVector3D Model_WithCalculations::calcClosestPointOnTriangle(
     }
 
     return triangle1 + s * edge0 + t * edge1;
+}
+
+QOpenGLShaderProgram* Model_WithCalculations::getShader(unsigned int index) const
+{
+    if (index > shaders.size()-1)
+    {
+        return NULL;
+    }
+    return shaders[index];
+}
+void Model_WithCalculations::setCurrentShader(unsigned int index)
+{
+    if (index > shaders.size()-1)
+    {
+        return;
+    }
+    shader = shaders[index];
 }
