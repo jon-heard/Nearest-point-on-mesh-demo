@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MODEL_H
+#define MODEL_H
 
 // Model - An object to be rendered within a 3D scene
 
@@ -58,4 +58,4 @@ class Model
     QOpenGLBuffer* vbo;
 };
 
-#endif // MESH_H
+#endif // MODEL_H

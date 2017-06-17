@@ -1,5 +1,4 @@
 #include "main3dscene.h"
-#include "model.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLShader>
 #include <QMouseEvent>
@@ -7,6 +6,8 @@
 #include <QApplication>
 #include <QOpenGLTexture>
 #include <QDebug>
+#include "model.h"
+#include "model_withcalculations.h"
 #include "model_loader_file_off.h"
 #include "model_loader_primitive.h"
 #include "mainwindow.h"
@@ -64,23 +65,24 @@ void Main3DScene::initializeGL()
         gl, {":/shaders/basic.vert", ":/shaders/lightAndRed.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
     this->models.push_back(this->model_focus);
-    // reflection
-    this->model_reflection = new Model(
+    // nearestPoint
+    this->model_nearestPoint = new Model(
         gl, {":/shaders/basic.vert", ":/shaders/lightAndBlue.frag"});
-    primitiveLoader.loadSphereIntoModel(this->model_reflection, 5, 3);
-    this->models.push_back(this->model_reflection);
+    primitiveLoader.loadSphereIntoModel(this->model_nearestPoint, 5, 3);
+    this->models.push_back(this->model_nearestPoint);
     // mesh
-    this->model_mesh = new Model_Calculatable(
+    this->model_mesh = new Model_WithCalculations(
         gl, {
             {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
-            {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
+            {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
+            {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
     });
     if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
     {
       qCritical() << "Failed to load file final.off";
       qCritical() << fileLoader.getErrorMessage().c_str();
     }
-    this->model_mesh->setCurrentShader(1);
+    this->model_mesh->setCurrentShader(2);
 //    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
     this->models.push_back(this->model_mesh);
   // Setup decal texture
@@ -93,23 +95,23 @@ void Main3DScene::paintGL()
 {
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   targetTexture->bind();
+  // Camera transform calculation
   QMatrix4x4 projectionCameraTransform = projectionTransform * cameraTransform;
-
-  QVector3D focusPosition = this->model_focus->calcWorldPosition();
-  QVector3D reflectedPosition = model_mesh->calcClosestSurfacePoint(focusPosition);
-  this->model_reflection->setPosition(reflectedPosition);
-  this->decalCameraTransform.setToIdentity();
-  this->decalCameraTransform.lookAt(focusPosition, reflectedPosition, QVector3D(0,1,0));
-  QVector3D decalNormal = (reflectedPosition - focusPosition).normalized();
-
+  // Nearest point calculation
+  QVector3D focus = this->model_focus->calcWorldPosition();
+  QVector3D nearestPoint = model_mesh->calcClosestSurfacePoint(focus);
+  this->model_nearestPoint->setPosition(nearestPoint);
+  // Render all models
   for (vector<Model*>::iterator i = this->models.begin(); i != this->models.end(); ++i)
   {
-    if (*i == this->model_mesh)
+    if (*i != this->model_mesh)
     {
-      ((Model_Calculatable*)*i)->draw(
-            projectionCameraTransform, cameraTransform, decalCameraTransform, decalNormal);
-    } else {
       (*i)->draw(projectionCameraTransform, cameraTransform);
+    } else {
+      // If model is the mesh, render with extra parameters
+      ((Model_WithCalculations*)*i)->draw(
+            projectionCameraTransform, cameraTransform,
+            focus, nearestPoint);
     }
   }
 }
@@ -240,13 +242,13 @@ void Main3DScene::keyPressEvent(QKeyEvent* event)
 }
 
 bool Main3DScene::getIsEnabled_targetSphere() { return this->isEnabled_targetSphere; }
-Model_Calculatable* Main3DScene::getMesh() { return this->model_mesh; }
+Model_WithCalculations* Main3DScene::getMesh() { return this->model_mesh; }
 MainWindow* Main3DScene::getMainWindow() { return this->window; }
 
 void Main3DScene::setIsEnabled_targetSphere(bool value)
 {
   this->isEnabled_targetSphere = value;
-  this->model_reflection->setIsVisible(value);
+  this->model_nearestPoint->setIsVisible(value);
   repaint();
 }
 

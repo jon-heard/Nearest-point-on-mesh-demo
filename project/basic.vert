@@ -2,9 +2,11 @@
 
 layout(location=1) in vec3 position;
 layout(location=2) in vec3 normal;
+
 uniform mat4 projectionCameraTransform;
 uniform mat4 cameraTransform;
 uniform mat4 modelTransform;
+
 out float passLightValue;
 
 void main()

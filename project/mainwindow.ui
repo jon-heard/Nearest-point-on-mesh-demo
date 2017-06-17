@@ -116,7 +116,7 @@
        <item>
         <widget class="QComboBox" name="decalTypeSelector">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <item>
           <property name="text">
@@ -126,6 +126,11 @@
          <item>
           <property name="text">
            <string>Projected texture</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Distance texture</string>
           </property>
          </item>
         </widget>

@@ -1,5 +1,5 @@
-#ifndef MODEL_CALCULATABLE_H
-#define MODEL_CALCULATABLE_H
+#ifndef MODEL_WITH_CALCULATIONS_H
+#define MODEL_WITH_CALCULATIONS_H
 
 // Model_Calculatable - A model with extra functionality for various calculations
 
@@ -11,16 +11,17 @@
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
 
-class Model_Calculatable : public Model
+class Model_WithCalculations : public Model
 {
   public:
   // Construction
-    Model_Calculatable(
+    Model_WithCalculations(
         QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
-    ~Model_Calculatable();
+    ~Model_WithCalculations();
   // Functionality
     // Overridden to add more involved shader functionality
-    void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform, QMatrix4x4 decalCameraTransform, QVector3D decalNormal);
+    void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
+        QVector3D focus, QVector3D nearestPoint);
     // Overridden initialize method adds storing mesh data for calculations
     void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
     // Calculates the point on this model that is closest to the given focusPoint
@@ -39,4 +40,4 @@ class Model_Calculatable : public Model
     QMatrix4x4 decalCameraTransform;
 };
 
-#endif // MODEL_CALCULATABLE_H
+#endif // MODEL_WITH_CALCULATIONS_H

@@ -1,15 +1,15 @@
-#include "model_calculatable.h"
+#include "model_withcalculations.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
 using namespace std;
 
-Model_Calculatable::Model_Calculatable(
+Model_WithCalculations::Model_WithCalculations(
     QOpenGLFunctions* gl, vector<pair<string, string> > shaderSources) :
   Model(gl, {"",""}), shaderSources(shaderSources) {}
 
-Model_Calculatable::~Model_Calculatable()
+Model_WithCalculations::~Model_WithCalculations()
 {
   while (shaders.size() > 0)
   {
@@ -19,36 +19,54 @@ Model_Calculatable::~Model_Calculatable()
   shader = NULL;
 }
 
-void Model_Calculatable::draw(
+void Model_WithCalculations::draw(
     QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
-    QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
+    QVector3D focus, QVector3D nearestPoint)
 {
+  QMatrix4x4 decalCameraTransform;
+  decalCameraTransform.lookAt(focus, nearestPoint, QVector3D(0,1,0));
+  QVector3D decalNormal = (nearestPoint - focus).normalized();
+
+
   this->gl->glDepthMask(false);
   this->gl->glFrontFace(GL_CW);
 
   this->shader->bind();
+  // Texture / alpha settings
   this->shader->setUniformValue("alpha", 0.0f);
   this->shader->setUniformValue("mainTexture", 0);
+  // Projected texture settings
   this->shader->setUniformValue(
       "decalAdjustAndProjectionTransform", decalAdjustAndProjectionTransform);
-  this->shader->setUniformValue("decalCamera", decalCameraTransform);
+  this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
   this->shader->setUniformValue("decalNormal", decalNormal);
+  // Distanced texture settings
+  this->shader->setUniformValue("focus", focus);
+  this->shader->setUniformValue("nearestPoint", nearestPoint);
+
   Model::draw(projectionCameraTransform, cameraTransform);
 
   this->gl->glFrontFace(GL_CCW);
   this->gl->glDepthMask(true);
 
+
   this->shader->bind();
+  // Texture / alpha settings
   this->shader->setUniformValue("alpha", 0.6f);
   this->shader->setUniformValue("mainTexture", 0);
+  // Projected texture settings
   this->shader->setUniformValue(
       "decalAdjustAndProjectionTransform", decalAdjustAndProjectionTransform);
-  this->shader->setUniformValue("decalCamera", decalCameraTransform);
+  this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
   this->shader->setUniformValue("decalNormal", decalNormal);
+  // Distanced texture settings
+  this->shader->setUniformValue("focus", focus);
+  this->shader->setUniformValue("nearestPoint", nearestPoint);
+
   Model::draw(projectionCameraTransform, cameraTransform);
 }
 
-void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)
+void Model_WithCalculations::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)
 {
   // Base model initialize
   Model::initialize(vertices, tris);
@@ -86,7 +104,7 @@ void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector
   isReady = true;
 }
 
-QVector3D Model_Calculatable::calcClosestSurfacePoint(QVector3D focusPoint)
+QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focusPoint)
 {
   QVector3D result;
   int resultDistance = INT_MAX;
@@ -102,7 +120,7 @@ QVector3D Model_Calculatable::calcClosestSurfacePoint(QVector3D focusPoint)
   return result;
 }
 
-QOpenGLShaderProgram* Model_Calculatable::getShader(unsigned int index) const
+QOpenGLShaderProgram* Model_WithCalculations::getShader(unsigned int index) const
 {
   if (index > shaders.size()-1)
   {
@@ -110,7 +128,7 @@ QOpenGLShaderProgram* Model_Calculatable::getShader(unsigned int index) const
   }
   return shaders[index];
 }
-void Model_Calculatable::setCurrentShader(unsigned int index)
+void Model_WithCalculations::setCurrentShader(unsigned int index)
 {
   if (index > shaders.size()-1)
   {

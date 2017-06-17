@@ -1,5 +1,5 @@
-#ifndef MODEL_FILELOADER_OFF_H
-#define MODEL_FILELOADER_OFF_H
+#ifndef MODEL_LOADER_FILE_OFF_H
+#define MODEL_LOADER_FILE_OFF_H
 
 // Model_FileLoader_Off - Provides functionality to load OFF files into model objects
 
@@ -31,4 +31,4 @@ class Model_Loader_File_OFF
     std::string errorMessage;
 };
 
-#endif // MODEL_FILELOADER_OFF_H
+#endif // MODEL_LOADER_FILE_OFF_H

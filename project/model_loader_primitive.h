@@ -1,5 +1,5 @@
-#ifndef MODEL_PRIMITIVELOADER_H
-#define MODEL_PRIMITIVELOADER_H
+#ifndef MODEL_LOADER_PRIMITIVE_H
+#define MODEL_LOADER_PRIMITIVE_H
 
 // Model_FileLoader_Off - Provides functionality to load primitive meshes into model objects
 
@@ -14,4 +14,4 @@ class Model_Loader_Primitive
     bool loadBoxIntoModel(Model* model, float sizeX, float sizeY, float sizeZ);
 };
 
-#endif // MODEL_PRIMITIVELOADER_H
+#endif // MODEL_LOADER_PRIMITIVE_H

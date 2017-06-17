@@ -9,9 +9,9 @@
 #include <QPoint>
 #include <QVector3D>
 #include <QQuaternion>
-#include "Model_Calculatable.h"
 
 class Model;
+class Model_WithCalculations;
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
 class QOpenGLTexture;
@@ -36,7 +36,7 @@ class Main3DScene : public QOpenGLWidget
     void keyPressEvent(QKeyEvent* event);
   // Accessors
     bool getIsEnabled_targetSphere();
-    Model_Calculatable* getMesh();
+    Model_WithCalculations* getMesh();
     MainWindow* getMainWindow();
     void setIsEnabled_targetSphere(bool value);
     void setMainWindow(MainWindow* value);
@@ -49,8 +49,8 @@ class Main3DScene : public QOpenGLWidget
     QPoint previousMousePos;
     QOpenGLFunctions* gl;
     std::vector<Model*> models;
-    Model_Calculatable* model_mesh;
-    Model* model_reflection;
+    Model_WithCalculations* model_mesh;
+    Model* model_nearestPoint;
     Model* model_focus;
     QOpenGLTexture* targetTexture;
 

@@ -1,8 +1,9 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QLabel>
 #include <QCheckBox>
 #include <string>
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "model_withcalculations.h"
 
 using namespace std;
 
