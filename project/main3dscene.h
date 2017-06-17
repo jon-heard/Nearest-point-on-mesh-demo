@@ -20,21 +20,21 @@ class MainWindow;
 class Main3DScene : public QOpenGLWidget
 {
   public:
-  // Construction
+    // Construction
     Main3DScene(QWidget* parent = 0);
     virtual ~Main3DScene();
-  // functionality
+    // functionality
     void refreshCameraTransform();
-  // Event handlers - OpenGL
+    // Event handlers - OpenGL
     void initializeGL();
     void paintGL();
     void resizeGL(int w, int h);
-  // Event handlers - input
+    // Event handlers - input
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent* event);
     void keyPressEvent(QKeyEvent* event);
-  // Accessors
+    // Accessors
     bool getIsEnabled_targetSphere();
     Model_WithCalculations* getMesh();
     MainWindow* getMainWindow();
@@ -53,11 +53,7 @@ class Main3DScene : public QOpenGLWidget
     Model* model_nearestPoint;
     Model* model_focus;
     QOpenGLTexture* targetTexture;
-
-    QMatrix4x4 decalCameraTransform;
-
     bool isEnabled_targetSphere;
-
     MainWindow* window;
 };
 

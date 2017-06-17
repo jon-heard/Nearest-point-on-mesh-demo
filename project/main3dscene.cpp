@@ -82,8 +82,8 @@ void Main3DScene::initializeGL()
       qCritical() << "Failed to load file final.off";
       qCritical() << fileLoader.getErrorMessage().c_str();
     }
-    this->model_mesh->setCurrentShader(2);
 //    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
+    this->model_mesh->setCurrentShader(2);
     this->models.push_back(this->model_mesh);
   // Setup decal texture
     this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));

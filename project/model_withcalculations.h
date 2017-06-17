@@ -23,16 +23,19 @@ class Model_WithCalculations : public Model
     void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform,
         QVector3D focus, QVector3D nearestPoint);
     // Overridden initialize method adds storing mesh data for calculations
-    void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
+    void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> triangles);
     // Calculates the point on this model that is closest to the given focusPoint
-    QVector3D calcClosestSurfacePoint(QVector3D focusPoint);
+    QVector3D calcClosestSurfacePoint(QVector3D focus);
   // Accessors
     QOpenGLShaderProgram* getShader(unsigned int index) const;
     void setCurrentShader(unsigned int index);
   private:
+  // Functionality - helper
+    static QVector3D calcClosestPointOnTriangle(
+        QVector3D point, QVector3D tri1, QVector3D triangle2, QVector3D triangle3);
   // Members
     std::vector<QVector3D> vertices;
-    std::vector<QVector3D> tris;
+    std::vector<QVector3D> triangles;
     std::vector<std::pair<std::string,std::string>> shaderSources;
     std::vector<QOpenGLShaderProgram*> shaders;
     unsigned int currentShaderIndex;
