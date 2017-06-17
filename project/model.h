@@ -25,7 +25,7 @@ class Model
     // Update the transform with the latest transformation info
     void refreshTransform();
     // Render this Model into the scene
-    void draw();
+    virtual void draw();
     // Initialize this model with mesh data
     virtual void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
     // Get model's position in world space
@@ -42,20 +42,20 @@ class Model
     void setPosition(QVector3D value);
     void setRotation(QQuaternion value);
   protected:
+    QOpenGLFunctions* gl;
     bool isReady;
     QOpenGLShaderProgram* shader;
+    QMatrix4x4 transform;
+    QOpenGLVertexArrayObject* vao;
+    int vertexCount;
   private:
   // Members
     bool isVisible;
     float scale;
     QVector3D position;
     QQuaternion rotation;
-    QMatrix4x4 transform;
-    int vertexCount;
     std::pair<std::string, std::string> shaderSource;
     QOpenGLBuffer* vbo;
-    QOpenGLVertexArrayObject* vao;
-    QOpenGLFunctions* gl;
 };
 
 #endif // MESH_H

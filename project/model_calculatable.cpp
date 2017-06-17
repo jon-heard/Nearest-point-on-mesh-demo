@@ -1,6 +1,7 @@
 #include "model_calculatable.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
 
 using namespace std;
 
@@ -18,12 +19,38 @@ Model_Calculatable::~Model_Calculatable()
   shader = NULL;
 }
 
+void Model_Calculatable::draw(QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
+{
+  this->shader->setUniformValue("mainTexture", 0);
+  this->shader->setUniformValue("decalProjection", decalProjectionTransform);
+  this->shader->setUniformValue("decalCamera", decalCameraTransform);
+  this->shader->setUniformValue("decalAdjust", decalAdjustTransform);
+  this->shader->setUniformValue("decalNormal", decalNormal);
+
+  this->gl->glDepthMask(false);
+  this->gl->glFrontFace(GL_CW);
+  this->shader->setUniformValue("alpha", 0.0f);
+  Model::draw();
+  this->gl->glFrontFace(GL_CCW);
+  this->gl->glDepthMask(true);
+
+  this->shader->setUniformValue("alpha", .6f);
+  Model::draw();
+}
+
 void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)
 {
+  // Base model initialize
   Model::initialize(vertices, tris);
   isReady = false;
+  // mesh data store
   this->vertices = vertices;
   this->tris = tris;
+  // Decal matrices
+  this->decalProjectionTransform.perspective(45, 1, .1f, 1000);
+  this->decalAdjustTransform.translate(.5,.5,.5);
+  this->decalAdjustTransform.scale(.5,.5,.5);
+  // shaders
   for (vector<pair<string,string>>::iterator i = shaderSources.begin(); i != shaderSources.end(); ++i)
   {
     QOpenGLShaderProgram* newShader = new QOpenGLShaderProgram();
@@ -45,6 +72,7 @@ void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector
   }
   currentShaderIndex = 0;
   shader = shaders[0];
+  // done
   isReady = true;
 }
 

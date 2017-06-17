@@ -5,6 +5,8 @@
 
 #include "Model.h"
 #include <vector>
+#include <QVector3D>
+#include <QMatrix4x4>
 
 class QOpenGLFunctions;
 class QOpenGLShaderProgram;
@@ -17,6 +19,8 @@ class Model_Calculatable : public Model
         QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
     ~Model_Calculatable();
   // Functionality
+    // Overridden to add more involved shader functionality
+    void draw(QMatrix4x4 decalCameraTransform, QVector3D decalNormal);
     // Overridden initialize method adds storing mesh data for calculations
     void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
     // Calculates the point on this model that is closest to the given focusPoint
@@ -31,6 +35,9 @@ class Model_Calculatable : public Model
     std::vector<std::pair<std::string,std::string>> shaderSources;
     std::vector<QOpenGLShaderProgram*> shaders;
     unsigned int currentShaderIndex;
+    QMatrix4x4 decalProjectionTransform;
+    QMatrix4x4 decalCameraTransform;
+    QMatrix4x4 decalAdjustTransform;
 };
 
 #endif // MODEL_CALCULATABLE_H

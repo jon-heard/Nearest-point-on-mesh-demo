@@ -54,9 +54,7 @@ class Main3DScene : public QOpenGLWidget
     Model* model_focus;
     QOpenGLTexture* target;
 
-    QMatrix4x4 decalProjectionTransform;
     QMatrix4x4 decalCameraTransform;
-    QMatrix4x4 decalAdjustTransform;
 
     bool isEnabled_targetSphere;
 

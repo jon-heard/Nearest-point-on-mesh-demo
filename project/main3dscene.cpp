@@ -61,19 +61,19 @@ void Main3DScene::initializeGL()
     Model_Loader_Primitive primitiveLoader;
     // focus
     this->model_focus = new Model(
-        gl, {":/shaders/shader_basic.vert", ":/shaders/shader_focus.frag"});
+        gl, {":/shaders/basic.vert", ":/shaders/lightAndRed.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
     this->models.push_back(this->model_focus);
     // reflection
     this->model_reflection = new Model(
-        gl, {":/shaders/shader_basic.vert", ":/shaders/shader_reflection.frag"});
+        gl, {":/shaders/basic.vert", ":/shaders/lightAndBlue.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_reflection, 5, 3);
     this->models.push_back(this->model_reflection);
     // mesh
     this->model_mesh = new Model_Calculatable(
         gl, {
-            {":/shaders/shader_basic.vert", ":/shaders/shader_mesh.frag"},
-            {":/shaders/shader_mesh_projectedTexture.vert", ":/shaders/shader_mesh_projectedTexture.frag"}
+            {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
+            {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
     });
     if (!fileLoader.loadFileIntoModel(this->model_mesh, ":/other/default.off"))
     {
@@ -87,10 +87,6 @@ void Main3DScene::initializeGL()
     this->target = new QOpenGLTexture(QImage(":/other/target.png"));
     this->target->setWrapMode(QOpenGLTexture::ClampToBorder);
     this->target->bind();
-  // Decal transforms
-    this->decalProjectionTransform.perspective(45, 1, .1f, 1000);
-    this->decalAdjustTransform.translate(.5,.5,.5);
-    this->decalAdjustTransform.scale(.5,.5,.5);
 }
 
 void Main3DScene::paintGL()
@@ -108,26 +104,12 @@ void Main3DScene::paintGL()
   {
     QOpenGLShaderProgram* shader = (*i)->getShader();
     shader->bind();
+    target->bind();
     shader->setUniformValue("projectionTransform", projectionTransform);
     shader->setUniformValue("cameraTransform", cameraTransform);
     if (*i == this->model_mesh)
     {
-      target->bind();
-      shader->setUniformValue("decal", 0);
-      shader->setUniformValue("decalProjection", this->decalProjectionTransform);
-      shader->setUniformValue("decalCamera", this->decalCameraTransform);
-      shader->setUniformValue("decalAdjust", this->decalAdjustTransform);
-      shader->setUniformValue("decalNormal", decalNormal);
-
-      this->gl->glDepthMask(false);
-      this->gl->glFrontFace(GL_CW);
-      shader->setUniformValue("transparency", 0.0f);
-      (*i)->draw();
-      this->gl->glFrontFace(GL_CCW);
-      this->gl->glDepthMask(true);
-
-      shader->setUniformValue("transparency", .6f);
-      (*i)->draw();
+      ((Model_Calculatable*)*i)->draw(decalCameraTransform, decalNormal);
     } else {
       (*i)->draw();
     }
