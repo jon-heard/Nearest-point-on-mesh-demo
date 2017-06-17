@@ -6,6 +6,7 @@
         <file>lightAndBlue.frag</file>
         <file>mesh_projectedTexture.vert</file>
         <file>mesh_basic.frag</file>
+        <file>mesh_distancedTexture.vert</file>
     </qresource>
     <qresource prefix="/other">
         <file>default.off</file>

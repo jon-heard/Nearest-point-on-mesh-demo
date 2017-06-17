@@ -52,7 +52,7 @@ class Main3DScene : public QOpenGLWidget
     Model_Calculatable* model_mesh;
     Model* model_reflection;
     Model* model_focus;
-    QOpenGLTexture* target;
+    QOpenGLTexture* targetTexture;
 
     QMatrix4x4 decalCameraTransform;
 

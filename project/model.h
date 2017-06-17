@@ -25,7 +25,7 @@ class Model
     // Update the transform with the latest transformation info
     void refreshTransform();
     // Render this Model into the scene
-    virtual void draw();
+    virtual void draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform);
     // Initialize this model with mesh data
     virtual void initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris);
     // Get model's position in world space

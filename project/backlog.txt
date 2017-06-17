@@ -1,8 +1,10 @@
 
-- nearest point: algorithm to work between vertices.  Test with low poly box
-    - confirm: ignoring backfacing
+- get distancedTexture shader working
 
-- get other decal styles working
+- nearest point: algorithm to work between vertices.  Test with low poly box
+    - confirm: ignoring backfacing (with point too)
+
+- get old school decal styles working
 
 - rotations: fix (quaternions)
 

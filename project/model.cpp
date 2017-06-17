@@ -40,7 +40,7 @@ void Model::refreshTransform()
   transform.scale(scale, scale, scale);
 }
 
-void Model::draw()
+void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
 {
   if (!isReady)
   {
@@ -51,10 +51,14 @@ void Model::draw()
   {
     return;
   }
+  this->shader->bind();
+  this->shader->setUniformValue("projectionCameraTransform", projectionCameraTransform);
+  this->shader->setUniformValue("cameraTransform", cameraTransform);
   this->shader->setUniformValue("modelTransform", this->transform);
   this->vao->bind();
   this->gl->glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);
   this->vao->release();
+  this->shader->release();
 }
 
 void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)

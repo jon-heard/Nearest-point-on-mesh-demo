@@ -19,23 +19,31 @@ Model_Calculatable::~Model_Calculatable()
   shader = NULL;
 }
 
-void Model_Calculatable::draw(QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
+void Model_Calculatable::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform, QMatrix4x4 decalCameraTransform, QVector3D decalNormal)
 {
+  this->gl->glDepthMask(false);
+  this->gl->glFrontFace(GL_CW);
+
+  this->shader->bind();
+  this->shader->setUniformValue("alpha", 0.0f);
   this->shader->setUniformValue("mainTexture", 0);
   this->shader->setUniformValue("decalProjection", decalProjectionTransform);
   this->shader->setUniformValue("decalCamera", decalCameraTransform);
   this->shader->setUniformValue("decalAdjust", decalAdjustTransform);
   this->shader->setUniformValue("decalNormal", decalNormal);
+  Model::draw(projectionCameraTransform, cameraTransform);
 
-  this->gl->glDepthMask(false);
-  this->gl->glFrontFace(GL_CW);
-  this->shader->setUniformValue("alpha", 0.0f);
-  Model::draw();
   this->gl->glFrontFace(GL_CCW);
   this->gl->glDepthMask(true);
 
-  this->shader->setUniformValue("alpha", .6f);
-  Model::draw();
+  this->shader->bind();
+  this->shader->setUniformValue("alpha", 0.6f);
+  this->shader->setUniformValue("mainTexture", 0);
+  this->shader->setUniformValue("decalProjection", decalProjectionTransform);
+  this->shader->setUniformValue("decalCamera", decalCameraTransform);
+  this->shader->setUniformValue("decalAdjust", decalAdjustTransform);
+  this->shader->setUniformValue("decalNormal", decalNormal);
+  Model::draw(projectionCameraTransform, cameraTransform);
 }
 
 void Model_Calculatable::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)

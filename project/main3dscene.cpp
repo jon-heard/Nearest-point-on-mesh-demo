@@ -31,8 +31,8 @@ Main3DScene::~Main3DScene()
     delete this->models.back();
     this->models.pop_back();
   }
-  this->target->destroy();
-  delete this->target;
+  this->targetTexture->destroy();
+  delete this->targetTexture;
 }
 
 void Main3DScene::refreshCameraTransform()
@@ -84,14 +84,16 @@ void Main3DScene::initializeGL()
 //    primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
     this->models.push_back(this->model_mesh);
   // Setup decal texture
-    this->target = new QOpenGLTexture(QImage(":/other/target.png"));
-    this->target->setWrapMode(QOpenGLTexture::ClampToBorder);
-    this->target->bind();
+    this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));
+    this->targetTexture->setWrapMode(QOpenGLTexture::ClampToBorder);
+    this->targetTexture->bind();
 }
 
 void Main3DScene::paintGL()
 {
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  targetTexture->bind();
+  QMatrix4x4 projectionCameraTransform = projectionTransform * cameraTransform;
 
   QVector3D focusPosition = this->model_focus->calcWorldPosition();
   QVector3D reflectedPosition = model_mesh->calcClosestSurfacePoint(focusPosition);
@@ -102,18 +104,13 @@ void Main3DScene::paintGL()
 
   for (vector<Model*>::iterator i = this->models.begin(); i != this->models.end(); ++i)
   {
-    QOpenGLShaderProgram* shader = (*i)->getShader();
-    shader->bind();
-    target->bind();
-    shader->setUniformValue("projectionTransform", projectionTransform);
-    shader->setUniformValue("cameraTransform", cameraTransform);
     if (*i == this->model_mesh)
     {
-      ((Model_Calculatable*)*i)->draw(decalCameraTransform, decalNormal);
+      ((Model_Calculatable*)*i)->draw(
+            projectionCameraTransform, cameraTransform, decalCameraTransform, decalNormal);
     } else {
-      (*i)->draw();
+      (*i)->draw(projectionCameraTransform, cameraTransform);
     }
-    shader->release();
   }
 }
 
