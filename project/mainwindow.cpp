@@ -12,17 +12,18 @@
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) :
-  QMainWindow(parent), ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
+  setFocusPolicy(Qt::StrongFocus);
   // Get widgets
   this->sceneRenderer = this->findChild<SceneRenderer*>("scene");
   this->toggleTargetSphere = this->findChild<QCheckBox*>("toggleTargetSphere");
   this->decalTypeSelector = this->findChild<QComboBox*>("decalTypeSelector");
   statusBarFilename = new QLabel();
-  // Setup the status bar
+  // Setup widgets
   this->findChild<QStatusBar*>("statusBar")->addWidget(statusBarFilename);
-  setModelFilename("default.off <i>(internal)</i>");
+  this->setModelFilename("default.off <i>(internal)</i>");
   // Setup the scene / scenerenderer
   this->sceneRenderer->setWindow(this);
   this->scene = new Scene_NearestPointDemo(this);
@@ -39,15 +40,21 @@ void MainWindow::setModelFilename(QString value)
   this->statusBarFilename->setText("<b>Model file:</b> " + value);
 }
 
-void MainWindow::setDecalTypeSelector(int index)
+void MainWindow::setDecalTypeSelector(unsigned int index)
 {
   // Disabling scene temporarily to prevent infinite loop
-  Scene_NearestPointDemo* tmpScene = scene;
-  sceneRenderer = NULL;
+  Scene_NearestPointDemo* tmpScene = this->scene;
+  this->scene = NULL;
   // Set the decal type
   this->decalTypeSelector->setCurrentIndex(index);
   // Restore the scene
-  scene = tmpScene;
+  this->scene = tmpScene;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event)
+{
+  this->sceneRenderer->setFocus();
+  this->sceneRenderer->keyPressEvent(event);
 }
 
 void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
@@ -59,10 +66,10 @@ void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
 void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
 {
   // Scene may be set to NULL to prevent infinite loop
-  if (scene)
+  if (this->scene)
   {
-    scene->setDecalType(index);
-    sceneRenderer->repaint();
+    this->scene->setDecalType(index);
+    this->sceneRenderer->repaint();
   }
 }
 

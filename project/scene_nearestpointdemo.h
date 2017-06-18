@@ -1,6 +1,8 @@
 #ifndef SCENE_NEARESTPOINTDEMO_H
 #define SCENE_NEARESTPOINTDEMO_H
 
+// Scene_NearestPointDemo - A subclass of Scene designed specifically for this application
+
 #include "scene.h"
 #include <string>
 
@@ -16,16 +18,18 @@ class Scene_NearestPointDemo : public Scene
     Scene_NearestPointDemo(MainWindow* window);
     virtual ~Scene_NearestPointDemo();
   // Functionality
+    // Setup the scene
     virtual void initialize(QOpenGLFunctions* gl);
+    // Called each frame to update scene components
     virtual void update();
+    // Called externally to tell the OpenGL thread to load a new Mesh Model
     void initiateMeshLoading(std::string filename);
   // Accessors
+    // Returns the focus model to be rotated with right mouse button.
     virtual Model* getRightMouseRotatedModel();
-    int getDecalType() const;
-//    Model_WithCalculations* getModel_mesh();
-//    Model* getModel_focus();
-//    Model* getModel_nearestPoint();
-//    QOpenGLTexture* getTargetTexture();
+    // DecalType - The current decal type being rendered
+    unsigned int getDecalType() const;
+    // If enabled, a blue sphere will be rendered at the nearest point
     bool getIsTargetSphereEnabled();
     void setDecalType(unsigned int value);
     void setIsTargetSphereEnabled(bool value);
@@ -35,7 +39,7 @@ class Scene_NearestPointDemo : public Scene
   // Fields - State
     bool isTargetSphereEnabled;
     std::string newMeshFilename;
-    int decalType;
+    unsigned int decalType;
   // Fields - Resources
     MainWindow* window;
     Model_WithCalculations* model_mesh;

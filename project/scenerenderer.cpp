@@ -18,8 +18,7 @@ using namespace std;
 
 const float FOCUS_ROTATION_SPEED = 5;
 
-SceneRenderer::SceneRenderer(QWidget *parent) :
-  QOpenGLWidget(parent), scene(NULL)
+SceneRenderer::SceneRenderer(QWidget *parent) : QOpenGLWidget(parent), scene(NULL)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
@@ -29,8 +28,8 @@ SceneRenderer::~SceneRenderer()
 {
   delete this->gl;
   this->gl = NULL;
-  delete scene;
-  scene = NULL;
+  delete this->scene;
+  this->scene = NULL;
 }
 
 void SceneRenderer::initializeGL()
@@ -43,21 +42,19 @@ void SceneRenderer::initializeGL()
   this->gl->glEnable(GL_CULL_FACE);
   this->gl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // Setup scene
-  if (scene != NULL)
+  if (this->scene != NULL)
   {
-    scene->initialize(gl);
+    this->scene->initialize(gl);
   }
 }
 
 void SceneRenderer::paintGL()
 {
-  if (scene == NULL) { return; }
-  if (!scene->getIsInitialized()) { scene->initialize(gl); }
+  if (this->scene == NULL) { return; }
+  if (!this->scene->getIsInitialized()) { this->scene->initialize(gl); }
   this->scene->update();
-
-  // Render
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  this->scene->draw(projectionTransform);
+  this->scene->draw(this->projectionTransform);
 }
 
 void SceneRenderer::resizeGL(int w, int h)
@@ -71,10 +68,9 @@ void SceneRenderer::mousePressEvent(QMouseEvent *event)
   this->previousMousePos = event->pos();
   if (event->buttons() & Qt::LeftButton)
   {
-    this->previousRotation = scene->getRotation();
+    this->previousRotation = this->scene->getRotation();
   }
-  else if (event->buttons() & Qt::RightButton &&
-           this->scene->getRightMouseRotatedModel() != NULL)
+  else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
   {
     this->previousRotation = this->scene->getRightMouseRotatedModel()->getRotation();
   }
@@ -89,8 +85,9 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
     rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
     this->scene->setRotation(rotation);
     repaint();
-  } else if (event->buttons() & Qt::RightButton &&
-             this->scene->getRightMouseRotatedModel() != NULL) {
+  }
+  else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
+  {
     QQuaternion rotation = this->scene->getRightMouseRotatedModel()->getRotation();
     rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
     rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));

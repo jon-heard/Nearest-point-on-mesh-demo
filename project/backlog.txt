@@ -2,20 +2,12 @@
 ---------
  Backlog
 ---------
-- adjust class names (ex/ modelLoader rather than model_loader)
-- add refocus to scenerenderer on keystroke
-
-- look up ways to get rid of back projection on projected texture
-
 - Clean up code!
-    - use 'this->' whenever applicable
-    - use accessors whenever possible
-    - look for places to use 'unsigned'
-    - consistant comments: start uppercase vs lowercase
-    - consistant indentation
     - use QString throughout
-    - within 100 chars
-    - includes use all lowercases
+- fix quaternion code
+- rotations: make it more intuitive
+- get distancedTexture shader working
+- get old school decal styles working
 
 -------------------
  before submission
@@ -28,11 +20,4 @@
 --------
  Icebox
 --------
-- rotations: fix (quaternions)
-
-- confirm: ignoring backfacing (with point too)
-
-- get distancedTexture shader working
-- get old school decal styles working
-
 - use bsp or octree to optimize search

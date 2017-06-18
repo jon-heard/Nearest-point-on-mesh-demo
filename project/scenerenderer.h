@@ -1,7 +1,7 @@
 #ifndef SCENERENDERER_H
 #define SCENERENDERER_H
 
-// Main3DScene - The primary I/O control.  Handles 3d rendering and user input.
+// SceneRenderer - Handles rendering of the 3d scene and also user input.
 
 #include <vector>
 #include <QOpenGLWidget>
@@ -25,13 +25,20 @@ class SceneRenderer : public QOpenGLWidget
     SceneRenderer(QWidget* parent = 0);
     virtual ~SceneRenderer();
   // Event handlers - OpenGL
+    // Event: OpenGL is initialized
     void initializeGL();
+    // Event: The scene has changed
     void paintGL();
+    // Event: The window has been resized
     void resizeGL(int w, int h);
   // Event handlers - input
+    // Event: A mouse button has been pressed
     void mousePressEvent(QMouseEvent *event);
+    // Event: The mouse has moved over the SceneRenderer
     void mouseMoveEvent(QMouseEvent *event);
+    // Event: The mouse wheel has been spun
     void wheelEvent(QWheelEvent* event);
+    // Event: A key has been pressed (used for key controls)
     void keyPressEvent(QKeyEvent* event);
   // Accessors
     MainWindow* getWindow();

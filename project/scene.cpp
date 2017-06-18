@@ -18,24 +18,23 @@ Scene::~Scene()
 void Scene::initialize(QOpenGLFunctions* gl)
 {
   this->gl = gl;
-  refreshTransform();
-  isInitialized = true;
+  this->refreshTransform();
+  this->isInitialized = true;
 }
 
 void Scene::update() {}
 
 void Scene::draw(QMatrix4x4 projectionTransform)
 {
-  QMatrix4x4 projectionCameraTransform = projectionTransform * transform;
+  QMatrix4x4 projectionCameraTransform = projectionTransform * this->transform;
   // Render all models
-  for (vector<Model*>::iterator i = models.begin();
-       i != models.end(); ++i)
+  for (vector<Model*>::iterator i = this->models.begin(); i != this->models.end(); ++i)
   {
-      (*i)->draw(projectionCameraTransform, transform);
+    (*i)->draw(projectionCameraTransform, this->transform);
   }
 }
 
-bool Scene::getIsInitialized() { return isInitialized; }
+bool Scene::getIsInitialized() { return this->isInitialized; }
 Model* Scene::getRightMouseRotatedModel() { return NULL; }
 float Scene::getZoom() const { return this->zoom; }
 QQuaternion Scene::getRotation() const { return this->rotation; }
@@ -44,19 +43,19 @@ void Scene::setZoom(float value)
 {
   this->zoom = value;
   if (this->zoom > -2) { this->zoom = -2; }
-  refreshTransform();
+  this->refreshTransform();
 }
 
 void Scene::setRotation(QQuaternion value)
 {
   this->rotation = value;
-  refreshTransform();
+  this->refreshTransform();
 }
 
 void Scene::refreshTransform()
 {
   this->transform.setToIdentity();
   this->transform.translate(0, 0, this->zoom);
-  //this->transform.rotate(rotation);
-  this->transform.rotate(QQuaternion::fromEulerAngles(rotation.x(), rotation.y(), 0));
+  //this->transform.rotate(rotation); // TODO: Fix quaternion calculations
+  this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
 }

@@ -31,12 +31,14 @@ class Model
     // Get model's position in world space
     QVector3D calcWorldPosition();
   // Accessors
+    // Visible - Determines whether this model is rendered or not
     bool getIsVisible() const;
+    // Scale - Adjusts the size of this model
     float getScale() const;
+    // Position - Adjusts the position of this model in world space
     QVector3D getPosition() const;
+    // Rotation - Determines how the model is rotated in world space
     QQuaternion getRotation() const;
-    QOpenGLShaderProgram* getShader() const;
-    std::vector<QVector3D> getVertices() const;
     void setIsVisible(bool value);
     void setScale(float value);
     void setPosition(QVector3D value);
@@ -47,7 +49,7 @@ class Model
     QOpenGLShaderProgram* shader;
     QMatrix4x4 transform;
     QOpenGLVertexArrayObject* vao;
-    int vertexCount;
+    unsigned int vertexCount;
   private:
   // Members
     bool isVisible;

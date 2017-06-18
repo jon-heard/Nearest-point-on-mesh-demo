@@ -1,7 +1,7 @@
 #ifndef MODELLOADER_FILE_OFF_H
 #define MODELLOADER_FILE_OFF_H
 
-// Model_FileLoader_Off - Provides functionality to load OFF files into model objects
+// ModelLoader_File_Off - Provides functionality to load meshes from OFF files into model objects
 
 #include <string>
 #include <vector>

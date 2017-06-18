@@ -13,18 +13,18 @@ Model::Model(QOpenGLFunctions* gl, pair<string, string> shaderSource) :
 
 Model::~Model()
 {
-  if (shader != NULL)
+  if (this->shader != NULL)
   {
     delete this->shader;
     this->shader = NULL;
   }
-  if (vao != NULL)
+  if (this->vao != NULL)
   {
     this->vao->destroy();
     delete this->vao;
     this->vao = NULL;
   }
-  if (vbo != NULL)
+  if (this->vbo != NULL)
   {
     this->vbo->destroy();
     delete this->vbo;
@@ -35,20 +35,20 @@ Model::~Model()
 void Model::refreshTransform()
 {
   this->transform.setToIdentity();
-  //this->transform.rotate(rotation);
+  //this->transform.rotate(rotation); // Todo: fix quaternion calculations
   this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
-  this->transform.translate(position);
-  this->transform.scale(scale, scale, scale);
+  this->transform.translate(this->position);
+  this->transform.scale(this->scale, this->scale, this->scale);
 }
 
 void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
 {
-  if (!isReady)
+  if (!this->isReady)
   {
     qCritical() << "Model error: drawn before initialized";
     return;
   }
-  if (!isVisible)
+  if (!this->isVisible)
   {
     return;
   }
@@ -65,7 +65,7 @@ void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransfor
 
 void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> tris)
 {
-  // only initialize once
+  // Only initialize once
   if (this->isReady)
   {
     qCritical() << "Model error: initialized twice";
@@ -76,47 +76,44 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
   {
     this->shader = new QOpenGLShaderProgram();
     this->shader->addShaderFromSourceFile(
-      QOpenGLShader::Vertex, shaderSource.first.c_str());
+          QOpenGLShader::Vertex, this->shaderSource.first.c_str());
     this->shader->addShaderFromSourceFile(
-      QOpenGLShader::Fragment, shaderSource.second.c_str());
+          QOpenGLShader::Fragment, this->shaderSource.second.c_str());
     this->shader->link();
-    if(!this->shader->isLinked())
+    if (!this->shader->isLinked())
     {
-      qCritical() << "Shader error: <" <<
-                     shaderSource.first.c_str() <<
-                     ", " <<
-                     shaderSource.second.c_str() <<
-                     ">";
+      qCritical() << "Shader error: <" << this->shaderSource.first.c_str() << ", " <<
+                     this->shaderSource.second.c_str() << ">";
       return;
     }
   }
   // Allocate data buffer
-  this->vertexCount = (int)tris.size() * 3;
+  this->vertexCount = (unsigned int)tris.size() * 3;
   float* dataBuffer = new float[this->vertexCount * 6];
-  int currentDataBufferIndex = 0;
-  // fill data buffer
+  unsigned int currentDataBufferIndex = 0;
+  // Fill data buffer
   for (vector<QVector3D>::iterator i = tris.begin(); i != tris.end(); ++i)
   {
-      // normal calculation
-      QVector3D normalCalc1 = (vertices[(*i)[1]] - vertices[(*i)[0]]).normalized();
-      QVector3D normalCalc2 = (vertices[(*i)[2]] - vertices[(*i)[0]]).normalized();
-      QVector3D normal = QVector3D::crossProduct(normalCalc1, normalCalc2).normalized();
-      for (int j = 0; j < 3; ++j)
+    // Normal calculation
+    QVector3D normalCalc1 = (vertices[(*i)[1]] - vertices[(*i)[0]]).normalized();
+    QVector3D normalCalc2 = (vertices[(*i)[2]] - vertices[(*i)[0]]).normalized();
+    QVector3D normal = QVector3D::crossProduct(normalCalc1, normalCalc2).normalized();
+    for (unsigned int j = 0; j < 3; ++j)
+    {
+      unsigned int currentVectorIndex = (*i)[j];
+      // Vector data
+      for (unsigned int k = 0; k < 3; ++k)
       {
-          int currentVectorIndex = (*i)[j];
-          // vector data
-          for (int k = 0; k < 3; ++k)
-          {
-              dataBuffer[currentDataBufferIndex] = vertices[currentVectorIndex][k];
-              ++currentDataBufferIndex;
-          }
-          // normal data
-          for (int k = 0; k < 3; ++k)
-          {
-              dataBuffer[currentDataBufferIndex] = normal[k];
-              ++currentDataBufferIndex;
-          }
+        dataBuffer[currentDataBufferIndex] = vertices[currentVectorIndex][k];
+        ++currentDataBufferIndex;
       }
+      // Normal data
+      for (unsigned int k = 0; k < 3; ++k)
+      {
+        dataBuffer[currentDataBufferIndex] = normal[k];
+        ++currentDataBufferIndex;
+      }
+    }
   }
   // Allocate OpenGL buffers
   this->vao = new QOpenGLVertexArrayObject();
@@ -140,14 +137,13 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
 
 QVector3D Model::calcWorldPosition()
 {
-  return transform * QVector3D();
+  return this->transform * QVector3D();
 }
 
-bool Model::getIsVisible() const { return isVisible; }
+bool Model::getIsVisible() const { return this->isVisible; }
 float Model::getScale() const { return this->scale; }
 QVector3D Model::getPosition() const { return this->position; }
 QQuaternion Model::getRotation() const { return this->rotation; }
-QOpenGLShaderProgram* Model::getShader() const { return this->shader; }
 
 void Model::setIsVisible(bool value)
 {
@@ -157,19 +153,17 @@ void Model::setIsVisible(bool value)
 void Model::setScale(float value)
 {
   this->scale = value;
-  refreshTransform();
+  this->refreshTransform();
 }
 
 void Model::setPosition(QVector3D value)
 {
   this->position = value;
-  refreshTransform();
+  this->refreshTransform();
 }
 
 void Model::setRotation(QQuaternion value)
 {
   this->rotation = value;
-  refreshTransform();
+  this->refreshTransform();
 }
-
-

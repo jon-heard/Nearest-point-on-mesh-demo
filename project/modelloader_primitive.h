@@ -9,7 +9,7 @@ class ModelLoader_Primitive
 {
   public:
     // Creates mesh data for a sphere, and puts it into the given model
-    bool loadSphereIntoModel(Model* model, float radius, int subdivisionCount);
+    bool loadSphereIntoModel(Model* model, float radius, unsigned int subdivisionCount);
     // Creates mesh data for a box, and puts it into the given model
     bool loadBoxIntoModel(Model* model, float sizeX, float sizeY, float sizeZ);
 };

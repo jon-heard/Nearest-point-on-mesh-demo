@@ -60,7 +60,8 @@ string ModelLoader_File_OFF::getErrorMessage() { return this->errorMessage; }
 bool ModelLoader_File_OFF::loadFileIntoString(string filename, string& result)
 {
   QFile mFile(QString(filename.c_str()));
-  if(!mFile.open(QFile::ReadOnly | QFile::Text)){
+  if(!mFile.open(QFile::ReadOnly | QFile::Text))
+  {
     return false;
   }
   QTextStream in(&mFile);
@@ -68,13 +69,12 @@ bool ModelLoader_File_OFF::loadFileIntoString(string filename, string& result)
   return true;
 }
 
-bool ModelLoader_File_OFF::stripCommentsFromString(string source,
-                                                   string& destination,
-                                                   vector<pair<string,string>> comments)
+bool ModelLoader_File_OFF::stripCommentsFromString(
+    string source, string& destination, vector<pair<string,string>> comments)
 {
   stringstream destinationStream;
   // Run through source, char by char
-  for (int i = 0; i < source.size(); ++i)
+  for (unsigned int i = 0; i < source.size(); ++i)
   {
     bool foundComment = false;
     // Run through list of comment types, checking for each
@@ -85,7 +85,7 @@ bool ModelLoader_File_OFF::stripCommentsFromString(string source,
         do {
           ++i;
         } while (source.substr(i, (*j).second.size()) != (*j).second);
-        for (int k = 0; k < (*j).second.size()-1; ++k)
+        for (unsigned int k = 0; k < (*j).second.size()-1; ++k)
         {
           ++i;
         }
@@ -117,9 +117,8 @@ bool ModelLoader_File_OFF::tokenizeString(string toTokenize, vector<string>& res
   return true;
 }
 
-bool ModelLoader_File_OFF::parseTokens(vector<string> tokens,
-                                       vector<QVector3D>& vertices,
-                                       vector<QVector3D>& tris)
+bool ModelLoader_File_OFF::parseTokens(
+    vector<string> tokens, vector<QVector3D>& vertices, vector<QVector3D>& tris)
 {
   // Confirm header tag
   if (tokens[0] != "OFF")
@@ -127,14 +126,14 @@ bool ModelLoader_File_OFF::parseTokens(vector<string> tokens,
     return false;
   }
   // Get item counts
-  int vertexCount = atoi(tokens[1].c_str());
-  int faceCount = atoi(tokens[2].c_str());
+  unsigned int vertexCount = atoi(tokens[1].c_str());
+  unsigned int faceCount = atoi(tokens[2].c_str());
   if (vertexCount == 0 || faceCount == 0)
   {
     return false;
   }
   // Load vertex data
-  int tokenIndex = 4;
+  unsigned int tokenIndex = 4;
   while (vertexCount > 0)
   {
     float x = atof(tokens[tokenIndex+0].c_str());
