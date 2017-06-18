@@ -5,8 +5,7 @@
 
 using namespace std;
 
-Model_WithCalculations::Model_WithCalculations(
-    QOpenGLFunctions* gl, vector<pair<string, string> > shaderSources) :
+Model_WithCalculations::Model_WithCalculations(QOpenGLFunctions* gl, std::vector<std::pair<QString, QString> > shaderSources) :
   Model(gl, {"",""}), shaderSources(shaderSources) {}
 
 Model_WithCalculations::~Model_WithCalculations()
@@ -58,18 +57,18 @@ void Model_WithCalculations::initialize(
   this->decalAdjustAndProjectionTransform.scale(.5, .5, .5);
   this->decalAdjustAndProjectionTransform.perspective(45, 1, .1f, 1000);
   // Shaders
-  for (vector<pair<string,string>>::iterator i = shaderSources.begin();
+  for (vector<pair<QString,QString>>::iterator i = shaderSources.begin();
        i != shaderSources.end(); ++i)
   {
     QOpenGLShaderProgram* newShader = new QOpenGLShaderProgram();
     newShader->addShaderFromSourceFile(
-        QOpenGLShader::Vertex, (*i).first.c_str());
+        QOpenGLShader::Vertex, (*i).first);
     newShader->addShaderFromSourceFile(
-        QOpenGLShader::Fragment, (*i).second.c_str());
+        QOpenGLShader::Fragment, (*i).second);
     newShader->link();
     if(!newShader->isLinked())
     {
-      qCritical() << "Shader error: <" << (*i).first.c_str() << ", " << (*i).second.c_str() << ">";
+      qCritical() << "Shader error: <" << (*i).first << ", " << (*i).second << ">";
       return;
     }
     this->shaders.push_back(newShader);

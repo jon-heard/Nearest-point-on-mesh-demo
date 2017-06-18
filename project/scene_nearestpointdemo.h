@@ -4,7 +4,7 @@
 // Scene_NearestPointDemo - A subclass of Scene designed specifically for this application
 
 #include "scene.h"
-#include <string>
+#include <QString>
 
 class Model;
 class Model_WithCalculations;
@@ -23,7 +23,7 @@ class Scene_NearestPointDemo : public Scene
     // Called each frame to update scene components
     virtual void update();
     // Called externally to tell the OpenGL thread to load a new Mesh Model
-    void initiateMeshLoading(std::string filename);
+    void initiateMeshLoading(QString filename);
   // Accessors
     // Returns the focus model to be rotated with right mouse button.
     virtual Model* getRightMouseRotatedModel();
@@ -35,10 +35,10 @@ class Scene_NearestPointDemo : public Scene
     void setIsTargetSphereEnabled(bool value);
   private:
   // Functionality
-    bool loadMesh(std::string filename);
+    bool loadMesh(QString filename);
   // Fields - State
     bool isTargetSphereEnabled;
-    std::string newMeshFilename;
+    QString newMeshFilename;
     unsigned int decalType;
   // Fields - Resources
     MainWindow* window;

@@ -16,7 +16,7 @@ class Model_WithCalculations : public Model
   public:
   // Construction
     Model_WithCalculations(
-        QOpenGLFunctions* gl, std::vector<std::pair<std::string, std::string>> shaderSources);
+        QOpenGLFunctions* gl, std::vector<std::pair<QString, QString>> shaderSources);
     ~Model_WithCalculations();
   // Functionality
     // Calculates and sets the scale so that the mesh form-fits to the given size
@@ -45,7 +45,7 @@ class Model_WithCalculations : public Model
   // Members
     std::vector<QVector3D> vertices;
     std::vector<QVector3D> triangles;
-    std::vector<std::pair<std::string,std::string>> shaderSources;
+    std::vector<std::pair<QString,QString>> shaderSources;
     std::vector<QOpenGLShaderProgram*> shaders;
     unsigned int currentShaderIndex;
     QMatrix4x4 decalAdjustAndProjectionTransform;

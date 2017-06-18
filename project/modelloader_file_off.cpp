@@ -8,10 +8,10 @@
 using namespace std;
 
 const char* FILELOADER_OFF_WHITESPACE = " \t\n\r";
-const vector<pair<string,string>> FILELOADER_OFF_COMMENTS = {{"#", "\n"}};
+const vector<pair<QString,QString>> FILELOADER_OFF_COMMENTS = {{"#", "\n"}};
 
 
-bool ModelLoader_File_OFF::loadFileIntoModel(Model* model, string filename)
+bool ModelLoader_File_OFF::loadFileIntoModel(Model* model, QString filename)
 {
   this->errorFilename = filename;
   // Input check
@@ -21,21 +21,21 @@ bool ModelLoader_File_OFF::loadFileIntoModel(Model* model, string filename)
     return false;
   }
   // Load file
-  string rawContents;
+  QString rawContents;
   if (!loadFileIntoString(filename, rawContents))
   {
     this->errorMessage = "Unable to open file";
     return false;
   }
   // Strip comments
-  string decommentedContents;
+  QString decommentedContents;
   if (!stripCommentsFromString(rawContents, decommentedContents, FILELOADER_OFF_COMMENTS))
   {
     this->errorMessage = "Unable to decomment file";
     return false;
   }
   // Tokenize
-  vector<string> tokens;
+  vector<QString> tokens;
   if (!tokenizeString(decommentedContents, tokens))
   {
     this->errorMessage = "Unable to tokenize file: incorrect format is likely";
@@ -54,38 +54,37 @@ bool ModelLoader_File_OFF::loadFileIntoModel(Model* model, string filename)
   return true;
 }
 
-string ModelLoader_File_OFF::getErrorFilename() { return this->errorFilename; }
-string ModelLoader_File_OFF::getErrorMessage() { return this->errorMessage; }
+QString ModelLoader_File_OFF::getErrorFilename() { return this->errorFilename; }
+QString ModelLoader_File_OFF::getErrorMessage() { return this->errorMessage; }
 
-bool ModelLoader_File_OFF::loadFileIntoString(string filename, string& result)
+bool ModelLoader_File_OFF::loadFileIntoString(QString filename, QString& result)
 {
-  QFile mFile(QString(filename.c_str()));
+  QFile mFile(filename);
   if(!mFile.open(QFile::ReadOnly | QFile::Text))
   {
     return false;
   }
   QTextStream in(&mFile);
-  result = in.readAll().toStdString();
+  result = in.readAll();
   return true;
 }
 
-bool ModelLoader_File_OFF::stripCommentsFromString(
-    string source, string& destination, vector<pair<string,string>> comments)
+bool ModelLoader_File_OFF::stripCommentsFromString(QString source, QString& destination, std::vector<std::pair<QString, QString> > comments)
 {
   stringstream destinationStream;
   // Run through source, char by char
-  for (unsigned int i = 0; i < source.size(); ++i)
+  for (int i = 0; i < source.size(); ++i)
   {
     bool foundComment = false;
     // Run through list of comment types, checking for each
-    for (vector<pair<string,string>>::iterator j = comments.begin(); j != comments.end(); ++j)
+    for (vector<pair<QString,QString>>::iterator j = comments.begin(); j != comments.end(); ++j)
     {
-      if (source.substr(i, (*j).first.size())  == (*j).first)
+      if (source.mid(i, (*j).first.size())  == (*j).first)
       {
         do {
           ++i;
-        } while (source.substr(i, (*j).second.size()) != (*j).second);
-        for (unsigned int k = 0; k < (*j).second.size()-1; ++k)
+        } while (source.mid(i, (*j).second.size()) != (*j).second);
+        for (int k = 0; k < (*j).second.size()-1; ++k)
         {
           ++i;
         }
@@ -96,17 +95,17 @@ bool ModelLoader_File_OFF::stripCommentsFromString(
     // Copy char from source to destination (unless end of comment)
     if (!foundComment)
     {
-      destinationStream << source[i];
+      destinationStream << source.at(i).toLatin1();
     }
   }
-  destination = destinationStream.str();
+  destination = destinationStream.str().c_str();
   return true;
 }
 
-bool ModelLoader_File_OFF::tokenizeString(string toTokenize, vector<string>& result)
+bool ModelLoader_File_OFF::tokenizeString(QString toTokenize, vector<QString>& result)
 {
   char* sourceBuffer = new char[toTokenize.size()+1];
-  strcpy(sourceBuffer, toTokenize.c_str());
+  strcpy(sourceBuffer, toTokenize.toStdString().c_str());
   char* token = strtok(sourceBuffer, FILELOADER_OFF_WHITESPACE);
   while (token)
   {
@@ -118,7 +117,7 @@ bool ModelLoader_File_OFF::tokenizeString(string toTokenize, vector<string>& res
 }
 
 bool ModelLoader_File_OFF::parseTokens(
-    vector<string> tokens, vector<QVector3D>& vertices, vector<QVector3D>& tris)
+    vector<QString> tokens, vector<QVector3D>& vertices, vector<QVector3D>& tris)
 {
   // Confirm header tag
   if (tokens[0] != "OFF")
@@ -126,8 +125,8 @@ bool ModelLoader_File_OFF::parseTokens(
     return false;
   }
   // Get item counts
-  unsigned int vertexCount = atoi(tokens[1].c_str());
-  unsigned int faceCount = atoi(tokens[2].c_str());
+  unsigned int vertexCount = atoi(tokens[1].toStdString().c_str());
+  unsigned int faceCount = atoi(tokens[2].toStdString().c_str());
   if (vertexCount == 0 || faceCount == 0)
   {
     return false;
@@ -136,9 +135,9 @@ bool ModelLoader_File_OFF::parseTokens(
   unsigned int tokenIndex = 4;
   while (vertexCount > 0)
   {
-    float x = atof(tokens[tokenIndex+0].c_str());
-    float y = atof(tokens[tokenIndex+1].c_str());
-    float z = atof(tokens[tokenIndex+2].c_str());
+    float x = atof(tokens[tokenIndex+0].toStdString().c_str());
+    float y = atof(tokens[tokenIndex+1].toStdString().c_str());
+    float z = atof(tokens[tokenIndex+2].toStdString().c_str());
     vertices.push_back({x, y, z});
     tokenIndex += 3;
     --vertexCount;
@@ -146,24 +145,24 @@ bool ModelLoader_File_OFF::parseTokens(
   // Load face data
   while (faceCount > 0)
   {
-    float vertexCount = atof(tokens[tokenIndex].c_str());
+    float vertexCount = atof(tokens[tokenIndex].toStdString().c_str());
     if (vertexCount == 3)
     {
-      float v1 = atof(tokens[tokenIndex+1].c_str());
-      float v2 = atof(tokens[tokenIndex+2].c_str());
-      float v3 = atof(tokens[tokenIndex+3].c_str());
+      float v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
+      float v2 = atof(tokens[tokenIndex+2].toStdString().c_str());
+      float v3 = atof(tokens[tokenIndex+3].toStdString().c_str());
       tris.push_back({v1, v2, v3});
       tokenIndex += 4;
     }
     else if (vertexCount == 4)
     {
-      float v1 = atof(tokens[tokenIndex+1].c_str());
-      float v2 = atof(tokens[tokenIndex+2].c_str());
-      float v3 = atof(tokens[tokenIndex+3].c_str());
+      float v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
+      float v2 = atof(tokens[tokenIndex+2].toStdString().c_str());
+      float v3 = atof(tokens[tokenIndex+3].toStdString().c_str());
       tris.push_back({v1, v2, v3});
-      v1 = atof(tokens[tokenIndex+1].c_str());
-      v2 = atof(tokens[tokenIndex+3].c_str());
-      v3 = atof(tokens[tokenIndex+4].c_str());
+      v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
+      v2 = atof(tokens[tokenIndex+3].toStdString().c_str());
+      v3 = atof(tokens[tokenIndex+4].toStdString().c_str());
       tris.push_back({v1, v2, v3});
       tokenIndex += 5;
     }

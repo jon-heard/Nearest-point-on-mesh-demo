@@ -36,6 +36,7 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     this->models.push_back(this->model_nearestPoint);
     // Mesh
     this->loadMesh(":/other/default.off");
+    //this->loadMesh("../project/test.off");
   // Setup decal texture
     this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));
     this->targetTexture->setWrapMode(QOpenGLTexture::ClampToBorder);
@@ -50,7 +51,7 @@ void Scene_NearestPointDemo::update()
   if (this->newMeshFilename != "")
   {
     loadMesh(this->newMeshFilename);
-    window->setModelFilename(this->newMeshFilename.c_str());
+    window->setModelFilename(this->newMeshFilename);
     this->newMeshFilename = "";
   }
 
@@ -84,7 +85,7 @@ void Scene_NearestPointDemo::setDecalType(unsigned int value)
   this->model_mesh->setCurrentShader(value);
 }
 
-bool Scene_NearestPointDemo::loadMesh(string filename)
+bool Scene_NearestPointDemo::loadMesh(QString filename)
 {
   bool result = true;
   // Keep track of old model_mesh, in case new one fails
@@ -106,7 +107,7 @@ bool Scene_NearestPointDemo::loadMesh(string filename)
   if (!loader.loadFileIntoModel(this->model_mesh, filename))
   {
     qCritical() << "Failed to load file final.off";
-    qCritical() << loader.getErrorMessage().c_str();
+    qCritical() << loader.getErrorMessage();
     this->model_mesh = oldModel;
     result = false;
   }
@@ -125,7 +126,7 @@ bool Scene_NearestPointDemo::loadMesh(string filename)
   return result;
 }
 
-void Scene_NearestPointDemo::initiateMeshLoading(string filename)
+void Scene_NearestPointDemo::initiateMeshLoading(QString filename)
 {
   this->newMeshFilename = filename;
 }

@@ -2,7 +2,7 @@
 #include <QCheckBox>
 #include <QFileDialog>
 #include <QComboBox>
-#include <string>
+#include <QString>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "scenerenderer.h"
@@ -82,5 +82,5 @@ void MainWindow::on_actionLoad_Mesh_triggered()
 {
   QString filename = QFileDialog::getOpenFileName(
       this, "Open a model file", "", "OFF Model file (*.off)");
-  this->scene->initiateMeshLoading(filename.toStdString());
+  this->scene->initiateMeshLoading(filename);
 }

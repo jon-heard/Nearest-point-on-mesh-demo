@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Model::Model(QOpenGLFunctions* gl, pair<string, string> shaderSource) :
+Model::Model(QOpenGLFunctions* gl, std::pair<QString, QString> shaderSource) :
   isReady(false), isVisible(true), scale(1), shaderSource(shaderSource),
   shader(NULL), vbo(NULL), vao(NULL), gl(gl) {}
 
@@ -76,14 +76,14 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
   {
     this->shader = new QOpenGLShaderProgram();
     this->shader->addShaderFromSourceFile(
-          QOpenGLShader::Vertex, this->shaderSource.first.c_str());
+          QOpenGLShader::Vertex, this->shaderSource.first);
     this->shader->addShaderFromSourceFile(
-          QOpenGLShader::Fragment, this->shaderSource.second.c_str());
+          QOpenGLShader::Fragment, this->shaderSource.second);
     this->shader->link();
     if (!this->shader->isLinked())
     {
-      qCritical() << "Shader error: <" << this->shaderSource.first.c_str() << ", " <<
-                     this->shaderSource.second.c_str() << ">";
+      qCritical() << "Shader error: <" << this->shaderSource.first << ", " <<
+                     this->shaderSource.second << ">";
       return;
     }
   }

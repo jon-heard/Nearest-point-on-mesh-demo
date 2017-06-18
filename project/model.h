@@ -4,8 +4,8 @@
 // Model - An object to be rendered within a 3D scene
 
 #include <vector>
-#include <string>
 #include <utility> // std::pair
+#include <QString>
 #include <QVector3D>
 #include <QQuaternion>
 #include <QMatrix4x4>
@@ -19,7 +19,7 @@ class Model
 {
   public:
   // Construction
-    Model(QOpenGLFunctions* gl, std::pair<std::string, std::string> shaderSource);
+    Model(QOpenGLFunctions* gl, std::pair<QString, QString> shaderSource);
     virtual ~Model();
   // Functionality
     // Update the transform with the latest transformation info
@@ -56,7 +56,7 @@ class Model
     float scale;
     QVector3D position;
     QQuaternion rotation;
-    std::pair<std::string, std::string> shaderSource;
+    std::pair<QString, QString> shaderSource;
     QOpenGLBuffer* vbo;
 };
 
