@@ -80,19 +80,26 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton)
   {
-    QQuaternion rotation = this->scene->getRotation();
-    rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
-    rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
-    this->scene->setRotation(rotation);
+    this->scene->setRotation(
+        this->previousRotation *
+        QQuaternion::fromEulerAngles(
+          (event->y() - this->previousMousePos.y()),
+          (event->x() - this->previousMousePos.x()), 0));
     repaint();
   }
   else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
   {
-    QQuaternion rotation = this->scene->getRightMouseRotatedModel()->getRotation();
-    rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
-    rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
-    this->scene->getRightMouseRotatedModel()->setRotation(rotation);
+    this->scene->getRightMouseRotatedModel()->setRotation(
+        this->previousRotation *
+        QQuaternion::fromEulerAngles(
+          (event->y() - this->previousMousePos.y()),
+          (event->x() - this->previousMousePos.x()), 0));
     repaint();
+//    QQuaternion rotation = this->scene->getRightMouseRotatedModel()->getRotation();
+//    rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
+//    rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
+//    this->scene->getRightMouseRotatedModel()->setRotation(rotation);
+//    repaint();
   }
 }
 

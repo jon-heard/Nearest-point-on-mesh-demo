@@ -35,8 +35,8 @@ Model::~Model()
 void Model::refreshTransform()
 {
   this->transform.setToIdentity();
-  //this->transform.rotate(rotation); // Todo: fix quaternion calculations
-  this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
+  this->transform.rotate(rotation); // Todo: fix quaternion calculations
+  //this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
   this->transform.translate(this->position);
   this->transform.scale(this->scale, this->scale, this->scale);
 }

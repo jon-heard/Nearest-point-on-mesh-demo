@@ -56,6 +56,5 @@ void Scene::refreshTransform()
 {
   this->transform.setToIdentity();
   this->transform.translate(0, 0, this->zoom);
-  //this->transform.rotate(rotation); // TODO: Fix quaternion calculations
-  this->transform.rotate(QQuaternion::fromEulerAngles(this->rotation.x(), this->rotation.y(), 0));
+  this->transform.rotate(rotation);
 }

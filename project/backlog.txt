@@ -2,12 +2,11 @@
 ---------
  Backlog
 ---------
-- Clean up code!
-    - use QString throughout
-- fix quaternion code
 - rotations: make it more intuitive
 - get distancedTexture shader working
 - get old school decal styles working
+- flesh out off file formatter
+- use bsp or octree to optimize search (?)
 
 -------------------
  before submission
@@ -16,8 +15,3 @@
 - writeup
 - understand tri-closest-point algorithm
     https://www.gamedev.net/topic/552906-closest-point-on-triangle/
-
---------
- Icebox
---------
-- use bsp or octree to optimize search
