@@ -27,22 +27,22 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     model.cpp \
-    model_loader_file__off.cpp \
-    model_loader_primitive.cpp \
     model_withcalculations.cpp \
-    scene_renderer.cpp \
     scene.cpp \
-    scene_nearestpointdemo.cpp
+    scene_nearestpointdemo.cpp \
+    modelloader_primitive.cpp \
+    scenerenderer.cpp \
+    modelloader_file_off.cpp
 
 HEADERS += \
         mainwindow.h \
     model.h \
-    model_loader_file_off.h \
-    model_loader_primitive.h \
     model_withcalculations.h \
-    scene_renderer.h \
     scene.h \
-    scene_nearestpointdemo.h
+    scene_nearestpointdemo.h \
+    modelloader_primitive.h \
+    modelloader_file_off.h \
+    scenerenderer.h
 
 FORMS += \
         mainwindow.ui

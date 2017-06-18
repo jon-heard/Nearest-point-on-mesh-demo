@@ -1,5 +1,5 @@
-#ifndef MODEL_LOADER_FILE_OFF_H
-#define MODEL_LOADER_FILE_OFF_H
+#ifndef MODELLOADER_FILE_OFF_H
+#define MODELLOADER_FILE_OFF_H
 
 // Model_FileLoader_Off - Provides functionality to load OFF files into model objects
 
@@ -10,7 +10,7 @@
 
 class Model;
 
-class Model_Loader_File_OFF
+class ModelLoader_File_OFF
 {
   public:
     // Loads the mesh data from the given OFF file, and puts it into the given model
@@ -31,4 +31,4 @@ class Model_Loader_File_OFF
     std::string errorMessage;
 };
 
-#endif // MODEL_LOADER_FILE_OFF_H
+#endif // MODELLOADER_FILE_OFF_H

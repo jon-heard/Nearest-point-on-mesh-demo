@@ -1,4 +1,4 @@
-#include "scene_renderer.h"
+#include "scenerenderer.h"
 #include <algorithm>
 #include <QOpenGLFunctions>
 #include <QOpenGLShader>
@@ -9,8 +9,8 @@
 #include <QDebug>
 #include "model.h"
 #include "model_withcalculations.h"
-#include "model_loader_file_off.h"
-#include "model_loader_primitive.h"
+#include "modelloader_file_off.h"
+#include "modelloader_primitive.h"
 #include "mainwindow.h"
 #include "scene_nearestpointdemo.h"
 
@@ -18,14 +18,14 @@ using namespace std;
 
 const float FOCUS_ROTATION_SPEED = 5;
 
-Scene_Renderer::Scene_Renderer(QWidget *parent) :
+SceneRenderer::SceneRenderer(QWidget *parent) :
   QOpenGLWidget(parent), scene(NULL)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
 }
 
-Scene_Renderer::~Scene_Renderer()
+SceneRenderer::~SceneRenderer()
 {
   delete this->gl;
   this->gl = NULL;
@@ -33,7 +33,7 @@ Scene_Renderer::~Scene_Renderer()
   scene = NULL;
 }
 
-void Scene_Renderer::initializeGL()
+void SceneRenderer::initializeGL()
 {
   // Setup opengl
   this->gl->initializeOpenGLFunctions();
@@ -49,7 +49,7 @@ void Scene_Renderer::initializeGL()
   }
 }
 
-void Scene_Renderer::paintGL()
+void SceneRenderer::paintGL()
 {
   if (scene == NULL) { return; }
   if (!scene->getIsInitialized()) { scene->initialize(gl); }
@@ -60,13 +60,13 @@ void Scene_Renderer::paintGL()
   this->scene->draw(projectionTransform);
 }
 
-void Scene_Renderer::resizeGL(int w, int h)
+void SceneRenderer::resizeGL(int w, int h)
 {
   this->projectionTransform.setToIdentity();
   this->projectionTransform.perspective(45, (float)w/h, 0.001f, 10000.0f);
 }
 
-void Scene_Renderer::mousePressEvent(QMouseEvent *event)
+void SceneRenderer::mousePressEvent(QMouseEvent *event)
 {
   this->previousMousePos = event->pos();
   if (event->buttons() & Qt::LeftButton)
@@ -80,7 +80,7 @@ void Scene_Renderer::mousePressEvent(QMouseEvent *event)
   }
 }
 
-void Scene_Renderer::mouseMoveEvent(QMouseEvent *event)
+void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton)
   {
@@ -99,7 +99,7 @@ void Scene_Renderer::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-void Scene_Renderer::wheelEvent(QWheelEvent* event)
+void SceneRenderer::wheelEvent(QWheelEvent* event)
 {
   float zoom = this->scene->getZoom();
   zoom += event->delta() / 2;
@@ -107,7 +107,7 @@ void Scene_Renderer::wheelEvent(QWheelEvent* event)
   repaint();
 }
 
-void Scene_Renderer::keyPressEvent(QKeyEvent* event)
+void SceneRenderer::keyPressEvent(QKeyEvent* event)
 {
   switch (event->key())
   {
@@ -234,16 +234,16 @@ void Scene_Renderer::keyPressEvent(QKeyEvent* event)
   }
 }
 
-Scene_NearestPointDemo* Scene_Renderer::getScene() { return this->scene; }
-MainWindow* Scene_Renderer::getWindow() { return this->window; }
+Scene_NearestPointDemo* SceneRenderer::getScene() { return this->scene; }
+MainWindow* SceneRenderer::getWindow() { return this->window; }
 
-void Scene_Renderer::setScene(Scene_NearestPointDemo* value)
+void SceneRenderer::setScene(Scene_NearestPointDemo* value)
 {
   delete scene;
   this->scene = value;
 }
 
-void Scene_Renderer::setWindow(MainWindow* value)
+void SceneRenderer::setWindow(MainWindow* value)
 {
   this->window = value;
 }

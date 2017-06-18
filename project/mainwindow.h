@@ -7,7 +7,7 @@ namespace Ui {
   class MainWindow;
 }
 
-class Scene_Renderer;
+class SceneRenderer;
 class Scene_NearestPointDemo;
 class QLabel;
 class QCheckBox;
@@ -25,12 +25,10 @@ class MainWindow : public QMainWindow
     void on_toggleTargetSphere_stateChanged(int arg1);
     void on_decalTypeSelector_currentIndexChanged(int index);
     void on_actionExit_triggered();
-
     void on_actionLoad_Mesh_triggered();
-
   private:
     Ui::MainWindow *ui;
-    Scene_Renderer* sceneRenderer;
+    SceneRenderer* sceneRenderer;
     Scene_NearestPointDemo* scene;
     QCheckBox* toggleTargetSphere;
     QLabel* statusBarFilename;

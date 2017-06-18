@@ -58,7 +58,7 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
 
     this->shader->bind();
     // Texture / alpha settings
-    this->shader->setUniformValue("alpha", 0.1f);
+    this->shader->setUniformValue("alpha", 0.0f);
     this->shader->setUniformValue("mainTexture", 0);
     // Projected texture settings
     this->shader->setUniformValue(

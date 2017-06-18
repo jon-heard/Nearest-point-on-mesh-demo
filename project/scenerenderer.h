@@ -1,5 +1,5 @@
-#ifndef SCENE_RENDERER_H
-#define SCENE_RENDERER_H
+#ifndef SCENERENDERER_H
+#define SCENERENDERER_H
 
 // Main3DScene - The primary I/O control.  Handles 3d rendering and user input.
 
@@ -18,12 +18,12 @@ class QOpenGLTexture;
 class MainWindow;
 class Scene_NearestPointDemo;
 
-class Scene_Renderer : public QOpenGLWidget
+class SceneRenderer : public QOpenGLWidget
 {
   public:
   // Construction
-    Scene_Renderer(QWidget* parent = 0);
-    virtual ~Scene_Renderer();
+    SceneRenderer(QWidget* parent = 0);
+    virtual ~SceneRenderer();
   // Event handlers - OpenGL
     void initializeGL();
     void paintGL();
@@ -48,4 +48,4 @@ class Scene_Renderer : public QOpenGLWidget
     QPoint previousMousePos;
 };
 
-#endif // SCENE_RENDERER_H
+#endif // SCENERENDERER_H

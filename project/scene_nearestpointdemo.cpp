@@ -4,8 +4,8 @@
 #include <QOpenGLTexture>
 #include "mainwindow.h"
 #include "model_withcalculations.h"
-#include "model_loader_primitive.h"
-#include "Model_Loader_File_OFF.h"
+#include "modelloader_primitive.h"
+#include "modelloader_file_off.h"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
   Scene::initialize(gl);
   // Setup models
     // loaders
-    Model_Loader_Primitive primitiveLoader;
+    ModelLoader_Primitive primitiveLoader;
     // focus
     this->model_focus = new Model(
         gl, {":/shaders/basic.vert", ":/shaders/lightAndRed.frag"});
@@ -93,7 +93,7 @@ void Scene_NearestPointDemo::setDecalType(unsigned int value)
 bool Scene_NearestPointDemo::loadMesh(string filename)
 {
   bool result = true;
-  Model_Loader_File_OFF fileLoader;
+  ModelLoader_File_OFF fileLoader;
   // Keep track of old model_mesh, in case new one fails
   Model_WithCalculations* oldModel = model_mesh;
   // Remove old model_mesh

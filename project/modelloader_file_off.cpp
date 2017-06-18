@@ -1,4 +1,4 @@
-#include "model_loader_file_off.h"
+#include "modelloader_file_off.h"
 #include "Model.h"
 #include <QVector3D>
 #include <sstream>
@@ -11,7 +11,7 @@ const char* FILELOADER_OFF_WHITESPACE = " \t\n\r";
 const vector<pair<string,string>> FILELOADER_OFF_COMMENTS = {{"#", "\n"}};
 
 
-bool Model_Loader_File_OFF::loadFileIntoModel(Model* model, string filename)
+bool ModelLoader_File_OFF::loadFileIntoModel(Model* model, string filename)
 {
   this->errorFilename = filename;
   // Input check
@@ -54,10 +54,10 @@ bool Model_Loader_File_OFF::loadFileIntoModel(Model* model, string filename)
   return true;
 }
 
-string Model_Loader_File_OFF::getErrorFilename() { return this->errorFilename; }
-string Model_Loader_File_OFF::getErrorMessage() { return this->errorMessage; }
+string ModelLoader_File_OFF::getErrorFilename() { return this->errorFilename; }
+string ModelLoader_File_OFF::getErrorMessage() { return this->errorMessage; }
 
-bool Model_Loader_File_OFF::loadFileIntoString(string filename, string& result)
+bool ModelLoader_File_OFF::loadFileIntoString(string filename, string& result)
 {
   QFile mFile(QString(filename.c_str()));
   if(!mFile.open(QFile::ReadOnly | QFile::Text)){
@@ -68,7 +68,7 @@ bool Model_Loader_File_OFF::loadFileIntoString(string filename, string& result)
   return true;
 }
 
-bool Model_Loader_File_OFF::stripCommentsFromString(string source,
+bool ModelLoader_File_OFF::stripCommentsFromString(string source,
                                                    string& destination,
                                                    vector<pair<string,string>> comments)
 {
@@ -103,7 +103,7 @@ bool Model_Loader_File_OFF::stripCommentsFromString(string source,
   return true;
 }
 
-bool Model_Loader_File_OFF::tokenizeString(string toTokenize, vector<string>& result)
+bool ModelLoader_File_OFF::tokenizeString(string toTokenize, vector<string>& result)
 {
   char* sourceBuffer = new char[toTokenize.size()+1];
   strcpy(sourceBuffer, toTokenize.c_str());
@@ -117,7 +117,7 @@ bool Model_Loader_File_OFF::tokenizeString(string toTokenize, vector<string>& re
   return true;
 }
 
-bool Model_Loader_File_OFF::parseTokens(vector<string> tokens,
+bool ModelLoader_File_OFF::parseTokens(vector<string> tokens,
                                        vector<QVector3D>& vertices,
                                        vector<QVector3D>& tris)
 {

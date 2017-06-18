@@ -1,11 +1,11 @@
-#include "model_loader_primitive.h"
+#include "modelloader_primitive.h"
 #include <vector>
 #include <QVector3D>
 #include "Model.h"
 
 using namespace std;
 
-bool Model_Loader_Primitive::loadSphereIntoModel(Model* model, float radius, int subdivisionCount)
+bool ModelLoader_Primitive::loadSphereIntoModel(Model* model, float radius, int subdivisionCount)
 {
   if (model == NULL)
   {
@@ -58,7 +58,7 @@ bool Model_Loader_Primitive::loadSphereIntoModel(Model* model, float radius, int
   return true;
 }
 
-bool Model_Loader_Primitive::loadBoxIntoModel(Model* model, float sizeX, float sizeY, float sizeZ)
+bool ModelLoader_Primitive::loadBoxIntoModel(Model* model, float sizeX, float sizeY, float sizeZ)
 {
   if (model == NULL)
   {

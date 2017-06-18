@@ -2,6 +2,9 @@
 ---------
  Backlog
 ---------
+- adjust class names (ex/ modelLoader rather than model_loader)
+- add refocus to scenerenderer on keystroke
+
 - look up ways to get rid of back projection on projected texture
 
 - Clean up code!
@@ -12,6 +15,7 @@
     - consistant indentation
     - use QString throughout
     - within 100 chars
+    - includes use all lowercases
 
 -------------------
  before submission
