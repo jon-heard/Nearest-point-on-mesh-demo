@@ -2,12 +2,12 @@
 ---------
  Backlog
 ---------
-- make focus controls (rotations!) more intuitive
-- Consider renaming SceneRenderer (as it also handles user input)
-    - ideas: SceneWidget, SceneInterface, SceneController, SceneUI
 - get distancedTexture shader working
 - get old school decal styles working
 - flesh out off file formatter
+    - work with faces of more than 4 points
+    - allow for (but exclude) colors
+- make focus rotation control more intuitive
 - fix keyboard locked when dropdown has the focus
 - use bsp or octree to optimize search (?)
 

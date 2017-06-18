@@ -9,7 +9,7 @@ namespace Ui {
   class MainWindow;
 }
 
-class SceneRenderer;
+class SceneUi;
 class Scene_NearestPointDemo;
 class QLabel;
 class QCheckBox;
@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow
     void setModelFilename(QString value);
     // Sets the decal type dropdown to the given type index
     void setDecalTypeSelector(unsigned int index);
-    // Key presses are forwarded to the SceneRenderer as it contains the input logic
+    // Key presses are forwarded to the SceneUi as it contains the input logic
     void keyPressEvent(QKeyEvent* event);
   private slots:
   // Callbacks
@@ -41,7 +41,7 @@ class MainWindow : public QMainWindow
     void on_actionLoad_Mesh_triggered();
   private:
     Ui::MainWindow *ui;
-    SceneRenderer* sceneRenderer;
+    SceneUi* sceneUi;
     Scene_NearestPointDemo* scene;
     QCheckBox* toggleTargetSphere;
     QLabel* statusBarFilename;

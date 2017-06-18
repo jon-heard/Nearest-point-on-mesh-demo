@@ -1,4 +1,4 @@
-#include "scenerenderer.h"
+#include "sceneui.h"
 #include <algorithm>
 #include <QOpenGLFunctions>
 #include <QOpenGLShader>
@@ -18,16 +18,17 @@ using namespace std;
 
 const float MOUSE_ROTATION_SPEED = 1;
 const float KEY_ROTATION_SPEED = 10;
-const float MOUSE_ZOOM_SPEED = 1;
-const float KEY_ZOOM_SPEED = 120;
+const float MOUSE_ZOOM_SPEED = .5;
+const float KEY_ZOOM_SPEED = 60;
+const float KEY_MOVE_SPEED = 10;
 
-SceneRenderer::SceneRenderer(QWidget *parent) : QOpenGLWidget(parent), scene(NULL)
+SceneUi::SceneUi(QWidget *parent) : QOpenGLWidget(parent), scene(NULL)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
 }
 
-SceneRenderer::~SceneRenderer()
+SceneUi::~SceneUi()
 {
   delete this->gl;
   this->gl = NULL;
@@ -35,7 +36,7 @@ SceneRenderer::~SceneRenderer()
   this->scene = NULL;
 }
 
-void SceneRenderer::initializeGL()
+void SceneUi::initializeGL()
 {
   // Setup opengl
   this->gl->initializeOpenGLFunctions();
@@ -51,7 +52,7 @@ void SceneRenderer::initializeGL()
   }
 }
 
-void SceneRenderer::paintGL()
+void SceneUi::paintGL()
 {
   if (this->scene == NULL) { return; }
   if (!this->scene->getIsInitialized()) { this->scene->initialize(gl); }
@@ -60,13 +61,13 @@ void SceneRenderer::paintGL()
   this->scene->draw(this->projectionTransform);
 }
 
-void SceneRenderer::resizeGL(int w, int h)
+void SceneUi::resizeGL(int w, int h)
 {
   this->projectionTransform.setToIdentity();
   this->projectionTransform.perspective(45, (float)w/h, 0.001f, 10000.0f);
 }
 
-void SceneRenderer::mousePressEvent(QMouseEvent *event)
+void SceneUi::mousePressEvent(QMouseEvent *event)
 {
   this->previousMousePos = QVector2D(event->pos());
   if (event->buttons() & Qt::LeftButton)
@@ -79,7 +80,7 @@ void SceneRenderer::mousePressEvent(QMouseEvent *event)
   }
 }
 
-void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
+void SceneUi::mouseMoveEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton)
   {
@@ -94,16 +95,18 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
   }
   else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
   {
+    QVector2D mouseDelta = QVector2D(event->pos()) - this->previousMousePos;
     this->scene->getRightMouseRotatedModel()->setRotation(
-        this->previousRotation *
-        QQuaternion::fromEulerAngles(
-          (event->y() - this->previousMousePos.y()),
-          (event->x() - this->previousMousePos.x()), 0));
+         QQuaternion::fromAxisAndAngle(
+            mouseDelta.y(), mouseDelta.x(), 0,
+            mouseDelta.length()*MOUSE_ROTATION_SPEED) *
+        this->previousRotation);
     repaint();
+    mousePressEvent(event); // reset offsets for the next move
   }
 }
 
-void SceneRenderer::wheelEvent(QWheelEvent* event)
+void SceneUi::wheelEvent(QWheelEvent* event)
 {
   float zoom = this->scene->getZoom();
   zoom += event->delta() * MOUSE_ZOOM_SPEED;
@@ -111,7 +114,7 @@ void SceneRenderer::wheelEvent(QWheelEvent* event)
   repaint();
 }
 
-void SceneRenderer::keyPressEvent(QKeyEvent* event)
+void SceneUi::keyPressEvent(QKeyEvent* event)
 {
   switch (event->key())
   {
@@ -168,9 +171,9 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -KEY_ROTATION_SPEED);
-        model->setRotation(focusRotation);
+        model->setRotation(
+            QQuaternion::fromAxisAndAngle(1, 0, 0, -KEY_ROTATION_SPEED) *
+            model->getRotation());
         repaint();
       }
       break;
@@ -180,9 +183,9 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -KEY_ROTATION_SPEED);
-        model->setRotation(focusRotation);
+        model->setRotation(
+            QQuaternion::fromAxisAndAngle(0, 1, 0, -KEY_ROTATION_SPEED) *
+            model->getRotation());
         repaint();
       }
       break;
@@ -192,9 +195,9 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, KEY_ROTATION_SPEED);
-        model->setRotation(focusRotation);
+        model->setRotation(
+            QQuaternion::fromAxisAndAngle(1, 0, 0, KEY_ROTATION_SPEED) *
+            model->getRotation());
         repaint();
       }
       break;
@@ -204,9 +207,9 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, KEY_ROTATION_SPEED);
-        model->setRotation(focusRotation);
+        model->setRotation(
+            QQuaternion::fromAxisAndAngle(0, 1, 0, KEY_ROTATION_SPEED) *
+            model->getRotation());
         repaint();
       }
       break;
@@ -217,7 +220,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QVector3D position = model->getPosition();
-        position += QVector3D(0, 0, 10);
+        position += QVector3D(0, 0, KEY_MOVE_SPEED);
         model->setPosition(position);
         repaint();
       }
@@ -229,7 +232,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QVector3D position = model->getPosition();
-        position += QVector3D(0, 0, -10);
+        position += QVector3D(0, 0, -KEY_MOVE_SPEED);
         model->setPosition(position);
         repaint();
       }
@@ -238,16 +241,16 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
   }
 }
 
-Scene_NearestPointDemo* SceneRenderer::getScene() { return this->scene; }
-MainWindow* SceneRenderer::getWindow() { return this->window; }
+Scene_NearestPointDemo* SceneUi::getScene() { return this->scene; }
+MainWindow* SceneUi::getWindow() { return this->window; }
 
-void SceneRenderer::setScene(Scene_NearestPointDemo* value)
+void SceneUi::setScene(Scene_NearestPointDemo* value)
 {
   delete scene;
   this->scene = value;
 }
 
-void SceneRenderer::setWindow(MainWindow* value)
+void SceneUi::setWindow(MainWindow* value)
 {
   this->window = value;
 }

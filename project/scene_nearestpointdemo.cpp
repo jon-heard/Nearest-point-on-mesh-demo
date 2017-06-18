@@ -29,6 +29,7 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     this->model_focus = new Model(gl, {":/shaders/basic.vert", ":/shaders/lightAndRed.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
     this->models.push_back(this->model_focus);
+    this->model_focus->setPosition({0, 0, 150});
     // NearestPoint
     this->model_nearestPoint = new Model(
         gl, {":/shaders/basic.vert", ":/shaders/lightAndBlue.frag"});

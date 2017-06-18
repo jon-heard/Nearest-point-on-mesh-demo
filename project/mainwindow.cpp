@@ -5,7 +5,7 @@
 #include <QString>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "scenerenderer.h"
+#include "sceneui.h"
 #include "model_withcalculations.h"
 #include "scene_nearestpointdemo.h"
 
@@ -17,17 +17,17 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
   setFocusPolicy(Qt::StrongFocus);
   // Get widgets
-  this->sceneRenderer = this->findChild<SceneRenderer*>("scene");
+  this->sceneUi = this->findChild<SceneUi*>("scene");
   this->toggleTargetSphere = this->findChild<QCheckBox*>("toggleTargetSphere");
   this->decalTypeSelector = this->findChild<QComboBox*>("decalTypeSelector");
   statusBarFilename = new QLabel();
   // Setup widgets
   this->findChild<QStatusBar*>("statusBar")->addWidget(statusBarFilename);
   this->setModelFilename("default.off <i>(internal)</i>");
-  // Setup the scenerenderer & scene
-  this->sceneRenderer->setWindow(this);
+  // Setup the sceneUi & scene
+  this->sceneUi->setWindow(this);
   this->scene = new Scene_NearestPointDemo(this);
-  this->sceneRenderer->setScene(scene);
+  this->sceneUi->setScene(scene);
 }
 
 MainWindow::~MainWindow()
@@ -42,7 +42,7 @@ void MainWindow::setModelFilename(QString value)
 
 void MainWindow::setDecalTypeSelector(unsigned int index)
 {
-  // Disabling scene (prevent infinite loop: combobox updates SceneRenderer updates combobox)
+  // Disabling scene (prevent infinite loop: combobox updates sceneUi updates combobox)
   Scene_NearestPointDemo* tmpScene = this->scene;
   this->scene = NULL;
   // Set the decal type
@@ -51,17 +51,17 @@ void MainWindow::setDecalTypeSelector(unsigned int index)
   this->scene = tmpScene;
 }
 
-// Returns keyboard focus to sceneRenderer for keyboard controls
+// Returns keyboard focus to sceneUi for keyboard controls
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
-  this->sceneRenderer->setFocus();
-  this->sceneRenderer->keyPressEvent(event);
+  this->sceneUi->setFocus();
+  this->sceneUi->keyPressEvent(event);
 }
 
 void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
 {
   this->scene->setIsTargetSphereEnabled(arg1 == Qt::Checked);
-  this->sceneRenderer->repaint();
+  this->sceneUi->repaint();
 }
 
 void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
@@ -70,7 +70,7 @@ void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
   if (this->scene)
   {
     this->scene->setDecalType(index);
-    this->sceneRenderer->repaint();
+    this->sceneUi->repaint();
   }
 }
 

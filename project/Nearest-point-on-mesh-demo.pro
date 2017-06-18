@@ -31,8 +31,8 @@ SOURCES += \
     scene.cpp \
     scene_nearestpointdemo.cpp \
     modelloader_primitive.cpp \
-    scenerenderer.cpp \
-    modelloader_file_off.cpp
+    modelloader_file_off.cpp \
+    sceneui.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,7 +42,7 @@ HEADERS += \
     scene_nearestpointdemo.h \
     modelloader_primitive.h \
     modelloader_file_off.h \
-    scenerenderer.h
+    sceneui.h
 
 FORMS += \
         mainwindow.ui

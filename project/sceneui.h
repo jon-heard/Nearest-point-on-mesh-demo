@@ -1,7 +1,7 @@
-#ifndef SCENERENDERER_H
-#define SCENERENDERER_H
+#ifndef SCENEUI_H
+#define SCENEUI_H
 
-// SceneRenderer - Handles rendering of the 3d scene and also user input.
+// SceneUi - Handles rendering and user input for the 3d scene.
 
 #include <vector>
 #include <QOpenGLWidget>
@@ -18,12 +18,12 @@ class QOpenGLTexture;
 class MainWindow;
 class Scene_NearestPointDemo;
 
-class SceneRenderer : public QOpenGLWidget
+class SceneUi : public QOpenGLWidget
 {
   public:
   // Construction
-    SceneRenderer(QWidget* parent = 0);
-    virtual ~SceneRenderer();
+    SceneUi(QWidget* parent = 0);
+    virtual ~SceneUi();
   // Event handlers - OpenGL
     // Event: OpenGL is initialized
     void initializeGL();
@@ -34,7 +34,7 @@ class SceneRenderer : public QOpenGLWidget
   // Event handlers - input
     // Event: A mouse button has been pressed
     void mousePressEvent(QMouseEvent *event);
-    // Event: The mouse has moved over the SceneRenderer
+    // Event: The mouse has moved over the SceneUi
     void mouseMoveEvent(QMouseEvent *event);
     // Event: The mouse wheel has been spun
     void wheelEvent(QWheelEvent* event);
@@ -55,4 +55,4 @@ class SceneRenderer : public QOpenGLWidget
     QVector2D previousMousePos;
 };
 
-#endif // SCENERENDERER_H
+#endif // SCENEUI_H

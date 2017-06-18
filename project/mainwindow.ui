@@ -28,7 +28,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="SceneRenderer" name="scene">
+     <widget class="SceneUi" name="scene">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -187,9 +187,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>SceneRenderer</class>
+   <class>SceneUi</class>
    <extends>QOpenGLWidget</extends>
-   <header location="global">scenerenderer.h</header>
+   <header location="global">sceneui.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

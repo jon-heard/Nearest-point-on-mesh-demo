@@ -21,7 +21,7 @@ class Scene
     virtual void initialize(QOpenGLFunctions* gl);
     // Called each frame to update scene components
     virtual void update();
-    // Called to render the scene to the SceneRenderer
+    // Called to render the scene to the SceneUi
     void draw(QMatrix4x4 projectionTransform);
   // Accessors
     // Set to true if Initialize has been called on this Scene

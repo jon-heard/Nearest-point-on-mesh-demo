@@ -140,7 +140,7 @@ QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focus)
     QVector3D v3 = this->transform * this->vertices[(*i)[2]];
     // Check the point
     QVector3D localResult = Model_WithCalculations::calcClosestPointOnTriangle(
-        this->focus, v1, v2, v3);
+        focus, v1, v2, v3);
     // Compare the result against the running best (shortest) distance
     float localResultDistance = (localResult - this->focus).length();
     if (localResultDistance < resultDistance)
