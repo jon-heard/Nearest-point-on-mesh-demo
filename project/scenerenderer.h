@@ -6,7 +6,7 @@
 #include <vector>
 #include <QOpenGLWidget>
 #include <QMatrix4x4>
-#include <QPoint>
+#include <QVector2D>
 #include <QVector3D>
 #include <QQuaternion>
 
@@ -52,7 +52,7 @@ class SceneRenderer : public QOpenGLWidget
     Scene_NearestPointDemo* scene;
     QMatrix4x4 projectionTransform;
     QQuaternion previousRotation;
-    QPoint previousMousePos;
+    QVector2D previousMousePos;
 };
 
 #endif // SCENERENDERER_H

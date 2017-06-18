@@ -65,7 +65,7 @@ void SceneRenderer::resizeGL(int w, int h)
 
 void SceneRenderer::mousePressEvent(QMouseEvent *event)
 {
-  this->previousMousePos = event->pos();
+  this->previousMousePos = QVector2D(event->pos());
   if (event->buttons() & Qt::LeftButton)
   {
     this->previousRotation = this->scene->getRotation();
@@ -80,12 +80,12 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
 {
   if (event->buttons() & Qt::LeftButton)
   {
+    QVector2D mouseDelta = QVector2D(event->pos()) - this->previousMousePos;
     this->scene->setRotation(
-        this->previousRotation *
-        QQuaternion::fromEulerAngles(
-          (event->y() - this->previousMousePos.y()),
-          (event->x() - this->previousMousePos.x()), 0));
+        QQuaternion::fromAxisAndAngle(mouseDelta.y(), mouseDelta.x(), 0, mouseDelta.length()) *
+        this->previousRotation);
     repaint();
+    mousePressEvent(event); // reset offsets for the next move
   }
   else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
   {
@@ -95,11 +95,6 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
           (event->y() - this->previousMousePos.y()),
           (event->x() - this->previousMousePos.x()), 0));
     repaint();
-//    QQuaternion rotation = this->scene->getRightMouseRotatedModel()->getRotation();
-//    rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
-//    rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
-//    this->scene->getRightMouseRotatedModel()->setRotation(rotation);
-//    repaint();
   }
 }
 

@@ -2,7 +2,8 @@
 ---------
  Backlog
 ---------
-- rotations: make it more intuitive
+- finish up polishing scene controls
+- make focus controls (rotations!) more intuitive
 - get distancedTexture shader working
 - get old school decal styles working
 - flesh out off file formatter
