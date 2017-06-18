@@ -1,7 +1,7 @@
 #ifndef MODELLOADER_PRIMITIVE_H
 #define MODELLOADER_PRIMITIVE_H
 
-// Model_FileLoader_Off - Provides functionality to load primitive meshes into model objects
+// Model_FileLoader_Off - Provides functionality to load primitive meshes into model objects.
 
 class Model;
 

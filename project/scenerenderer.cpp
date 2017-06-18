@@ -16,7 +16,10 @@
 
 using namespace std;
 
-const float FOCUS_ROTATION_SPEED = 5;
+const float MOUSE_ROTATION_SPEED = 1;
+const float KEY_ROTATION_SPEED = 10;
+const float MOUSE_ZOOM_SPEED = 1;
+const float KEY_ZOOM_SPEED = 120;
 
 SceneRenderer::SceneRenderer(QWidget *parent) : QOpenGLWidget(parent), scene(NULL)
 {
@@ -82,7 +85,9 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
   {
     QVector2D mouseDelta = QVector2D(event->pos()) - this->previousMousePos;
     this->scene->setRotation(
-        QQuaternion::fromAxisAndAngle(mouseDelta.y(), mouseDelta.x(), 0, mouseDelta.length()) *
+        QQuaternion::fromAxisAndAngle(
+            mouseDelta.y(), mouseDelta.x(), 0,
+            mouseDelta.length()*MOUSE_ROTATION_SPEED) *
         this->previousRotation);
     repaint();
     mousePressEvent(event); // reset offsets for the next move
@@ -101,7 +106,7 @@ void SceneRenderer::mouseMoveEvent(QMouseEvent *event)
 void SceneRenderer::wheelEvent(QWheelEvent* event)
 {
   float zoom = this->scene->getZoom();
-  zoom += event->delta() / 2;
+  zoom += event->delta() * MOUSE_ZOOM_SPEED;
   this->scene->setZoom(zoom);
   repaint();
 }
@@ -112,40 +117,40 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
   {
     case Qt::Key_Up:
     {
-      QQuaternion rotation = this->scene->getRotation();
-      rotation.setX(rotation.x() - 10);
-      this->scene->setRotation(rotation);
+      this->scene->setRotation(
+          QQuaternion::fromAxisAndAngle(1, 0, 0, -KEY_ROTATION_SPEED) *
+          this->scene->getRotation());
       repaint();
       break;
     }
     case Qt::Key_Right:
     {
-      QQuaternion rotation = this->scene->getRotation();
-      rotation.setY(rotation.y() + 10);
-      this->scene->setRotation(rotation);
+      this->scene->setRotation(
+          QQuaternion::fromAxisAndAngle(0, -1, 0, -KEY_ROTATION_SPEED) *
+          this->scene->getRotation());
       repaint();
       break;
     }
     case Qt::Key_Down:
     {
-      QQuaternion rotation = this->scene->getRotation();
-      rotation.setX(rotation.x() + 10);
-      this->scene->setRotation(rotation);
+      this->scene->setRotation(
+          QQuaternion::fromAxisAndAngle(1, 0, 0, KEY_ROTATION_SPEED) *
+          this->scene->getRotation());
       repaint();
       break;
     }
     case Qt::Key_Left:
     {
-      QQuaternion rotation = this->scene->getRotation();
-      rotation.setY(rotation.y() - 10);
-      this->scene->setRotation(rotation);
+      this->scene->setRotation(
+          QQuaternion::fromAxisAndAngle(0, 1, 0, -KEY_ROTATION_SPEED) *
+          this->scene->getRotation());
       repaint();
       break;
     }
     case Qt::Key_Z:
     {
       float zoom = this->scene->getZoom();
-      zoom += 20;
+      zoom += KEY_ZOOM_SPEED;
       this->scene->setZoom(zoom);
       repaint();
       break;
@@ -153,7 +158,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
     case Qt::Key_X:
     {
       float zoom = this->scene->getZoom();
-      zoom -= 20;
+      zoom -= KEY_ZOOM_SPEED;
       this->scene->setZoom(zoom);
       repaint();
       break;
@@ -164,7 +169,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -FOCUS_ROTATION_SPEED);
+        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -KEY_ROTATION_SPEED);
         model->setRotation(focusRotation);
         repaint();
       }
@@ -176,7 +181,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -FOCUS_ROTATION_SPEED);
+        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -KEY_ROTATION_SPEED);
         model->setRotation(focusRotation);
         repaint();
       }
@@ -188,7 +193,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, FOCUS_ROTATION_SPEED);
+        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, KEY_ROTATION_SPEED);
         model->setRotation(focusRotation);
         repaint();
       }
@@ -200,7 +205,7 @@ void SceneRenderer::keyPressEvent(QKeyEvent* event)
       if (model != NULL)
       {
         QQuaternion focusRotation = model->getRotation();
-        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, FOCUS_ROTATION_SPEED);
+        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, KEY_ROTATION_SPEED);
         model->setRotation(focusRotation);
         repaint();
       }

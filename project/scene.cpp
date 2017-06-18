@@ -35,7 +35,7 @@ void Scene::draw(QMatrix4x4 projectionTransform)
 }
 
 bool Scene::getIsInitialized() { return this->isInitialized; }
-Model* Scene::getRightMouseRotatedModel() { return NULL; }
+Model* Scene::getRightMouseRotatedModel() { return NULL; } // Overridden in subclass
 float Scene::getZoom() const { return this->zoom; }
 QQuaternion Scene::getRotation() const { return this->rotation; }
 

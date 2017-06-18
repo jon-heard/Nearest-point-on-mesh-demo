@@ -5,21 +5,23 @@
 
 using namespace std;
 
-Model_WithCalculations::Model_WithCalculations(QOpenGLFunctions* gl, std::vector<std::pair<QString, QString> > shaderSources) :
+Model_WithCalculations::Model_WithCalculations(
+    QOpenGLFunctions* gl, vector<pair<QString, QString> > shaderSources) :
   Model(gl, {"",""}), shaderSources(shaderSources) {}
 
 Model_WithCalculations::~Model_WithCalculations()
 {
+  this->shader = NULL; // Null out 'current' shader so it's not deleted by base 'Model' destructor
   while (this->shaders.size() > 0)
   {
     delete this->shaders.back();
     this->shaders.pop_back();
   }
-  this->shader = NULL;
 }
 
 void Model_WithCalculations::scaleToFit(float size)
 {
+  // Get the min and max vertex locations on each axis
   QVector3D min((float)INT_MAX, (float)INT_MAX, (float)INT_MAX);
   QVector3D max((float)INT_MIN, (float)INT_MIN, (float)INT_MIN);
   for (vector<QVector3D>::iterator i = this->vertices.begin(); i != this->vertices.end(); ++i)
@@ -34,12 +36,14 @@ void Model_WithCalculations::scaleToFit(float size)
       if ((*i)[2] > max[2]) { max[2] = (*i)[2]; }
     }
   }
+  // Get the size along the biggest axis
   QVector3D modelSize = max-min;
   float maxModelSize = INT_MIN;
   for (unsigned int i = 0; i < 3; ++i)
   {
     if (modelSize[i] > maxModelSize) { maxModelSize = modelSize[i]; }
   }
+  // Set the scale to fit this model to the given size
   this->setScale(size / maxModelSize);
 }
 
@@ -49,14 +53,14 @@ void Model_WithCalculations::initialize(
   // Base model initialize
   Model::initialize(vertices, triangles);
   this->isReady = false;
-  // mesh data store
+  // Store mesh data
   this->vertices = vertices;
   this->triangles = triangles;
-  // Decal matrices
+  // Calculate the decal's projection and adjustment matrix (for projected texture style)
   this->decalAdjustAndProjectionTransform.translate(.5, .5, .5);
   this->decalAdjustAndProjectionTransform.scale(.5, .5, .5);
   this->decalAdjustAndProjectionTransform.perspective(45, 1, .1f, 1000);
-  // Shaders
+  // Setup all the shaders
   for (vector<pair<QString,QString>>::iterator i = shaderSources.begin();
        i != shaderSources.end(); ++i)
   {
@@ -81,58 +85,63 @@ void Model_WithCalculations::initialize(
 
 void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
 {
+  // Calculate the decal's look matrix and decal normal (for projected texture style)
   QMatrix4x4 decalCameraTransform;
   decalCameraTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
   QVector3D decalNormal = (this->nearestPoint - this->focus).normalized();
-
+  // Flip front facing (to draw the back of the model)
   this->gl->glDepthMask(false);
   this->gl->glFrontFace(GL_CW);
-
-  this->shader->bind();
-  // Texture / alpha settings
-  this->shader->setUniformValue("alpha", 0.0f);
-  this->shader->setUniformValue("mainTexture", 0);
-  // Projected texture settings
-  this->shader->setUniformValue(
-      "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
-  this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
-  this->shader->setUniformValue("decalNormal", decalNormal);
-  // Distanced texture settings
-  this->shader->setUniformValue("focus", this->focus);
-  this->shader->setUniformValue("nearestPoint", this->nearestPoint);
-
-  Model::draw(projectionCameraTransform, cameraTransform);
-
+  // Draw the back of the model
+    this->shader->bind();
+    // Shader uniforms: Texture & alpha
+    this->shader->setUniformValue("alpha", 0.0f); // 0 alpha: back won't be drawn, EXCEPT for decal
+    this->shader->setUniformValue("mainTexture", 0);
+    // Shader uniforms: Projected texture
+    this->shader->setUniformValue(
+        "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
+    this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
+    this->shader->setUniformValue("decalNormal", decalNormal);
+    // Shader uniforms: Distanced texture
+    this->shader->setUniformValue("focus", this->focus);
+    this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    // Actual draw
+    Model::draw(projectionCameraTransform, cameraTransform);
+  // Flip front facing (to draw the front of the model)
   this->gl->glFrontFace(GL_CCW);
   this->gl->glDepthMask(true);
-
-  this->shader->bind();
-  // Texture / alpha settings
-  this->shader->setUniformValue("alpha", 0.5f);
-  this->shader->setUniformValue("mainTexture", 0);
-  // Projected texture settings
-  this->shader->setUniformValue(
-      "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
-  this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
-  this->shader->setUniformValue("decalNormal", decalNormal);
-  // Distanced texture settings
-  this->shader->setUniformValue("focus", this->focus);
-  this->shader->setUniformValue("nearestPoint", this->nearestPoint);
-
-  Model::draw(projectionCameraTransform, cameraTransform);
+  // Draw the front of the model
+    this->shader->bind();
+    // Shader uniforms: Texture & alpha
+    this->shader->setUniformValue("alpha", 0.5f); // .5 alpha: transparent, but still visible
+    this->shader->setUniformValue("mainTexture", 0);
+    // Shader uniforms: Projected texture
+    this->shader->setUniformValue(
+        "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
+    this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
+    this->shader->setUniformValue("decalNormal", decalNormal);
+    // Shader uniforms: Distanced texture
+    this->shader->setUniformValue("focus", this->focus);
+    this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    // Actual draw
+    Model::draw(projectionCameraTransform, cameraTransform);
 }
 
 QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focus)
 {
   QVector3D result;
   unsigned int resultDistance = INT_MAX;
+  // Check ALL triangles for closest point
+  // TODO: optimize to not check EVERY triangle (bsp or octree)
   for (vector<QVector3D>::iterator i = this->triangles.begin(); i != this->triangles.end(); ++i)
   {
     QVector3D v1 = this->transform * this->vertices[(*i)[0]];
     QVector3D v2 = this->transform * this->vertices[(*i)[1]];
     QVector3D v3 = this->transform * this->vertices[(*i)[2]];
+    // Check the point
     QVector3D localResult = Model_WithCalculations::calcClosestPointOnTriangle(
         this->focus, v1, v2, v3);
+    // Compare the result against the running best (shortest) distance
     float localResultDistance = (localResult - this->focus).length();
     if (localResultDistance < resultDistance)
     {
@@ -154,6 +163,7 @@ void Model_WithCalculations::setCurrentShader(unsigned int index)
 {
   if (index > this->shaders.size()-1)
   {
+    qWarning() << "Shader set to invalid index: " << index;
     return;
   }
   this->shader = this->shaders[index];
@@ -177,6 +187,10 @@ inline float clamp(float x, float a, float b)
 QVector3D Model_WithCalculations::calcClosestPointOnTriangle(
     QVector3D point, QVector3D triangle1, QVector3D triangle2, QVector3D triangle3)
 {
+  //-------------------------------------------------------//
+  // This code returns the cloests CORNER of the triangle, //
+  // rather than the closest point along its face          //
+  //-------------------------------------------------------//
   //  QVector3D result = tri1;
   //  float resultDistance = (point - result).length();
   //  float checkDistance = (point - tri2).length();
@@ -193,6 +207,9 @@ QVector3D Model_WithCalculations::calcClosestPointOnTriangle(
   //  }
   //  return result;
 
+  //---------------------------------------------------------------//
+  // This code returns the cloests point along the triangle's face //
+  //---------------------------------------------------------------//
   QVector3D edge0 = triangle2 - triangle1;
   QVector3D edge1 = triangle3 - triangle1;
   QVector3D v0 = triangle1 - point;

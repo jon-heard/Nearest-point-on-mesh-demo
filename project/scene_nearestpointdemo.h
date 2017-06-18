@@ -1,7 +1,7 @@
 #ifndef SCENE_NEARESTPOINTDEMO_H
 #define SCENE_NEARESTPOINTDEMO_H
 
-// Scene_NearestPointDemo - A subclass of Scene designed specifically for this application
+// Scene_NearestPointDemo - A subclass of Scene designed specifically for this application.
 
 #include "scene.h"
 #include <QString>

@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-// Scene - Represents a 3d scene with models to render
+// Scene - Represents a 3d scene with models to render.
 
 #include <QQuaternion>
 #include <QMatrix4x4>

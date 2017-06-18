@@ -1,7 +1,7 @@
 #ifndef MODEL_WITH_CALCULATIONS_H
 #define MODEL_WITH_CALCULATIONS_H
 
-// Model_Calculatable - A Model with extra functionality for various calculations
+// Model_Calculatable - A Model with extra functionality for various calculations.
 
 #include "Model.h"
 #include <vector>
@@ -28,7 +28,7 @@ class Model_WithCalculations : public Model
     // Calculates the point on this model that is closest to the given focusPoint
     QVector3D calcClosestSurfacePoint(QVector3D focus);
   // Accessors
-    // "Model_WidthCalculations" can have multiple shaders prepared for use.  This gets their count
+    // "Model_WidthCalculations" can have multiple shaders prepared.  This gets their count.
     unsigned int getShaderCount() const;
     // "focus" is the point to get the nearest mesh point to
     QVector3D getFocus() const;

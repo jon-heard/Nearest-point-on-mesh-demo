@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-// Model - An object to be rendered within a 3D scene
+// Model - An object to be rendered within a 3D scene.
 
 #include <vector>
 #include <utility> // std::pair

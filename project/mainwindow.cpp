@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
   // Setup widgets
   this->findChild<QStatusBar*>("statusBar")->addWidget(statusBarFilename);
   this->setModelFilename("default.off <i>(internal)</i>");
-  // Setup the scene / scenerenderer
+  // Setup the scenerenderer & scene
   this->sceneRenderer->setWindow(this);
   this->scene = new Scene_NearestPointDemo(this);
   this->sceneRenderer->setScene(scene);
@@ -42,15 +42,16 @@ void MainWindow::setModelFilename(QString value)
 
 void MainWindow::setDecalTypeSelector(unsigned int index)
 {
-  // Disabling scene temporarily to prevent infinite loop
+  // Disabling scene (prevent infinite loop: combobox updates SceneRenderer updates combobox)
   Scene_NearestPointDemo* tmpScene = this->scene;
   this->scene = NULL;
   // Set the decal type
   this->decalTypeSelector->setCurrentIndex(index);
-  // Restore the scene
+  // Reenable the scene
   this->scene = tmpScene;
 }
 
+// Returns keyboard focus to sceneRenderer for keyboard controls
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
   this->sceneRenderer->setFocus();
@@ -65,7 +66,7 @@ void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
 
 void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
 {
-  // Scene may be set to NULL to prevent infinite loop
+  // Scene may be set to NULL to prevent infinite loop (see 'setDecalTypeSelector' for details)
   if (this->scene)
   {
     this->scene->setDecalType(index);
@@ -82,5 +83,8 @@ void MainWindow::on_actionLoad_Mesh_triggered()
 {
   QString filename = QFileDialog::getOpenFileName(
       this, "Open a model file", "", "OFF Model file (*.off)");
-  this->scene->initiateMeshLoading(filename);
+  if (filename != "")
+  {
+    this->scene->initiateMeshLoading(filename);
+  }
 }

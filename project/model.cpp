@@ -123,6 +123,7 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
   this->vbo->bind();
   this->vbo->setUsagePattern(QOpenGLBuffer::StaticDraw);
   this->vbo->allocate(dataBuffer, vertexCount * 6 * 4);
+  // Using native opengl commands (instead of QOpenGLShader) as shader may not exist at this point
   this->gl->glEnableVertexAttribArray(1);
   this->gl->glEnableVertexAttribArray(2);
   this->gl->glVertexAttribPointer(1, 3, GL_FLOAT, false, 6*4, 0);
