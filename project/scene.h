@@ -17,26 +17,23 @@ class Scene
   // Functionality
     virtual void initialize(QOpenGLFunctions* gl);
     virtual void update();
+    void draw(QMatrix4x4 projectionTransform);
   // Accessors
-    float getZoom() const;
+    bool getIsInitialized();
+    virtual Model* getRightMouseRotatedModel();
     QQuaternion getRotation() const;
-    QMatrix4x4 getTransform() const;
-    std::vector<Model*>* getModels();
+    float getZoom() const;
     void setZoom(float value);
     void setRotation(QQuaternion value);
   protected:
-  // Helper
     QOpenGLFunctions* gl;
+    std::vector<Model*> models;
   private:
-  // Functionality
     void refreshTransform();
-  // Fields
-    // Transform
     float zoom;
     QQuaternion rotation;
     QMatrix4x4 transform;
-    // To render
-    std::vector<Model*> models;
+    bool isInitialized;
 };
 
 #endif // SCENE_H

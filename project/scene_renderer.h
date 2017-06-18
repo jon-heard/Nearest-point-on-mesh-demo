@@ -1,7 +1,7 @@
 #ifndef SCENE_RENDERER_H
 #define SCENE_RENDERER_H
 
-// Main3DScene - The driver class of this application
+// Main3DScene - The primary I/O control.  Handles 3d rendering and user input.
 
 #include <vector>
 #include <QOpenGLWidget>
@@ -24,8 +24,6 @@ class Scene_Renderer : public QOpenGLWidget
   // Construction
     Scene_Renderer(QWidget* parent = 0);
     virtual ~Scene_Renderer();
-  // functionality
-    void initiateLoadMesh(std::string filename);
   // Event handlers - OpenGL
     void initializeGL();
     void paintGL();
@@ -36,24 +34,18 @@ class Scene_Renderer : public QOpenGLWidget
     void wheelEvent(QWheelEvent* event);
     void keyPressEvent(QKeyEvent* event);
   // Accessors
+    MainWindow* getWindow();
     Scene_NearestPointDemo* getScene();
-    bool getIsEnabled_targetSphere();
-    MainWindow* getMainWindow();
+    void setWindow(MainWindow* value);
     void setScene(Scene_NearestPointDemo* value);
-    void setIsEnabled_targetSphere(bool value);
-    void setMainWindow(MainWindow* value);
   private:
-  // Functionality
-    //bool loadMesh(std::string filename);
   // Fields
+    MainWindow* window;
+    QOpenGLFunctions* gl;
     Scene_NearestPointDemo* scene;
     QMatrix4x4 projectionTransform;
     QQuaternion previousRotation;
     QPoint previousMousePos;
-    QOpenGLFunctions* gl;
-    bool isEnabled_targetSphere;
-    MainWindow* window;
-    std::string newMeshFilename;
 };
 
 #endif // SCENE_RENDERER_H

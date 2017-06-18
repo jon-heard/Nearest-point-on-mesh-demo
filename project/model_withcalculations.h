@@ -28,9 +28,10 @@ class Model_WithCalculations : public Model
     // Calculates the point on this model that is closest to the given focusPoint
     QVector3D calcClosestSurfacePoint(QVector3D focus);
   // Accessors
-    QOpenGLShaderProgram* getShader(unsigned int index) const;
+    unsigned int getShaderCount() const;
     QVector3D getFocus() const;
     QVector3D getNearestPoint() const;
+    QOpenGLShaderProgram* getShader(unsigned int index) const;
     void setCurrentShader(unsigned int index);
     void setFocus(QVector3D value);
     void setNearestPoint(QVector3D value);

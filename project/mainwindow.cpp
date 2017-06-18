@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
   this->sceneRenderer = this->findChild<Scene_Renderer*>("scene");
-  this->sceneRenderer->setMainWindow(this);
-  this->scene = new Scene_NearestPointDemo();
+  this->sceneRenderer->setWindow(this);
+  this->scene = new Scene_NearestPointDemo(this);
   this->sceneRenderer->setScene(scene);
   this->toggleTargetSphere = this->findChild<QCheckBox*>("toggleTargetSphere");
   this->decalTypeSelector = this->findChild<QComboBox*>("decalTypeSelector");
@@ -46,14 +46,15 @@ void MainWindow::setDecalTypeSelector(int index)
 
 void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)
 {
-  this->sceneRenderer->setIsEnabled_targetSphere(arg1 == Qt::Checked);
+  this->scene->setIsTargetSphereEnabled(arg1 == Qt::Checked);
+  this->sceneRenderer->repaint();
 }
 
 void MainWindow::on_decalTypeSelector_currentIndexChanged(int index)
 {
   if (sceneRenderer)
   {
-    sceneRenderer->getScene()->getModel_mesh()->setCurrentShader(index);
+    scene->setDecalType(index);
     sceneRenderer->repaint();
   }
 }
@@ -66,5 +67,5 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionLoad_Mesh_triggered()
 {
   QString filename = QFileDialog::getOpenFileName(this, "Open a model file", "", "OFF Model file (*.off)");
-  this->sceneRenderer->initiateLoadMesh(filename.toStdString());
+  this->scene->initiateMeshLoading(filename.toStdString());
 }

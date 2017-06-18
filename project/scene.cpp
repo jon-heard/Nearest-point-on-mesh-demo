@@ -2,9 +2,9 @@
 #include <QOpenGLFunctions>
 #include "model.h"
 
-Scene::Scene() :
-  zoom(-500)
-{}
+using namespace std;
+
+Scene::Scene() : zoom(-500), isInitialized(false) {}
 
 Scene::~Scene()
 {
@@ -19,17 +19,26 @@ void Scene::initialize(QOpenGLFunctions* gl)
 {
   this->gl = gl;
   refreshTransform();
+  isInitialized = true;
 }
 
-void Scene::update()
+void Scene::update() {}
+
+void Scene::draw(QMatrix4x4 projectionTransform)
 {
-
+  QMatrix4x4 projectionCameraTransform = projectionTransform * transform;
+  // Render all models
+  for (vector<Model*>::iterator i = models.begin();
+       i != models.end(); ++i)
+  {
+      (*i)->draw(projectionCameraTransform, transform);
+  }
 }
 
+bool Scene::getIsInitialized() { return isInitialized; }
+Model* Scene::getRightMouseRotatedModel() { return NULL; }
 float Scene::getZoom() const { return this->zoom; }
 QQuaternion Scene::getRotation() const { return this->rotation; }
-QMatrix4x4 Scene::getTransform() const { return this->transform; }
-std::vector<Model*>* Scene::getModels() { return &this->models; }
 
 void Scene::setZoom(float value)
 {

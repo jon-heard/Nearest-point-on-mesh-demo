@@ -2,14 +2,15 @@
 
 #include "model.h"
 #include <QOpenGLTexture>
+#include "mainwindow.h"
 #include "model_withcalculations.h"
 #include "model_loader_primitive.h"
 #include "Model_Loader_File_OFF.h"
 
 using namespace std;
 
-Scene_NearestPointDemo::Scene_NearestPointDemo() :
-  model_mesh(NULL)
+Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
+  model_mesh(NULL), isTargetSphereEnabled(true), newMeshFilename(""), window(window), decalType(0)
 {}
 
 Scene_NearestPointDemo::~Scene_NearestPointDemo()
@@ -28,12 +29,12 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     this->model_focus = new Model(
         gl, {":/shaders/basic.vert", ":/shaders/lightAndRed.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_focus, 10, 3);
-    getModels()->push_back(this->model_focus);
+    models.push_back(this->model_focus);
     // nearestPoint
     this->model_nearestPoint = new Model(
         gl, {":/shaders/basic.vert", ":/shaders/lightAndBlue.frag"});
     primitiveLoader.loadSphereIntoModel(this->model_nearestPoint, 5, 3);
-    getModels()->push_back(this->model_nearestPoint);
+    models.push_back(this->model_nearestPoint);
     // mesh
     this->loadMesh(":/other/default.off");
     //loadMesh("D:/_projects/Nearest-point-on-mesh-demo/off files/Apple.off");
@@ -46,13 +47,48 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
 void Scene_NearestPointDemo::update()
 {
   Scene::update();
-  this->getTargetTexture()->bind();
+
+  // Load mesh
+  if (newMeshFilename != "")
+  {
+    loadMesh(newMeshFilename);
+    window->setModelFilename(newMeshFilename.c_str());
+    newMeshFilename = "";
+  }
+
+  targetTexture->bind();
+
+  // Nearest point calculation
+  QVector3D focus = this->model_focus->calcWorldPosition();
+  QVector3D nearestPoint = this->model_mesh->calcClosestSurfacePoint(focus);
+  this->model_nearestPoint->setPosition(nearestPoint);
+  this->model_mesh->setFocus(focus);
+  this->model_mesh->setNearestPoint(nearestPoint);
 }
 
-Model_WithCalculations* Scene_NearestPointDemo::getModel_mesh() { return model_mesh; }
-Model* Scene_NearestPointDemo::getModel_focus() { return model_focus; }
-Model* Scene_NearestPointDemo::getModel_nearestPoint() { return model_nearestPoint; }
-QOpenGLTexture* Scene_NearestPointDemo::getTargetTexture() { return targetTexture; }
+Model* Scene_NearestPointDemo::getRightMouseRotatedModel() { return model_focus; }
+//Model_WithCalculations* Scene_NearestPointDemo::getModel_mesh() { return model_mesh; }
+//Model* Scene_NearestPointDemo::getModel_focus() { return model_focus; }
+//Model* Scene_NearestPointDemo::getModel_nearestPoint() { return model_nearestPoint; }
+//QOpenGLTexture* Scene_NearestPointDemo::getTargetTexture() { return targetTexture; }
+bool Scene_NearestPointDemo::getIsTargetSphereEnabled() { return this->isTargetSphereEnabled; }
+int Scene_NearestPointDemo::getDecalType() const { return this->decalType; }
+
+void Scene_NearestPointDemo::setIsTargetSphereEnabled(bool value)
+{
+  this->isTargetSphereEnabled = value;
+  this->model_nearestPoint->setIsVisible(value);
+}
+
+void Scene_NearestPointDemo::setDecalType(unsigned int value)
+{
+  if (value > model_mesh->getShaderCount())
+  {
+    return;
+  }
+  this->decalType = value;
+  model_mesh->setCurrentShader(value);
+}
 
 bool Scene_NearestPointDemo::loadMesh(string filename)
 {
@@ -63,7 +99,7 @@ bool Scene_NearestPointDemo::loadMesh(string filename)
   // Remove old model_mesh
   if (model_mesh != NULL)
   {
-    this->getModels()->erase(std::find(this->getModels()->begin(), this->getModels()->end(), model_mesh));
+    this->models.erase(std::find(this->models.begin(), this->models.end(), model_mesh));
   }
   // Create new model_mesh
   this->model_mesh = new Model_WithCalculations(
@@ -83,7 +119,7 @@ bool Scene_NearestPointDemo::loadMesh(string filename)
   // primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
   // Add new model_mesh
   //this->window->setDecalTypeSelector(0);
-  this->getModels()->push_back(this->model_mesh);
+  this->models.push_back(this->model_mesh);
   // Erase old model_mesh
   if (oldModel != model_mesh)
   {
@@ -92,4 +128,9 @@ bool Scene_NearestPointDemo::loadMesh(string filename)
   }
   model_mesh->scaleToFit(250);
   return result;
+}
+
+void Scene_NearestPointDemo::initiateMeshLoading(string filename)
+{
+  newMeshFilename = filename;
 }

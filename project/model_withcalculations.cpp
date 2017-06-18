@@ -152,6 +152,12 @@ QVector3D Model_WithCalculations::calcClosestSurfacePoint(QVector3D focus)
     return result;
 }
 
+unsigned int Model_WithCalculations::getShaderCount() const
+{
+    return (unsigned int)this->shaders.size();
+}
+QVector3D Model_WithCalculations::getFocus() const { return this->focus; }
+QVector3D Model_WithCalculations::getNearestPoint() const { return this->nearestPoint; }
 QOpenGLShaderProgram* Model_WithCalculations::getShader(unsigned int index) const
 {
     if (index > shaders.size()-1)
@@ -159,16 +165,6 @@ QOpenGLShaderProgram* Model_WithCalculations::getShader(unsigned int index) cons
         return NULL;
     }
     return shaders[index];
-}
-
-QVector3D Model_WithCalculations::getFocus() const
-{
-    return this->focus;
-}
-
-QVector3D Model_WithCalculations::getNearestPoint() const
-{
-    return this->nearestPoint;
 }
 
 void Model_WithCalculations::setCurrentShader(unsigned int index)

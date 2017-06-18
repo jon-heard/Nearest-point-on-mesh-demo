@@ -11,6 +11,7 @@
     - consistant comments: start uppercase vs lowercase
     - consistant indentation
     - use QString throughout
+    - within 100 chars
 
 -------------------
  before submission

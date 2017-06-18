@@ -19,8 +19,7 @@ using namespace std;
 const float FOCUS_ROTATION_SPEED = 5;
 
 Scene_Renderer::Scene_Renderer(QWidget *parent) :
-  QOpenGLWidget(parent), scene(NULL), isEnabled_targetSphere(true),
-  newMeshFilename("")
+  QOpenGLWidget(parent), scene(NULL)
 {
   this->gl = new QOpenGLFunctions;
   setFocusPolicy(Qt::StrongFocus);
@@ -28,15 +27,10 @@ Scene_Renderer::Scene_Renderer(QWidget *parent) :
 
 Scene_Renderer::~Scene_Renderer()
 {
-  delete scene;
-  scene = NULL;
   delete this->gl;
   this->gl = NULL;
-}
-
-void Scene_Renderer::initiateLoadMesh(std::string filename)
-{
-  newMeshFilename = filename;
+  delete scene;
+  scene = NULL;
 }
 
 void Scene_Renderer::initializeGL()
@@ -49,36 +43,21 @@ void Scene_Renderer::initializeGL()
   this->gl->glEnable(GL_CULL_FACE);
   this->gl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   // Setup scene
-  scene->initialize(gl);
+  if (scene != NULL)
+  {
+    scene->initialize(gl);
+  }
 }
 
 void Scene_Renderer::paintGL()
 {
-  // Load mesh
-  if (newMeshFilename != "")
-  {
-    //loadMesh(newMeshFilename);
-    window->setModelFilename(newMeshFilename.c_str());
-    newMeshFilename = "";
-  }
-
+  if (scene == NULL) { return; }
+  if (!scene->getIsInitialized()) { scene->initialize(gl); }
   this->scene->update();
 
   // Render
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  // Camera transform calculation
-  QMatrix4x4 projectionCameraTransform = projectionTransform * scene->getTransform();
-  // Nearest point calculation
-  QVector3D focus = this->scene->getModel_focus()->calcWorldPosition();
-  QVector3D nearestPoint = this->scene->getModel_mesh()->calcClosestSurfacePoint(focus);
-  this->scene->getModel_nearestPoint()->setPosition(nearestPoint);
-  this->scene->getModel_mesh()->setFocus(focus);
-  this->scene->getModel_mesh()->setNearestPoint(nearestPoint);
-  // Render all models
-  for (vector<Model*>::iterator i = this->scene->getModels()->begin(); i != this->scene->getModels()->end(); ++i)
-  {
-      (*i)->draw(projectionCameraTransform, scene->getTransform());
-  }
+  this->scene->draw(projectionTransform);
 }
 
 void Scene_Renderer::resizeGL(int w, int h)
@@ -94,9 +73,10 @@ void Scene_Renderer::mousePressEvent(QMouseEvent *event)
   {
     this->previousRotation = scene->getRotation();
   }
-  else if (event->buttons() & Qt::RightButton)
+  else if (event->buttons() & Qt::RightButton &&
+           this->scene->getRightMouseRotatedModel() != NULL)
   {
-    this->previousRotation = this->scene->getModel_focus()->getRotation();
+    this->previousRotation = this->scene->getRightMouseRotatedModel()->getRotation();
   }
 }
 
@@ -109,11 +89,12 @@ void Scene_Renderer::mouseMoveEvent(QMouseEvent *event)
     rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
     this->scene->setRotation(rotation);
     repaint();
-  } else if (event->buttons() & Qt::RightButton) {
-    QQuaternion rotation = this->scene->getModel_focus()->getRotation();
+  } else if (event->buttons() & Qt::RightButton &&
+             this->scene->getRightMouseRotatedModel() != NULL) {
+    QQuaternion rotation = this->scene->getRightMouseRotatedModel()->getRotation();
     rotation.setX(this->previousRotation.x() + (event->y() - this->previousMousePos.y()));
     rotation.setY(this->previousRotation.y() + (event->x() - this->previousMousePos.x()));
-    this->scene->getModel_focus()->setRotation(rotation);
+    this->scene->getRightMouseRotatedModel()->setRotation(rotation);
     repaint();
   }
 }
@@ -180,58 +161,81 @@ void Scene_Renderer::keyPressEvent(QKeyEvent* event)
     }
     case Qt::Key_W:
     {
-      QQuaternion focusRotation = this->scene->getModel_focus()->getRotation();
-      focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -FOCUS_ROTATION_SPEED);
-      this->scene->getModel_focus()->setRotation(focusRotation);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QQuaternion focusRotation = model->getRotation();
+        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, -FOCUS_ROTATION_SPEED);
+        model->setRotation(focusRotation);
+        repaint();
+      }
       break;
     }
     case Qt::Key_A:
     {
-      QQuaternion focusRotation = this->scene->getModel_focus()->getRotation();
-      focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -FOCUS_ROTATION_SPEED);
-      this->scene->getModel_focus()->setRotation(focusRotation);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QQuaternion focusRotation = model->getRotation();
+        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, -FOCUS_ROTATION_SPEED);
+        model->setRotation(focusRotation);
+        repaint();
+      }
       break;
     }
     case Qt::Key_S:
     {
-      QQuaternion focusRotation = this->scene->getModel_focus()->getRotation();
-      focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, FOCUS_ROTATION_SPEED);
-      this->scene->getModel_focus()->setRotation(focusRotation);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QQuaternion focusRotation = model->getRotation();
+        focusRotation *= QQuaternion::fromAxisAndAngle(1, 0, 0, FOCUS_ROTATION_SPEED);
+        model->setRotation(focusRotation);
+        repaint();
+      }
       break;
     }
     case Qt::Key_D:
     {
-      QQuaternion focusRotation = this->scene->getModel_focus()->getRotation();
-      focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, FOCUS_ROTATION_SPEED);
-      this->scene->getModel_focus()->setRotation(focusRotation);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QQuaternion focusRotation = model->getRotation();
+        focusRotation *= QQuaternion::fromAxisAndAngle(0, 1, 0, FOCUS_ROTATION_SPEED);
+        model->setRotation(focusRotation);
+        repaint();
+      }
       break;
     }
     case Qt::Key_Q:
     {
-      QVector3D position = this->scene->getModel_focus()->getPosition();
-      position += QVector3D(0, 0, 10);
-      this->scene->getModel_focus()->setPosition(position);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QVector3D position = model->getPosition();
+        position += QVector3D(0, 0, 10);
+        model->setPosition(position);
+        repaint();
+      }
       break;
     }
     case Qt::Key_E:
     {
-      QVector3D position = this->scene->getModel_focus()->getPosition();
-      position += QVector3D(0, 0, -10);
-      this->scene->getModel_focus()->setPosition(position);
-      repaint();
+      Model* model = this->scene->getRightMouseRotatedModel();
+      if (model != NULL)
+      {
+        QVector3D position = model->getPosition();
+        position += QVector3D(0, 0, -10);
+        model->setPosition(position);
+        repaint();
+      }
       break;
     }
   }
 }
 
 Scene_NearestPointDemo* Scene_Renderer::getScene() { return this->scene; }
-bool Scene_Renderer::getIsEnabled_targetSphere() { return this->isEnabled_targetSphere; }
-MainWindow* Scene_Renderer::getMainWindow() { return this->window; }
+MainWindow* Scene_Renderer::getWindow() { return this->window; }
 
 void Scene_Renderer::setScene(Scene_NearestPointDemo* value)
 {
@@ -239,14 +243,7 @@ void Scene_Renderer::setScene(Scene_NearestPointDemo* value)
   this->scene = value;
 }
 
-void Scene_Renderer::setIsEnabled_targetSphere(bool value)
-{
-  this->isEnabled_targetSphere = value;
-  this->scene->getModel_nearestPoint()->setIsVisible(value);
-  repaint();
-}
-
-void Scene_Renderer::setMainWindow(MainWindow* value)
+void Scene_Renderer::setWindow(MainWindow* value)
 {
   this->window = value;
 }
