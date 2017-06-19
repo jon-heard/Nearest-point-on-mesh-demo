@@ -8,7 +8,7 @@ Features include:
 
 The wrinkle:
 - Control a "focus" point in 3d space, represented as a red sphere. <i>(keyboard and/or mouse)</i>
-- Target is drawn onto the model at the point that is closest to the user-controlled "focus" point.
+- A target is drawn onto the model at the point that is closest to the user-controlled "focus" point.
 
 ![An image of the application](readme_screen01.png?raw=true "The application")
 
@@ -47,9 +47,9 @@ Projected texture mapping has a few drawbacks however.
 
 I fought issue #1 by preventing projection onto back faces.
 
-I handled issue #2 by scaling texture coordinates (after they were generated) to match the distance of the vertex from the texture's center coordinates (the "nearest point" coordinate).
+I handled issue #2 by scaling texture coordinates (after they were generated) to match the distance of the vertex from the texture's center vertex (the "nearest point" vertex) in world space.
 
-<b>Enhancements: </b> I never ended up trying the old school way of generating the decal with special geometry.  It just seemed to be too involved and bug prone to make it worth my time.  Still, this could produce better results.
+<b>Enhancements: </b> I never ended up trying the old school way of generating the decal with special geometry.  It just seemed too involved and bug prone to make it worth my time.  Still, this could possibly produce better results.
 Also, the current technique still has some minor bugs I'm working to fix.
 
 ### Other
