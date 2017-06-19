@@ -4,7 +4,7 @@
 ---------
 - polish decal system
     - look into flicker offs (heart, apple)
-    - look into artifacts when near the surface
+    - look into artifacts when near the surface (low poly sphere)
 
 --------
  polish

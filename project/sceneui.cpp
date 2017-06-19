@@ -181,9 +181,12 @@ void SceneUi::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        model->setRotation(
-            QQuaternion::fromAxisAndAngle(1, 0, 0, -KEY_ROTATION_SPEED) *
-            model->getRotation());
+        QQuaternion invertedSceneRotation = this->scene->getRotation().inverted();
+        this->scene->getRightMouseRotatedModel()->setRotation(
+            QQuaternion::fromAxisAndAngle(
+                invertedSceneRotation * QVector3D(1,0,0),
+                -KEY_ROTATION_SPEED) *
+            this->scene->getRightMouseRotatedModel()->getRotation());
         repaint();
       }
       break;
@@ -193,10 +196,14 @@ void SceneUi::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        model->setRotation(
-            QQuaternion::fromAxisAndAngle(0, 1, 0, -KEY_ROTATION_SPEED) *
-            model->getRotation());
+        QQuaternion invertedSceneRotation = this->scene->getRotation().inverted();
+        this->scene->getRightMouseRotatedModel()->setRotation(
+            QQuaternion::fromAxisAndAngle(
+                invertedSceneRotation * QVector3D(0,1,0),
+                -KEY_ROTATION_SPEED) *
+            this->scene->getRightMouseRotatedModel()->getRotation());
         repaint();
+
       }
       break;
     }
@@ -205,10 +212,14 @@ void SceneUi::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        model->setRotation(
-            QQuaternion::fromAxisAndAngle(1, 0, 0, KEY_ROTATION_SPEED) *
-            model->getRotation());
+        QQuaternion invertedSceneRotation = this->scene->getRotation().inverted();
+        this->scene->getRightMouseRotatedModel()->setRotation(
+            QQuaternion::fromAxisAndAngle(
+                invertedSceneRotation * QVector3D(1,0,0),
+                KEY_ROTATION_SPEED) *
+            this->scene->getRightMouseRotatedModel()->getRotation());
         repaint();
+
       }
       break;
     }
@@ -217,10 +228,14 @@ void SceneUi::keyPressEvent(QKeyEvent* event)
       Model* model = this->scene->getRightMouseRotatedModel();
       if (model != NULL)
       {
-        model->setRotation(
-            QQuaternion::fromAxisAndAngle(0, 1, 0, KEY_ROTATION_SPEED) *
-            model->getRotation());
+        QQuaternion invertedSceneRotation = this->scene->getRotation().inverted();
+        this->scene->getRightMouseRotatedModel()->setRotation(
+            QQuaternion::fromAxisAndAngle(
+                invertedSceneRotation * QVector3D(0,1,0),
+                KEY_ROTATION_SPEED) *
+            this->scene->getRightMouseRotatedModel()->getRotation());
         repaint();
+
       }
       break;
     }
