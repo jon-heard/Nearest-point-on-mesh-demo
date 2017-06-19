@@ -3,11 +3,11 @@
  Backlog
 ---------
 - get distancedTexture shader working
+- make focus rotation control more intuitive
 - get old school decal styles working
 - flesh out off file formatter
     - work with faces of more than 4 points
     - allow for (but exclude) colors
-- make focus rotation control more intuitive
 - fix keyboard locked when dropdown has the focus
 - use bsp or octree to optimize search (?)
 

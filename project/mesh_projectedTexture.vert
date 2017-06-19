@@ -19,10 +19,12 @@ void main()
   passLightValue = dot(
       normalize(cameraTransform * modelTransform * vec4(normal, 0.0)),
       vec4(0.0, 0.0, 1.0, 0.0));
+
   passTextureCoordinates = vec4(
       decalAdjustAndProjectionTransform * decalCameraTransform *
       modelTransform * vec4(position, 1.0)
   ) * .01;
+  // If projecting onto a backface, don't project
   if (dot(normalize(modelTransform * vec4(normal, 0.0)), vec4(decalNormal, 0.0)) > 0)
   {
     passTextureCoordinates = vec4(0,0,0,0);

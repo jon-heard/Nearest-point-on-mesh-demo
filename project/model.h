@@ -2,6 +2,7 @@
 #define MODEL_H
 
 // Model - An object to be rendered within a 3D scene.
+//     Note: The transformation is non-standard. Use in other applications will require adjustment.
 
 #include <vector>
 #include <utility> // std::pair
