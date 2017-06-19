@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QComboBox>
 #include <QString>
+#include <QKeyEvent>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sceneui.h"
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  setFocusPolicy(Qt::StrongFocus);
+  qApp->installEventFilter(this);
   // Get widgets
   this->sceneUi = this->findChild<SceneUi*>("scene");
   this->toggleTargetSphere = this->findChild<QCheckBox*>("toggleTargetSphere");
@@ -52,10 +53,13 @@ void MainWindow::setDecalTypeSelector(unsigned int index)
 }
 
 // Returns keyboard focus to sceneUi for keyboard controls
-void MainWindow::keyPressEvent(QKeyEvent* event)
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-  this->sceneUi->setFocus();
-  this->sceneUi->keyPressEvent(event);
+  if (event->type() == QEvent::KeyPress && obj != this && obj != sceneUi)
+  {
+    this->sceneUi->setFocus();
+  }
+  return QObject::eventFilter(obj, event);
 }
 
 void MainWindow::on_toggleTargetSphere_stateChanged(int arg1)

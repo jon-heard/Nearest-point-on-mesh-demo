@@ -28,7 +28,7 @@ class MainWindow : public QMainWindow
     // Sets the decal type dropdown to the given type index
     void setDecalTypeSelector(unsigned int index);
     // Key presses are forwarded to the SceneUi as it contains the input logic
-    void keyPressEvent(QKeyEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
   private slots:
   // Callbacks
     // Event: The checkbox for toggling the target sphere has been checked/unckecked

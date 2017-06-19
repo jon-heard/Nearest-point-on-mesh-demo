@@ -9,7 +9,6 @@
 --------
  polish
 --------
-- fix keyboard locked when dropdown has the focus
 
 -------------------
  before submission
