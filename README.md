@@ -15,7 +15,7 @@ The wrinkle:
 ## Implementation details
 
 ### File loader
-The file loader works with the majority of OFF files, with convex faces of arbitrary large vertex counts.  It does <i>not</i> work with color data.  Color data was not part of the OFF specs referenced during development.
+The file loader works with the majority of OFF files, with convex faces of arbitrary vertex counts.  It does <i>not</i> work with color data.  Color data was not part of the OFF specs referenced during development.
 
 <b>Enhancements: </b> to properly read color data, or at least properly ignore it.
 
@@ -31,7 +31,7 @@ This algorithm involves iterating over all triangles to find the point on each t
 
 The algorithm that I used to find the nearest point on a triangle was from <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/'>this forum page</a>.  Here is a brief description:
 
-The "focus" point is transformed to be on a 2d plane space where the triangle's vertices are at (0,0), (0,1) and (1,0).  This reduces the problem to finding out the closest from a 2d "focus" point to the "unit" triangle.
+The "focus" point is transformed to be on a 2d plane space where the triangle's vertices are at (0,0), (0,1) and (1,0).  This reduces the problem to finding the closest point on the "unit" triangle to the 2d "focus" point.
 
 <b>Enhancements: </b>I was planning to use an octree or bsp to cull some triangle checks, but speed never became an issue.  Still, it'd be a good first choice for optimization.
 
