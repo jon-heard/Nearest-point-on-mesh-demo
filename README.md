@@ -1,51 +1,63 @@
 # Nearest point on mesh - demo
-The goal of this project is to create a 3d model viewing application with a few extra features.
+The goal of this project is to create a simple 3d model viewing application with one extra wrinkle.
 
 Features include:
-- Can load object file format (OFF) model files to be viewed in the application.
-- Can load a number of built in, primitive models for testing.
-- Allows the user to rotate and zoom the model. <i>(keyboard and/or mouse)</i>
-- Allows the user to control a "focus" point in 3d space, represented as a red sphere. <i>(keyboard and/or mouse)</i>
-- Draws a target on the model at the point that is closest to the "focus" point.
+- Load and view model files in the OFF format.
+- Load and view built in, primitive models.
+- Rotate and zoom the model. <i>(keyboard and/or mouse)</i>
+
+The wrinkle:
+- Control a "focus" point in 3d space, represented as a red sphere. <i>(keyboard and/or mouse)</i>
+- Target is drawn onto the model at the point that is closest to the user-controlled "focus" point.
+
+![An image of the application](readme_screen01.png?raw=true "The application")
 
 ## Implementation details
 
 ### File loader
-The file loader works with most OFF files.  It handles faces with arbitrary vertex counts.  It does <i>not</i> work with OFF files with color data, as that was not in the specs listed on wikepedia or princeton's website.
+The file loader works with the majority of OFF files, with convex faces of arbitrary large vertex counts.  It does <i>not</i> work with color data.  Color data was not part of the OFF specs referenced during development.
 
-<b>Enhancements: </b> to properly read color data, or at least properly ignore it.  Right now, it fails to load an OFF file if it contains color data.
+<b>Enhancements: </b> to properly read color data, or at least properly ignore it.
 
 Steps to load an OFF file:
-1) Load the file contents into a string
+1) Load the file content into a string
 2) Remove comments
 3) Tokenize the data
 4) Parse the tokens into vertices and faces
 5) Pass those vertices and faces into the model
 
-### Basic shaders
-The shaders are simple and sufficiently functional.  Lighting is based on a dot product between the look vector and the normal.
-
-### Controls
-Controls mostly involve dragging the mouse to rotate the scene or the "focus" point, zooming with the mouse wheel and hitting keys for various other transformations.
-
 ### Nearest point calculation
 This algorithm involves iterating over all triangles to find the point on each triangle that is closest to the "focus" point.  As each triangle is checked, the shortest overall point is kept and returned at the end.
 
-<b>Enhancements: </b>I was planning to use an octree or bsp for optimization here, but speed never be came an issue.  Still, it'd be an obvious optimization choice if input data starts becoming to dense.
+The algorithm that I used to find the nearest point on a triangle was from <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/'>this forum page</a>.  Here is a brief description:
+
+The "focus" point is transformed to be on a 2d plane space where the triangle's vertices are at (0,0), (0,1) and (1,0).  This reduces the problem to finding out the closest from a 2d "focus" point to the "unit" triangle.
+
+<b>Enhancements: </b>I was planning to use an octree or bsp to cull some triangle checks, but speed never became an issue.  Still, it'd be a good first choice for optimization.
 
 ### The target decal
 This was certainly the most involved feature.
 
-After searching and reviewing source material about decals that deform to a mesh, I decided to start with "projected texture mapping" as it had many of the wanted features.
-Straight projection mapping had a few drawbacks however.
-1) It projects right through to the other side of the mesh.
-2) Its deformations are often too "blobby" to be of use.
+After searching / reviewing source material on decals that conform to a mesh, I decided to start with "projected texture mapping" as it had many of the desired features.
+Projected texture mapping has a few drawbacks however.
+1) It projects through all layers, rendering the texture on the back side as well
+2) Its deformations are often too "blobby".
+
+![An image of projected texture drawbacks](readme_screen02.png?raw=true "Projected texture mapping drawbacks")
 
 I fought issue #1 by preventing projection onto back faces.
-As for issue #2, this was handled by scaling texture coordinates to match the distance from the texture's center.
 
-<b>Enhancements: </b> I never ended up trying the old school way of generating the decal.  It just seemed to be too involved and too bug prone to make it worth my time.  Still, this may result in improvements.
-Also, there are some minor bugs I'm still ironing out with the current technique.
+I handled issue #2 by scaling texture coordinates (after they were generated) to match the distance of the vertex from the texture's center coordinates (the "nearest point" coordinate).
+
+<b>Enhancements: </b> I never ended up trying the old school way of generating the decal with special geometry.  It just seemed to be too involved and bug prone to make it worth my time.  Still, this could produce better results.
+Also, the current technique still has some minor bugs I'm working to fix.
+
+### Other
+
+<b>Basic shaders</b> - The shaders are simple and sufficiently functional.  Lighting is based on a dot product between the look vector and the normal.
+
+<b>Controls</b> - Controls mostly involve dragging the mouse to rotate the scene or the "focus" point, zooming with the mouse wheel and hitting keys for various other transformations.
+
 
 ### C++ class list:
 - MainWindow - The overarching UI controller and container.
