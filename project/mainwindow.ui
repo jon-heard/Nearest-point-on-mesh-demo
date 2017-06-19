@@ -11,18 +11,18 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Nearest point on mesh - demo</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="leftMargin">
-     <number>4</number>
+     <number>2</number>
     </property>
     <property name="topMargin">
      <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>4</number>
+     <number>2</number>
     </property>
     <property name="bottomMargin">
      <number>0</number>
@@ -178,12 +178,12 @@
          </item>
          <item>
           <property name="text">
-           <string>Projected (truncated)</string>
+           <string>Projected (truncate)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Projected (truncated, no backface)</string>
+           <string>Projected (truncate, no back)</string>
           </property>
          </item>
         </widget>
