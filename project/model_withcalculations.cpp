@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const float TARGET_SIZE = 1;
+
 Model_WithCalculations::Model_WithCalculations(
     QOpenGLFunctions* gl, vector<pair<QString, QString> > shaderSources) :
   Model(gl, {"",""}), shaderSources(shaderSources) {}
@@ -59,7 +61,7 @@ void Model_WithCalculations::initialize(
   // Calculate the decal's projection and adjustment matrix (for projected texture style)
   this->decalAdjustAndProjectionTransform.translate(.5, .5, .5);
   this->decalAdjustAndProjectionTransform.scale(.5, .5, .5);
-  this->decalAdjustAndProjectionTransform.perspective(45, 1, .1f, 1000);
+  this->decalAdjustAndProjectionTransform.perspective(30, 1, .1f, 1000);
   // Setup all the shaders
   for (vector<pair<QString,QString>>::iterator i = shaderSources.begin();
        i != shaderSources.end(); ++i)
@@ -90,6 +92,7 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
   decalCameraTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
   QVector3D decalNormal = (this->nearestPoint - this->focus).normalized();
   QMatrix4x4 lookatTransform;
+  float scale = (this->focus - this->nearestPoint).length() * TARGET_SIZE;
   lookatTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
   // Flip front facing (to draw the back of the model)
   this->gl->glDepthMask(false);
@@ -106,7 +109,7 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Shader uniforms: Distanced texture
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);
-    this->shader->setUniformValue("scale", (this->focus - this->nearestPoint).length());
+    this->shader->setUniformValue("scale", scale);
     this->shader->setUniformValue("lookatTransform", lookatTransform);
     // Actual draw
     Model::draw(projectionCameraTransform, cameraTransform);
@@ -125,7 +128,7 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Shader uniforms: Distanced texture
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);
-    this->shader->setUniformValue("scale", (this->focus - this->nearestPoint).length());
+    this->shader->setUniformValue("scale", scale);
     this->shader->setUniformValue("lookatTransform", lookatTransform);
     // Actual draw
     Model::draw(projectionCameraTransform, cameraTransform);

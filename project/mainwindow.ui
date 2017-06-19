@@ -173,17 +173,17 @@
          </item>
          <item>
           <property name="text">
-           <string>Projected texture</string>
+           <string>Projected</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Projected texture (no backface)</string>
+           <string>Projected (truncated)</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Distance texture</string>
+           <string>Projected (truncated, no backface)</string>
           </property>
          </item>
         </widget>

@@ -3,15 +3,13 @@
  Backlog
 ---------
 - polish decal system
-    - get distancedTexture shader working
-    - get old school decal styles working
-- make focus rotation control more intuitive
+    - look into flicker offs (heart, apple)
+    - look into artifacts when near the surface
 
 --------
  polish
 --------
 - fix keyboard locked when dropdown has the focus
-- use bsp or octree to optimize search (?)
 
 -------------------
  before submission

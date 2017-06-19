@@ -98,14 +98,17 @@ void SceneUi::mouseMoveEvent(QMouseEvent *event)
             mouseDelta.length()*MOUSE_ROTATION_SPEED) *
         this->previousRotation);
     repaint();
+    qInfo() << this->scene->getRotation().inverted() * QVector3D(0,1,0) << " :: " << this->scene->getRotation().inverted() * QVector3D(1,0,0);
     mousePressEvent(event); // reset offsets for the next move
   }
   else if (event->buttons() & Qt::RightButton && this->scene->getRightMouseRotatedModel() != NULL)
   {
     QVector2D mouseDelta = QVector2D(event->pos()) - this->previousMousePos;
+    QQuaternion invertedSceneRotation = this->scene->getRotation().inverted();
     this->scene->getRightMouseRotatedModel()->setRotation(
          QQuaternion::fromAxisAndAngle(
-            mouseDelta.y(), mouseDelta.x(), 0,
+            invertedSceneRotation * QVector3D(0,mouseDelta.x(),0) +
+            invertedSceneRotation * QVector3D(mouseDelta.y(),0,0),
             mouseDelta.length()*MOUSE_ROTATION_SPEED) *
         this->previousRotation);
     repaint();

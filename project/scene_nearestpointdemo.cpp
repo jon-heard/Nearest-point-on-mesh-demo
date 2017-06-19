@@ -9,7 +9,10 @@
 
 using namespace std;
 
-const int DEAULT_DECAL_TYPE = 2;
+const QString STARTING_MESH_FILE = "DEFAULT";
+//const QString STARTING_MESH_FILE = "LOW_POLY_SPHERE";
+//const QString STARTING_MESH_FILE = "D:/_projects/Nearest-point-on-mesh-demo/off files/helm.off";
+const int DEAULT_DECAL_TYPE = 3;
 
 Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
     model_mesh(NULL), isTargetSphereEnabled(true), newMeshFilename(""), window(window),
@@ -38,12 +41,13 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     primitiveLoader.loadSphereIntoModel(this->model_nearestPoint, 5, 3);
     this->models.push_back(this->model_nearestPoint);
     // Mesh
-    this->loadMesh("DEFAULT");
-    //this->loadMesh("LOW_POLY_SPHERE");
+    this->loadMesh(STARTING_MESH_FILE);
   // Setup decal texture
     this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));
     this->targetTexture->setWrapMode(QOpenGLTexture::ClampToBorder);
     this->targetTexture->bind();
+  // Tell UI which file we are viewing
+    window->setModelFilename(STARTING_MESH_FILE);
 }
 
 bool Scene_NearestPointDemo::update()
@@ -110,9 +114,10 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
       gl,
       {{":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
        {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
-       {":/shaders/mesh_projectedTexture_noBackface.vert",
+       {":/shaders/mesh_projectedTexture_truncated.vert",
         ":/shaders/lightAndTextureProjAndAlpha.frag"},
-       {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}});
+       {":/shaders/mesh_projectedTexture_truncated_noBackface.vert",
+        ":/shaders/lightAndTextureProjAndAlpha.frag"}});
   // ... and load mesh data (based on filename)
   if (filename == "LOW_POLY_SPHERE")
   {

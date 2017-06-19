@@ -13,6 +13,5 @@ void main()
 {
   gl_Position = projectionCameraTransform * modelTransform * vec4(position, 1.0);
   passLightValue = dot(
-      normalize(cameraTransform * modelTransform * vec4(normal, 0.0)),
-      vec4(0.0, 0.0, 1.0, 0.0));
+      normalize(cameraTransform * modelTransform * vec4(normal, 0.0)), vec4(0.0, 0.0, 1.0, 0.0));
 }
