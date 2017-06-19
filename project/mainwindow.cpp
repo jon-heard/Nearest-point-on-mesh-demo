@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
   statusBarFilename = new QLabel();
   // Setup widgets
   this->findChild<QStatusBar*>("statusBar")->addWidget(statusBarFilename);
-  this->setModelFilename("default.off <i>(internal)</i>");
+  this->setModelFilename("DEFAULT");
   // Setup the sceneUi & scene
   this->sceneUi->setWindow(this);
   this->scene = new Scene_NearestPointDemo(this);
@@ -87,4 +87,16 @@ void MainWindow::on_actionLoad_Mesh_triggered()
   {
     this->scene->initiateMeshLoading(filename);
   }
+}
+
+void MainWindow::on_actionLoad_Default_Mesh_triggered()
+{
+  this->scene->initiateMeshLoading("DEFAULT");
+  sceneUi->repaint();
+}
+
+void MainWindow::on_actionLoad_Low_Poly_Sphere_triggered()
+{
+  this->scene->initiateMeshLoading("LOW_POLY_SPHERE");
+  sceneUi->repaint();
 }

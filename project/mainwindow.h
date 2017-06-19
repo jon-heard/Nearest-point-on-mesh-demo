@@ -39,6 +39,10 @@ class MainWindow : public QMainWindow
     void on_actionExit_triggered();
     // Event: The "Load Mesh" menu item has been clicked
     void on_actionLoad_Mesh_triggered();
+    void on_actionLoad_Default_Mesh_triggered();
+
+    void on_actionLoad_Low_Poly_Sphere_triggered();
+
   private:
     Ui::MainWindow *ui;
     SceneUi* sceneUi;

@@ -9,6 +9,8 @@
 
 using namespace std;
 
+const int DEAULT_DECAL_TYPE = 1;
+
 Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
     model_mesh(NULL), isTargetSphereEnabled(true), newMeshFilename(""), window(window),
     decalType(0) {}
@@ -36,8 +38,8 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     primitiveLoader.loadSphereIntoModel(this->model_nearestPoint, 5, 3);
     this->models.push_back(this->model_nearestPoint);
     // Mesh
-    this->loadMesh(":/other/default.off");
-    //this->loadMesh("../project/test.off");
+    this->loadMesh("DEFAULT");
+    //this->loadMesh("LOW_POLY_SPHERE");
   // Setup decal texture
     this->targetTexture = new QOpenGLTexture(QImage(":/other/target.png"));
     this->targetTexture->setWrapMode(QOpenGLTexture::ClampToBorder);
@@ -110,25 +112,37 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
           {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
           {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
   });
-
-  // ... and load its mesh data from the file.  If loading fails, revert back to the old mesh
-  //---------------------------------------------//
-  // This code loads the requested file properly //
-  //---------------------------------------------//
-//  ModelLoader_File_OFF loader;
-//  if (!loader.loadFileIntoModel(this->model_mesh, filename))
-//  {
-//    qCritical() << "Failed to load file final.off";
-//    qCritical() << loader.getErrorMessage();
-//    this->model_mesh = oldModel;
-//    result = false;
-//  }
-  //-------------------------------------------------------------------------------//
-  // This code loads a sparse sphere mesh instead of the proper file (for testing) //
-  //-------------------------------------------------------------------------------//
-  ModelLoader_Primitive loader;
-  loader.loadSphereIntoModel(this->model_mesh, 1, 1);
-
+  // ... and load mesh data (based on filename)
+  if (filename == "LOW_POLY_SPHERE")
+  {
+    // Load primitive data
+    ModelLoader_Primitive loader;
+    loader.loadSphereIntoModel(this->model_mesh, 1, 1);
+  }
+  else if (filename == "DEFAULT")
+  {
+    // load mesh data from a file.  If loading fails, revert back to the old mesh
+    ModelLoader_File_OFF loader;
+    if (!loader.loadFileIntoModel(this->model_mesh, ":other/default.off"))
+    {
+      qCritical() << "Failed to load file final.off";
+      qCritical() << loader.getErrorMessage();
+      this->model_mesh = oldModel;
+      result = false;
+    }
+  }
+  else
+  {
+    // load mesh data from a file.  If loading fails, revert back to the old mesh
+    ModelLoader_File_OFF loader;
+    if (!loader.loadFileIntoModel(this->model_mesh, filename))
+    {
+      qCritical() << "Failed to load file final.off";
+      qCritical() << loader.getErrorMessage();
+      this->model_mesh = oldModel;
+      result = false;
+    }
+  }
   // If mesh was loaded successfully, erase the old mesh
   if (result == true)
   {
@@ -140,8 +154,9 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
   // Add mesh to model list
   this->models.push_back(this->model_mesh);
   // Set the decal type of the mesh (and update the ui to match)
-  model_mesh->setCurrentShader(2);
-  this->window->setDecalTypeSelector(2);
+  model_mesh->setCurrentShader(DEAULT_DECAL_TYPE);
+  this->window->setDecalTypeSelector(DEAULT_DECAL_TYPE);
+
   // Done.  Return whether new mesh was loaded or not
   return result;
 }

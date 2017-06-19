@@ -85,10 +85,12 @@ void Model_WithCalculations::initialize(
 
 void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
 {
-  // Calculate the decal's look matrix and decal normal (for projected texture style)
+  // Calculate decal-based uniforms
   QMatrix4x4 decalCameraTransform;
   decalCameraTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
   QVector3D decalNormal = (this->nearestPoint - this->focus).normalized();
+  QMatrix4x4 lookatTransform;
+  lookatTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
   // Flip front facing (to draw the back of the model)
   this->gl->glDepthMask(false);
   this->gl->glFrontFace(GL_CW);
@@ -103,8 +105,9 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Shader uniforms: Distanced texture
-    this->shader->setUniformValue("focus", this->focus);
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    this->shader->setUniformValue("scale", (this->focus - this->nearestPoint).length());
+    this->shader->setUniformValue("lookatTransform", lookatTransform);
     // Actual draw
     Model::draw(projectionCameraTransform, cameraTransform);
   // Flip front facing (to draw the front of the model)
@@ -121,8 +124,9 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Shader uniforms: Distanced texture
-    this->shader->setUniformValue("focus", this->focus);
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);
+    this->shader->setUniformValue("scale", (this->focus - this->nearestPoint).length());
+    this->shader->setUniformValue("lookatTransform", lookatTransform);
     // Actual draw
     Model::draw(projectionCameraTransform, cameraTransform);
 }
