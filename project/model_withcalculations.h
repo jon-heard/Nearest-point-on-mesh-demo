@@ -48,7 +48,7 @@ class Model_WithCalculations : public Model
     std::vector<std::pair<QString,QString>> shaderSources;
     std::vector<QOpenGLShaderProgram*> shaders;
     unsigned int currentShaderIndex;
-    QMatrix4x4 decalAdjustAndProjectionTransform;
+    QMatrix4x4 adjust_projection_transform;
     QMatrix4x4 decalCameraTransform;
     QVector3D focus, nearestPoint;
 };

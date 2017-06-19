@@ -40,7 +40,7 @@ void Model::refreshTransform()
   this->transform.scale(this->scale, this->scale, this->scale);
 }
 
-void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
+void Model::draw(QMatrix4x4 transform_projection_camera, QMatrix4x4 transform_camera)
 {
   if (!this->isReady)
   {
@@ -51,10 +51,12 @@ void Model::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransfor
   {
     return;
   }
+  QMatrix4x4 transform_projection_camera_model = transform_projection_camera * this->transform;
+  QMatrix4x4 transform_camera_model = transform_camera * this->transform;
   this->shader->bind();
-  this->shader->setUniformValue("projectionCameraTransform", projectionCameraTransform);
-  this->shader->setUniformValue("cameraTransform", cameraTransform);
-  this->shader->setUniformValue("modelTransform", this->transform);
+  this->shader->setUniformValue(
+      "transform_projection_camera_model", transform_projection_camera_model);
+  this->shader->setUniformValue("transform_camera_model", transform_camera_model);
   this->vao->bind();
 
   this->gl->glDrawArrays(GL_TRIANGLES, 0, this->vertexCount);

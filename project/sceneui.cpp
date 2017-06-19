@@ -65,13 +65,13 @@ void SceneUi::paintGL()
     this->repaint();
   }
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  this->scene->draw(this->projectionTransform);
+  this->scene->draw(this->transform_projection);
 }
 
 void SceneUi::resizeGL(int w, int h)
 {
-  this->projectionTransform.setToIdentity();
-  this->projectionTransform.perspective(45, (float)w/h, 0.001f, 10000.0f);
+  this->transform_projection.setToIdentity();
+  this->transform_projection.perspective(45, (float)w/h, 0.001f, 10000.0f);
 }
 
 void SceneUi::mousePressEvent(QMouseEvent *event)

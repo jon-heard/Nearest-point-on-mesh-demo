@@ -50,7 +50,7 @@ class SceneUi : public QOpenGLWidget
     MainWindow* window;
     QOpenGLFunctions* gl;
     Scene_NearestPointDemo* scene;
-    QMatrix4x4 projectionTransform;
+    QMatrix4x4 transform_projection;
     QQuaternion previousRotation;
     QVector2D previousMousePos;
 };

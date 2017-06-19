@@ -23,7 +23,7 @@ class Scene
     // If it returns true, scene should be re-rendered
     virtual bool update();
     // Called to render the scene to the SceneUi
-    void draw(QMatrix4x4 projectionTransform);
+    void draw(QMatrix4x4 transform_projection);
   // Accessors
     // Set to true if Initialize has been called on this Scene
     bool getIsInitialized();

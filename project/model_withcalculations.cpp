@@ -59,9 +59,9 @@ void Model_WithCalculations::initialize(
   this->vertices = vertices;
   this->triangles = triangles;
   // Calculate the decal's projection and adjustment matrix (for projected texture style)
-  this->decalAdjustAndProjectionTransform.translate(.5, .5, .5);
-  this->decalAdjustAndProjectionTransform.scale(.5, .5, .5);
-  this->decalAdjustAndProjectionTransform.perspective(30, 1, .1f, 1000);
+  this->adjust_projection_transform.translate(.5, .5, .5);
+  this->adjust_projection_transform.scale(.5, .5, .5);
+  this->adjust_projection_transform.perspective(30, 1, .1f, 1000);
   // Setup all the shaders
   for (vector<pair<QString,QString>>::iterator i = shaderSources.begin();
        i != shaderSources.end(); ++i)
@@ -87,9 +87,11 @@ void Model_WithCalculations::initialize(
 
 void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4x4 cameraTransform)
 {
-  // Calculate decal-based uniforms
-  QMatrix4x4 decalCameraTransform;
-  decalCameraTransform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
+  // Calculate uniforms
+  QMatrix4x4 focusCam_transform;
+  focusCam_transform.lookAt(this->focus, this->nearestPoint, QVector3D(0,1,0));
+  QMatrix4x4 adjust_projection_focusCam_model_transform =
+      adjust_projection_transform * focusCam_transform * this->transform;
   QVector3D decalNormal = (this->nearestPoint - this->focus).normalized();
   QMatrix4x4 lookatTransform;
   float scale = (this->focus - this->nearestPoint).length() * TARGET_SIZE;
@@ -104,13 +106,13 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("mainTexture", 0);
     // Shader uniforms: Projected texture
     this->shader->setUniformValue(
-        "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
-    this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
-    this->shader->setUniformValue("decalNormal", decalNormal);
-    // Shader uniforms: Distanced texture
+        "adjust_projection_focusCam_model_transform", adjust_projection_focusCam_model_transform);
+    // Shader uniforms: Projected texture truncated
+    this->shader->setUniformValue("transform_model", this->transform);
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);
     this->shader->setUniformValue("scale", scale);
-    this->shader->setUniformValue("lookatTransform", lookatTransform);
+  // Shader uniforms: Projected texture truncated no backface
+    this->shader->setUniformValue("decalNormal", decalNormal);
     // Actual draw
     Model::draw(projectionCameraTransform, cameraTransform);
   // Flip front facing (to draw the front of the model)
@@ -123,8 +125,8 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
     this->shader->setUniformValue("mainTexture", 0);
     // Shader uniforms: Projected texture
     this->shader->setUniformValue(
-        "decalAdjustAndProjectionTransform", this->decalAdjustAndProjectionTransform);
-    this->shader->setUniformValue("decalCameraTransform", decalCameraTransform);
+        "decalAdjustAndProjectionTransform", this->adjust_projection_transform);
+    this->shader->setUniformValue("decalCameraTransform", focusCam_transform);
     this->shader->setUniformValue("decalNormal", decalNormal);
     // Shader uniforms: Distanced texture
     this->shader->setUniformValue("nearestPoint", this->nearestPoint);

@@ -24,13 +24,13 @@ void Scene::initialize(QOpenGLFunctions* gl)
 
 bool Scene::update() { return false; }
 
-void Scene::draw(QMatrix4x4 projectionTransform)
+void Scene::draw(QMatrix4x4 transform_projection)
 {
-  QMatrix4x4 projectionCameraTransform = projectionTransform * this->transform;
+  QMatrix4x4 transform_projection_camera = transform_projection * this->transform;
   // Render all models
   for (vector<Model*>::iterator i = this->models.begin(); i != this->models.end(); ++i)
   {
-    (*i)->draw(projectionCameraTransform, this->transform);
+    (*i)->draw(transform_projection_camera, this->transform);
   }
 }
 
