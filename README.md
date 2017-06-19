@@ -29,7 +29,7 @@ Steps to load an OFF file:
 ### Nearest point calculation
 This algorithm involves iterating over all triangles to find the point on each triangle that is closest to the "focus" point.  As each triangle is checked, the shortest overall point is kept and returned at the end.
 
-The algorithm that I used to find the nearest point on a triangle was from <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/'>this forum page</a>.  Here is a brief description:
+The algorithm that I used to find the nearest point on a triangle was from <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/' target='_blank'>this forum page</a>.  Here is a brief description:
 
 The "focus" point is transformed to be on a 2d plane space where the triangle's vertices are at (0,0), (0,1) and (1,0).  This reduces the problem to finding the closest point on the "unit" triangle to the 2d "focus" point.
 
