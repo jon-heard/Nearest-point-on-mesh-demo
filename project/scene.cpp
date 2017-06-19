@@ -22,7 +22,7 @@ void Scene::initialize(QOpenGLFunctions* gl)
   this->isInitialized = true;
 }
 
-void Scene::update() {}
+bool Scene::update() { return false; }
 
 void Scene::draw(QMatrix4x4 projectionTransform)
 {

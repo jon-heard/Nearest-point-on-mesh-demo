@@ -21,7 +21,7 @@ class Scene_NearestPointDemo : public Scene
     // Setup the scene
     virtual void initialize(QOpenGLFunctions* gl);
     // Called each frame to update scene components
-    virtual void update();
+    virtual bool update();
     // Called externally to tell the OpenGL thread to load a new Mesh Model
     void initiateMeshLoading(QString filename);
   // Accessors

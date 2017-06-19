@@ -44,26 +44,33 @@ void Scene_NearestPointDemo::initialize(QOpenGLFunctions* gl)
     this->targetTexture->bind();
 }
 
-void Scene_NearestPointDemo::update()
+bool Scene_NearestPointDemo::update()
 {
+  bool result = false;
+  // Superclass Scene update
   Scene::update();
-
-  // Load mesh
+  // Load new mesh, if requested
   if (this->newMeshFilename != "")
   {
-    loadMesh(this->newMeshFilename);
-    window->setModelFilename(this->newMeshFilename);
+    if (loadMesh(this->newMeshFilename))
+    {
+      window->setModelFilename(this->newMeshFilename);
+    }
     this->newMeshFilename = "";
+    // Return true to force a repaint.  See SceneUi.paintGL() for more info.
+    result = true;
   }
-
+  // Prepare our only texture
   targetTexture->bind();
-
   // Nearest point calculation
   QVector3D focus = this->model_focus->calcWorldPosition();
   QVector3D nearestPoint = this->model_mesh->calcClosestSurfacePoint(focus);
+  // Update the position of the nearest-point sphere
   this->model_nearestPoint->setPosition(nearestPoint);
+  // Update values of focus and nearest point for mesh to render decal
   this->model_mesh->setFocus(focus);
   this->model_mesh->setNearestPoint(nearestPoint);
+  return result;
 }
 
 Model* Scene_NearestPointDemo::getRightMouseRotatedModel() { return this->model_focus; }
@@ -89,21 +96,21 @@ void Scene_NearestPointDemo::setDecalType(unsigned int value)
 bool Scene_NearestPointDemo::loadMesh(QString filename)
 {
   bool result = true;
-  // Keep track of old model_mesh, in case new one fails
+  // Keep track of old mesh, in case new one fails to load right
   Model_WithCalculations* oldModel = this->model_mesh;
-  // Remove old model_mesh
+  // Remove old mesh from the model list (if it exists)
   if (this->model_mesh != NULL)
   {
     this->models.erase(std::find(this->models.begin(), this->models.end(), this->model_mesh));
   }
-  // Create new model_mesh
+  // Create new model_mesh...
   this->model_mesh = new Model_WithCalculations(
       gl, {
           {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
           {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
           {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
   });
-  // Load mesh data
+  // ... and load its mesh data from the file.  If loading fails, revert back to the old mesh
   ModelLoader_File_OFF loader;
   if (!loader.loadFileIntoModel(this->model_mesh, filename))
   {
@@ -112,18 +119,20 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
     this->model_mesh = oldModel;
     result = false;
   }
-  //ModelLoader_Primitive loader;
-  //primitiveLoader.loadBoxIntoModel(this->model_mesh, 100, 100, 100);
-  // Add new model_mesh
-  //this->window->setDecalTypeSelector(0);
-  this->models.push_back(this->model_mesh);
-  // Erase old model_mesh
-  if (oldModel != this->model_mesh)
+  // If mesh was loaded successfully, erase the old mesh
+  if (result == true)
   {
     delete oldModel;
     oldModel = NULL;
   }
+  // Size mesh to fit
   model_mesh->scaleToFit(250);
+  // Add mesh to model list
+  this->models.push_back(this->model_mesh);
+  // Set the decal type of the mesh (and update the ui to match)
+  model_mesh->setCurrentShader(1);
+  this->window->setDecalTypeSelector(1);
+  // Done.  Return whether new mesh was loaded or not
   return result;
 }
 

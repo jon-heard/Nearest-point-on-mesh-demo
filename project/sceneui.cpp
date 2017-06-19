@@ -56,7 +56,14 @@ void SceneUi::paintGL()
 {
   if (this->scene == NULL) { return; }
   if (!this->scene->getIsInitialized()) { this->scene->initialize(gl); }
-  this->scene->update();
+  if (this->scene->update())
+  {
+    // Scene.update returns true.  This indicates that a mesh was just loaded, which requires
+    // forcing the UI to repaint.  This fixes a small bug wherein the UI gets whited out and the
+    // nearest-point calculation is bad.
+    this->window->repaint();
+    this->repaint();
+  }
   gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   this->scene->draw(this->projectionTransform);
 }
