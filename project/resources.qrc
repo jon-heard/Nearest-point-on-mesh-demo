@@ -8,6 +8,7 @@
         <file>mesh_basic.frag</file>
         <file>mesh_distancedTexture.vert</file>
         <file>lightAndTextureProjAndAlpha.frag</file>
+        <file>mesh_projectedTexture_noBackface.vert</file>
     </qresource>
     <qresource prefix="/other">
         <file>default.off</file>

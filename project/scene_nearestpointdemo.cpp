@@ -9,7 +9,7 @@
 
 using namespace std;
 
-const int DEAULT_DECAL_TYPE = 1;
+const int DEAULT_DECAL_TYPE = 2;
 
 Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
     model_mesh(NULL), isTargetSphereEnabled(true), newMeshFilename(""), window(window),
@@ -107,11 +107,12 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
   }
   // Create new model_mesh...
   this->model_mesh = new Model_WithCalculations(
-      gl, {
-          {":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
-          {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
-          {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}
-  });
+      gl,
+      {{":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
+       {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
+       {":/shaders/mesh_projectedTexture_noBackface.vert",
+        ":/shaders/lightAndTextureProjAndAlpha.frag"},
+       {":/shaders/mesh_distancedTexture.vert", ":/shaders/lightAndTextureAndAlpha.frag"}});
   // ... and load mesh data (based on filename)
   if (filename == "LOW_POLY_SPHERE")
   {

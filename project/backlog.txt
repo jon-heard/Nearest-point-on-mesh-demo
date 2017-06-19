@@ -2,19 +2,25 @@
 ---------
  Backlog
 ---------
-- get distancedTexture shader working
+- polish decal system
+    - get distancedTexture shader working
+    - get old school decal styles working
 - make focus rotation control more intuitive
-- get old school decal styles working
-- flesh out off file formatter
-    - work with faces of more than 4 points
-    - allow for (but exclude) colors
+
+--------
+ polish
+--------
 - fix keyboard locked when dropdown has the focus
 - use bsp or octree to optimize search (?)
 
 -------------------
  before submission
 -------------------
-- get this working on my laptop
 - writeup
-- understand tri-closest-point algorithm
+
+------------------
+ after submission
+------------------
+- get this working on my laptop
+- study tri-closest-point algorithm
     https://www.gamedev.net/topic/552906-closest-point-on-triangle/

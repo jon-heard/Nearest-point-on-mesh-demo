@@ -145,27 +145,15 @@ bool ModelLoader_File_OFF::parseTokens(
   // Load face data
   while (faceCount > 0)
   {
-    float vertexCount = atof(tokens[tokenIndex].toStdString().c_str());
-    if (vertexCount == 3)
+    int vertexCount = atoi(tokens[tokenIndex].toStdString().c_str());
+    for (int i = 1; i < vertexCount-1; ++i)
     {
       float v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
-      float v2 = atof(tokens[tokenIndex+2].toStdString().c_str());
-      float v3 = atof(tokens[tokenIndex+3].toStdString().c_str());
+      float v2 = atof(tokens[tokenIndex+i+1].toStdString().c_str());
+      float v3 = atof(tokens[tokenIndex+i+2].toStdString().c_str());
       tris.push_back({v1, v2, v3});
-      tokenIndex += 4;
     }
-    else if (vertexCount == 4)
-    {
-      float v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
-      float v2 = atof(tokens[tokenIndex+2].toStdString().c_str());
-      float v3 = atof(tokens[tokenIndex+3].toStdString().c_str());
-      tris.push_back({v1, v2, v3});
-      v1 = atof(tokens[tokenIndex+1].toStdString().c_str());
-      v2 = atof(tokens[tokenIndex+3].toStdString().c_str());
-      v3 = atof(tokens[tokenIndex+4].toStdString().c_str());
-      tris.push_back({v1, v2, v3});
-      tokenIndex += 5;
-    }
+    tokenIndex += vertexCount + 1;
     --faceCount;
   }
   return true;

@@ -97,7 +97,7 @@ void Model_WithCalculations::draw(QMatrix4x4 projectionCameraTransform, QMatrix4
   // Draw the back of the model
     this->shader->bind();
     // Shader uniforms: Texture & alpha
-    this->shader->setUniformValue("alpha", 0.0f); // alpha=0: back won't be drawn, EXCEPT for decal
+    this->shader->setUniformValue("alpha", 0.2f); // alpha=.2: back barely drawn, EXCEPT for decal
     this->shader->setUniformValue("mainTexture", 0);
     // Shader uniforms: Projected texture
     this->shader->setUniformValue(
