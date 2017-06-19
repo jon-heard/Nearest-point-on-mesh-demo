@@ -121,9 +121,18 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
   // ... and load mesh data (based on filename)
   if (filename == "LOW_POLY_SPHERE")
   {
-    // Load primitive data
     ModelLoader_Primitive loader;
     loader.loadSphereIntoModel(this->model_mesh, 1, 1);
+  }
+  else if (filename == "LOW_POLY_BOX")
+  {
+    ModelLoader_Primitive loader;
+    loader.loadBoxIntoModel(this->model_mesh, 1, 1, 1);
+  }
+  else if (filename == "HIGH_POLY_SPHERE")
+  {
+    ModelLoader_Primitive loader;
+    loader.loadSphereIntoModel(this->model_mesh, 1, 4);
   }
   else if (filename == "DEFAULT")
   {
