@@ -3,7 +3,7 @@
 
 // Model_Calculatable - A Model with extra functionality for various calculations.
 
-#include "Model.h"
+#include "model.h"
 #include <vector>
 #include <QVector3D>
 #include <QMatrix4x4>

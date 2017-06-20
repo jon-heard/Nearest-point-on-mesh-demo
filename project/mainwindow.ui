@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>655</width>
+    <width>729</width>
     <height>524</height>
    </rect>
   </property>
@@ -16,13 +16,13 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="leftMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
      <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
      <number>0</number>
@@ -72,6 +72,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="styleSheet">
+       <string notr="true">border: 0;</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -89,11 +92,18 @@
         <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>4</number>
+        <number>8</number>
        </property>
        <property name="bottomMargin">
         <number>0</number>
        </property>
+       <item>
+        <widget class="QLabel" name="spacer1">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="instructions">
          <property name="sizePolicy">
@@ -117,7 +127,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="spacer1">
+        <widget class="QLabel" name="spacer2">
          <property name="text">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;br/&gt;&lt;br/&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -149,6 +159,9 @@
        </item>
        <item>
         <widget class="QComboBox" name="decalTypeSelector">
+         <property name="styleSheet">
+          <string notr="true">border: 2 inset grey</string>
+         </property>
          <property name="currentIndex">
           <number>0</number>
          </property>
@@ -202,8 +215,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>655</width>
-     <height>21</height>
+     <width>729</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

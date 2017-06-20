@@ -8,8 +8,8 @@
 using namespace std;
 
 Model::Model(QOpenGLFunctions* gl, std::pair<QString, QString> shaderSource) :
-  isReady(false), isVisible(true), scale(1), shaderSource(shaderSource),
-  shader(NULL), vbo(NULL), vao(NULL), gl(gl) {}
+  isReady(false), gl(gl), shader(NULL), vao(NULL), isVisible(true), scale(1),
+  shaderSource(shaderSource), vbo(NULL) {}
 
 Model::~Model()
 {
@@ -80,6 +80,8 @@ void Model::initialize(std::vector<QVector3D> vertices, std::vector<QVector3D> t
           QOpenGLShader::Vertex, this->shaderSource.first);
     this->shader->addShaderFromSourceFile(
           QOpenGLShader::Fragment, this->shaderSource.second);
+    this->shader->bindAttributeLocation("position", 1);
+    this->shader->bindAttributeLocation("normal", 2);
     this->shader->link();
     if (!this->shader->isLinked())
     {

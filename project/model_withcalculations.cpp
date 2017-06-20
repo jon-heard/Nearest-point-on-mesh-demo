@@ -71,6 +71,8 @@ void Model_WithCalculations::initialize(
         QOpenGLShader::Vertex, (*i).first);
     newShader->addShaderFromSourceFile(
         QOpenGLShader::Fragment, (*i).second);
+    newShader->bindAttributeLocation("position", 1);
+    newShader->bindAttributeLocation("normal", 2);
     newShader->link();
     if(!newShader->isLinked())
     {

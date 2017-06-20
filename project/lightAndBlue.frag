@@ -1,8 +1,8 @@
-#version 330
-in float passLightValue;
-out vec4 outFragmentColor;
+#version 120
+
+varying float passLightValue;
 
 void main()
 {
-  outFragmentColor = vec4(0.0, 0.0, passLightValue, 1.0);
+  gl_FragColor = vec4(0.0, 0.0, passLightValue, 1.0);
 }

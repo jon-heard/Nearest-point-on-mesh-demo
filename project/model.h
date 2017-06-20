@@ -45,8 +45,8 @@ class Model
     void setPosition(QVector3D value);
     void setRotation(QQuaternion value);
   protected:
-    QOpenGLFunctions* gl;
     bool isReady;
+    QOpenGLFunctions* gl;
     QOpenGLShaderProgram* shader;
     QMatrix4x4 transform;
     QOpenGLVertexArrayObject* vao;

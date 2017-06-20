@@ -15,8 +15,8 @@ const QString STARTING_MESH_FILE = "DEFAULT";
 const int DEAULT_DECAL_TYPE = 3;
 
 Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
-    model_mesh(NULL), isTargetSphereEnabled(true), newMeshFilename(""), window(window),
-    decalType(0) {}
+    isTargetSphereEnabled(true), newMeshFilename(""), decalType(0), window(window),
+    model_mesh(NULL) {}
 
 Scene_NearestPointDemo::~Scene_NearestPointDemo()
 {
@@ -115,9 +115,9 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
       {{":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
        {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
        {":/shaders/mesh_projectedTexture_truncated.vert",
-        ":/shaders/lightAndTextureProjAndAlpha.frag"},
+        ":/shaders/lightAndTextureAndAlpha.frag"},
        {":/shaders/mesh_projectedTexture_truncated_noBackface.vert",
-        ":/shaders/lightAndTextureProjAndAlpha.frag"}});
+        ":/shaders/lightAndTextureAndAlpha.frag"}});
   // ... and load mesh data (based on filename)
   if (filename == "LOW_POLY_SPHERE")
   {

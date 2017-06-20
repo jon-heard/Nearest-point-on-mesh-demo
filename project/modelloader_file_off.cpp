@@ -1,5 +1,5 @@
 #include "modelloader_file_off.h"
-#include "Model.h"
+#include "model.h"
 #include <QVector3D>
 #include <sstream>
 #include <QFile>

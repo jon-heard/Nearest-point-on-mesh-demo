@@ -1,6 +1,7 @@
-#version 330
-layout(location=1) in vec3 position;
-layout(location=2) in vec3 normal;
+#version 120
+
+attribute vec3 position;
+attribute vec3 normal;
 
 uniform mat4 transform_projection_camera_model;
 uniform mat4 transform_camera_model;
@@ -10,8 +11,8 @@ uniform mat4 transform_model;
 uniform vec3 nearestPoint;
 uniform float scale;
 
-out float passLightValue;
-out vec2 passTextureCoordinates;
+varying float passLightValue;
+varying vec2 passTextureCoordinates;
 
 void main()
 {

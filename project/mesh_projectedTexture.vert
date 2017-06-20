@@ -1,14 +1,15 @@
-#version 330
-layout(location=1) in vec3 position;
-layout(location=2) in vec3 normal;
+#version 120
+
+attribute vec3 position;
+attribute vec3 normal;
 
 uniform mat4 transform_projection_camera_model;
 uniform mat4 transform_camera_model;
 
 uniform mat4 adjust_projection_focusCam_model_transform;
 
-out float passLightValue;
-out vec4 passTextureCoordinates;
+varying float passLightValue;
+varying vec4 passTextureCoordinates;
 
 void main()
 {

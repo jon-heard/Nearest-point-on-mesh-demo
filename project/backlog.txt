@@ -3,8 +3,6 @@
  Backlog
 ---------
 - polish decal system
-    - look into flicker offs (heart, apple)
-    - look into artifacts when near the surface (low poly sphere)
 
 --------
  polish
@@ -18,6 +16,5 @@
 ------------------
  after submission
 ------------------
-- get this working on my laptop
 - study tri-closest-point algorithm
     https://www.gamedev.net/topic/552906-closest-point-on-triangle/
