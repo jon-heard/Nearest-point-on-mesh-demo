@@ -50,6 +50,14 @@ The "focus" point is transformed to be on a 2d plane space where the triangle's 
 <b>Future enhancements: </b>I was planning to use an octree or bsp to reduce the number of triangle checks, but speed never became an issue, even on an old laptop.  Still, this would be a good first choice for optimization.
 
 ### The target decal
+
+First, the decal types: These represent my evolution of decal processing.  Specifically, they represent points where bugs have been introduced.  The current decal type can be specified in the UI.
+1) <b>No decal</b> - Do not calculate or render the decal at all.
+2) <b>Projected</b> - Use pure projected texture mapping to render the decal.
+3) <b>Projected (manual texcoord)</b> - The same as projected, except that the projected texture coordinates are manually calculated.  I calculated the texture coordinates based on a number of references, including the kronos website, but this process still introduces a bug wherein texture artifacts can occasionally be seen on the mesh.
+4) <b>Projected (truncate)</b> - Use projecte texture mapping to render the decal, but also scale texture coordinates to be bound in 3d space.
+5) <b>Projected (truncate, no back)</b> - Same as "Projected (truncate)" except that the projection is also blocked from projecting onto back surfaces.
+
 This was definitely the most involved feature.
 
 I began by searching / reviewing source material on various techniques for rendering decals that conform to a mesh.  I eventually chose to start with "projected texture mapping" as it had many of the desired features.
