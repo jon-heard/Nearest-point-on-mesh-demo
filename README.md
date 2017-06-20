@@ -61,7 +61,7 @@ I tried implementing a few other techniques for rendering conforming decals, but
 
 I worked around issue #1 by preventing the texture from projecting onto back faces.  This doesn't stop the projected texture from rendering multiple times when the mesh has two front facing surfaces in the projection path.  The next adjustment greatly minimizes this issue, but it can still be a problem in some circumstances.
 
-I handled issue #2 with the following vertex shader technique.  After generating the texture coordinates for the vertex, I calculated how far the vertex was from the center of the projection (from where the "nearest point" is).  I then took that distance and scaled the texture coordinates to be of that length.
+I handled issue #2 with the following vertex shader technique.  After generating the texture coordinates for the vertex with projected texture mapping, I calculate how far the vertex is from the center of the decal (from where the "nearest point" is).  I then take that distance and scale the texture coordinates so that it's length matches the distance.
 
 My solution to issue #2 had a startlingly positive impact, and was the primary reason that I ended up staying with projected textures for the decal.  It isn't perfect, however.  I needed to turn the projected texture coordinates (vec4) into normal 2d texture coordinates  (vec2) to be able to scale them.  This conversion introduces an occasional glitch in the texturing mapping, which I'm actively trying to resolve.
 
