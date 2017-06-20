@@ -88,7 +88,7 @@ Steps to reproduce:
 4) Change decal type to "Projected (manual texCoord)"
 5) Notice the artifacts that are added with the second decal type.  The only difference is the projected to standard texture coordinate conversion.
 
-<i>Note: The vertex shaders used for these decal types are "mesh_projectedTexture.vert" and "mesh_projectedTexture_manualTexCoord.vert" respectively
+<i>Note: The vertex shaders used for these decal types are "mesh_projectedTexture.vert" and "mesh_projectedTexture_manualTexCoord.vert" respectively</i>
 
 #### Rare unprojected polygons
 
