@@ -1,5 +1,7 @@
 #version 120
 
+// Vertex - Simply calculates geometry and normals
+
 attribute vec3 position;
 attribute vec3 normal;
 

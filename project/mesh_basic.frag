@@ -1,5 +1,7 @@
 #version 120
 
+// Fragment - White, adjusted by light and alpha values.
+
 varying float passLightValue;
 uniform float alpha;
 

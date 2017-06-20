@@ -12,7 +12,7 @@ using namespace std;
 const QString STARTING_MESH_FILE = "DEFAULT";
 //const QString STARTING_MESH_FILE = "LOW_POLY_SPHERE";
 //const QString STARTING_MESH_FILE = "D:/_projects/Nearest-point-on-mesh-demo/off files/helm.off";
-const int DEAULT_DECAL_TYPE = 3;
+const int DEAULT_DECAL_TYPE = 4;
 
 Scene_NearestPointDemo::Scene_NearestPointDemo(MainWindow* window) :
     isTargetSphereEnabled(true), newMeshFilename(""), decalType(0), window(window),
@@ -114,6 +114,8 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
       gl,
       {{":/shaders/basic.vert", ":/shaders/mesh_basic.frag"},
        {":/shaders/mesh_projectedTexture.vert", ":/shaders/lightAndTextureProjAndAlpha.frag"},
+       {":/shaders/mesh_projectedTexture_manualTexCoord.vert",
+        ":/shaders/lightAndTextureProjAndAlpha.frag"},
        {":/shaders/mesh_projectedTexture_truncated.vert",
         ":/shaders/lightAndTextureAndAlpha.frag"},
        {":/shaders/mesh_projectedTexture_truncated_noBackface.vert",
@@ -123,11 +125,6 @@ bool Scene_NearestPointDemo::loadMesh(QString filename)
   {
     ModelLoader_Primitive loader;
     loader.loadSphereIntoModel(this->model_mesh, 1, 1);
-  }
-  else if (filename == "LOW_POLY_BOX")
-  {
-    ModelLoader_Primitive loader;
-    loader.loadBoxIntoModel(this->model_mesh, 1, 1, 1);
   }
   else if (filename == "HIGH_POLY_SPHERE")
   {

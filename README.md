@@ -10,6 +10,8 @@ The wrinkle:
 - Control a "focus" point in 3d space, represented as a red sphere. <i>(keyboard and/or mouse)</i>
 - A target is drawn onto the model at the point that is closest to the user-controlled "focus" point.
 
+You can download the windows version [here](https://github.com/jon-heard/Nearest-point-on-mesh-demo/raw/master/build/Nearest-point-on-mesh-demo_win64.zip).
+
 ![An image of the application](readme_screen01.png?raw=true "The application")
 
 ## Implementation details
@@ -73,3 +75,25 @@ Also, the current technique still has some minor bugs I'm working to fix.
 <b>Basic shaders</b> - The shaders are simple and sufficiently functional.  Lighting is based on a dot product between the camera's look vector and the vertex normal.  When I ported this application to my old linux laptop, I needed to reduce the GLSL version from 3.3 to 1.2, which required a number of superficial adjustments, but nothing structurally significant.
 
 <b>Controls</b> - Controls mostly involve dragging the mouse to rotate either the scene or the "focus" point.  There is also zooming with the mouse wheel and hitting keys for other controls.  It took a bit of thinking to get controls for the "focus" point to function relative to the camera/scene transform, rather than relative to the world axis.  This work was worth it, though, as it made controlling the "focus" point <i>much</i> more intuitive.
+
+### Known bugs
+
+#### Artifacts with texture conversion
+My technique required manually converting projected texture coordinates to standard 2d texture coordinates.  I've used what seems to be the correct technique, but manual conversion introduces artifacts.
+
+Steps to reproduce:
+1) Load a low-poly sphere
+2) Set decal type to "Projected"
+3) Move the "focus" point within the mesh
+4) Change decal type to "Projected (manual texCoord)"
+5) Notice the artifacts that are added with the second decal type.  The only difference is the projected to standard texture coordinate conversion.
+
+<i>Note: The vertex shaders used for these decal types are "mesh_projectedTexture.vert" and "mesh_projectedTexture_manualTexCoord.vert" respectively
+
+#### Rare unprojected polygons
+
+Occasionally a spacial configuration will occur that results in one of the polygons not showing the projected texture.  This is rare, and quickly passes when any object in the scene moves.
+
+#### Double projection
+
+If a mesh has two surfaces facing the same direction and they are close enough, the target may be rendered onto both surfaces.

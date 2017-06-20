@@ -1,5 +1,7 @@
 #version 120
 
+// Fragment - Light, texture and alpha.
+
 varying float passLightValue;
 varying vec2 passTextureCoordinates;
 

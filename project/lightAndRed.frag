@@ -1,5 +1,7 @@
 #version 120
 
+// Fragment - Red, adjusted by light value.
+
 varying float passLightValue;
 
 void main()

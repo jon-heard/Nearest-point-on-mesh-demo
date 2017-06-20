@@ -1,5 +1,7 @@
 #version 120
 
+// Vertex - Basic projected texture mapping
+
 attribute vec3 position;
 attribute vec3 normal;
 
@@ -18,6 +20,7 @@ void main()
   passLightValue = dot(
       normalize(transform_camera_model * vec4(normal, 0.0)), vec4(0.0, 0.0, 1.0, 0.0));
 
+  // Run projected texture mapping
   passTextureCoordinates = vec4(
       adjust_projection_focusCam_model_transform * vec4(position, 1.0));
 }

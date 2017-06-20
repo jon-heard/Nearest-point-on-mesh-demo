@@ -1,5 +1,8 @@
 #version 120
 
+// Vertex - Projected texture mapping with texcoord distance scaled to distance from
+//     decal center, and NO projection onto back faces.
+
 attribute vec3 position;
 attribute vec3 normal;
 
@@ -25,9 +28,9 @@ void main()
   // Run projected texture mapping
   vec4 projectedTextureCoordinates = vec4(
       adjust_projection_focusCam_model_transform * vec4(position, 1.0));
+  passTextureCoordinates = projectedTextureCoordinates.st / projectedTextureCoordinates.q;
 
   // Scale texture coordintaes
-  passTextureCoordinates = projectedTextureCoordinates.st / projectedTextureCoordinates.q;
   float distanceFromCenter =
       length(transform_model * vec4(position, 1.0) - vec4(nearestPoint, 1.0)) / scale;
   passTextureCoordinates =

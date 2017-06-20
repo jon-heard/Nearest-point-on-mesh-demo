@@ -105,12 +105,6 @@ void MainWindow::on_actionLoad_Low_Poly_Sphere_triggered()
   sceneUi->repaint();
 }
 
-void MainWindow::on_actionLoad_Low_Poly_Box_triggered()
-{
-  this->scene->initiateMeshLoading("LOW_POLY_BOX");
-  sceneUi->repaint();
-}
-
 void MainWindow::on_actionLoad_High_Poly_Sphere_triggered()
 {
   this->scene->initiateMeshLoading("HIGH_POLY_SPHERE");

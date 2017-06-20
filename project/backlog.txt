@@ -2,7 +2,6 @@
 ---------
  Backlog
 ---------
-- polish decal system
 
 --------
  polish

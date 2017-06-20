@@ -1,5 +1,7 @@
 #version 120
 
+// Fragment - Light, texture and alpha. Texcoords are projected.
+
 varying float passLightValue;
 varying vec4 passTextureCoordinates;
 

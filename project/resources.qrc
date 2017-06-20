@@ -9,6 +9,7 @@
         <file>lightAndTextureProjAndAlpha.frag</file>
         <file>mesh_projectedTexture_truncated.vert</file>
         <file>mesh_projectedTexture_truncated_noBackface.vert</file>
+        <file>mesh_projectedTexture_manualTexCoord.vert</file>
     </qresource>
     <qresource prefix="/other">
         <file>default.off</file>

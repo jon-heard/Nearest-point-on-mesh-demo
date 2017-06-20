@@ -43,8 +43,6 @@ class MainWindow : public QMainWindow
     void on_actionLoad_Default_Mesh_triggered();
     // Event: The "Load Low_Poly Sphere" menu item has been clicked
     void on_actionLoad_Low_Poly_Sphere_triggered();
-    // Event: The "Load Low_Poly Box" menu item has been clicked
-    void on_actionLoad_Low_Poly_Box_triggered();
     // Event: The "Load High_Poly Sphere" menu item has been clicked
     void on_actionLoad_High_Poly_Sphere_triggered();
   private:
