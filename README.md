@@ -25,27 +25,27 @@ The wrinkle:
 - <b>Model_WithCalculations</b> - A subclass of 'Model' that adds extra functionality, useful for the application's 'mesh' model.
 
 ### File loader
-The file loader works with the majority of OFF files, with convex faces of arbitrary vertex counts.  It does <i>not</i> work with color data.  Color data was not part of the OFF specs referenced during development, though it is included in certain OFF spec references that I found later.
+The file loader works with the majority of OFF files, with convex faces of arbitrary vertex counts.  It does <i>not</i> work with color data.  Color data was not part of the OFF specs referenced during development, though it <i>is</i> included in certain OFF specs that I found later on.
 
-I first implemented OFF file loading with std::string and typical C++ file I/O.  I eventually switched to QT's file handling to allow loading application resources.  I found QT's file handling and QString implementation to be easy to work with.  I would happily use them again.
-
-<b>Enhancements: </b> to properly read color data, or at least properly ignore it.
+I first implemented OFF file loading with std::string and typical C++ file I/O.  I eventually switched to QT's file handling to allow loading internal application resources.  I found QT's file handling and QString implementation to be easy to work with.  I would happily use them again.
 
 Steps to load an OFF file:
 1) Load the file content into a string
-2) Remove comments
-3) Tokenize the data
+2) Remove comments from the string
+3) Tokenize the string
 4) Parse the tokens into vertices and faces
 5) Pass those vertices and faces into the model
 
-### Nearest point calculation
-This algorithm involves iterating over all triangles to find the point on each triangle that is closest to the "focus" point.  As each triangle is checked, the shortest overall point is kept and returned at the end.
+<b>Future enhancements: </b> to properly read color data, or at least properly ignore it.
 
-The algorithm that I used to find the nearest point on a <i>single</i> triangle was one found on <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/' target='_blank'>this forum page</a>.  The algorithm integrated well with barely any tweaking.  Here is a brief description of how it works:
+### Nearest point calculation
+This algorithm involves iterating over all triangles, finding the point on each triangle that is closest to the "focus" point.  As each triangle is checked, the shortest overall point is kept and returned at the end.
+
+The algorithm that I used to find the nearest point on a <i>single</i> triangle was one found on <a href='https://www.gamedev.net/forums/topic/552906-closest-point-on-triangle/' target='_blank'>this forum page</a>.  The algorithm integrated well with my code, with minimal work.  Here is a brief description of how it works:
 
 The "focus" point is transformed to be on a 2d plane space where the triangle's vertices are at (0,0), (0,1) and (1,0).  This reduces the problem to finding the closest point on the "unit" triangle to the 2d "focus" point.
 
-<b>Enhancements: </b>I was planning to use an octree or bsp to reduce the number of triangle checks, but speed never became an issue, even on an old laptop.  Still, this would be a good first choice for optimization.
+<b>Future enhancements: </b>I was planning to use an octree or bsp to reduce the number of triangle checks, but speed never became an issue, even on an old laptop.  Still, this would be a good first choice for optimization.
 
 ### The target decal
 This was definitely the most involved feature.
@@ -59,17 +59,17 @@ After implementing projected texture mapping, however, I realized that it also h
 
 I tried implementing a few other techniques for rendering conforming decals, but ultimately settled on projected textures after some adjustments to address the stated issues.
 
-I worked around issue #1 by preventing the texture from projecting onto back faces.  This doesn't stop the projected texture from rendering multiple times when the mesh has two front facing surfaces in its way.  The next adjustment greatly minimizes this issue, but it can still be a problem in some circumstances.
+I worked around issue #1 by preventing the texture from projecting onto back faces.  This doesn't stop the projected texture from rendering multiple times when the mesh has two front facing surfaces in the projection path.  The next adjustment greatly minimizes this issue, but it can still be a problem in some circumstances.
 
 I handled issue #2 with the following vertex shader technique.  After generating the texture coordinates for the vertex, I calculated how far the vertex was from the center of the projection (from where the "nearest point" is).  I then took that distance and scaled the texture coordinates to be of that length.
 
-My solution to issue #2 had a startlingly positive impact, and was the primary reason that I ended up staying with projected textures for the decal.  It isn't perfect, however.  I needed to turn the projected texture coordinates into normal 2d texture coordinates to be able to scale them.  This conversion introduces an occasional glitch in the texturing mapping, which I'm actively trying to resolve.
+My solution to issue #2 had a startlingly positive impact, and was the primary reason that I ended up staying with projected textures for the decal.  It isn't perfect, however.  I needed to turn the projected texture coordinates (vec4) into normal 2d texture coordinates  (vec2) to be able to scale them.  This conversion introduces an occasional glitch in the texturing mapping, which I'm actively trying to resolve.
 
-<b>Enhancements: </b> I never ended up trying the old school way of generating the decal with a special dynamic mesh.  It just seemed too involved and bug prone to make it worth my time.  Still, this could possibly produce better results.
+<b>Future enhancements: </b> I never ended up trying the old school way of generating the decal with a special dynamic mesh.  It just seemed too involved and bug prone to make it worth my time.  Still, this could possibly produce better results.
 Also, the current technique still has some minor bugs I'm working to fix.
 
 ### Other
 
-<b>Basic shaders</b> - The shaders are simple and sufficiently functional.  Lighting is based on a dot product between the look vector and the normal.  When I ported this application to my old linux laptop, I needed to reduce the GLSL version from 3.3 to 1.2, which required a number of superficial adjustments, but nothing structurally significant.
+<b>Basic shaders</b> - The shaders are simple and sufficiently functional.  Lighting is based on a dot product between the camera's look vector and the vertex normal.  When I ported this application to my old linux laptop, I needed to reduce the GLSL version from 3.3 to 1.2, which required a number of superficial adjustments, but nothing structurally significant.
 
-<b>Controls</b> - Controls mostly involve dragging the mouse to rotate the scene or the "focus" point, zooming with the mouse wheel and hitting keys for various other transformations.  It took a bit of thinking to get the controls for the "focus" point to work relative to the scene rotation, but it was worth it as it made controlling the "focus" point <i>much</i> easier.
+<b>Controls</b> - Controls mostly involve dragging the mouse to rotate either the scene or the "focus" point.  There is also zooming with the mouse wheel and hitting keys for other controls.  It took a bit of thinking to get controls for the "focus" point to function relative to the camera/scene transform, rather than relative to the world axis.  This work was worth it, though, as it made controlling the "focus" point <i>much</i> more intuitive.
